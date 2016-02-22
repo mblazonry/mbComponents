@@ -1,0 +1,43 @@
+{
+   "id": "mblazonry",
+   "folders": [
+      {
+         "id": "mblazonry",
+         "name": "mB Custom",
+         "icon": "fa-th-large"
+      }
+   ],
+   "components": [
+      {
+         "id": "sayhello",
+         "folderId": "mblazonry"
+      },
+      {
+         "id": "popupcontroller",
+         "folderId": "mblazonry"
+      },
+      {
+         "id": "progress_indicator",
+         "folderId": "mblazonry"
+      }
+   ],
+   "js": [
+      {
+         "path": "Builder_sayhello.js"
+      },
+      {
+         "path": "Builder_popupcontroller.js"
+      },
+      {
+         "path": "Builder_progressIndicator.js"
+      }
+   ],
+   "css": [
+      {
+         "path": "Builder_sayhello.css"
+      },
+      {
+         "path": "Runtime_progressIndicator.css"
+      }
+   ]
+}

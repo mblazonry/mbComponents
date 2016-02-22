@@ -1,0 +1,33 @@
+{
+   "id": "mblazonry",
+   "components": [
+      {
+         "id": "sayhello"
+      },
+      {
+         "id": "popupcontroller"
+      },
+      {
+         "id": "progress_indicator"
+      }
+   ],
+   "js": [
+      {
+         "path": "Runtime_sayhello.js"
+      },
+      {
+         "path": "Runtime_popupcontroller.js"
+      },
+      {
+         "path": "Runtime_progressIndicator.js"
+      }
+   ],
+   "css": [
+      {
+         "path": "Runtime_sayhello.css"
+      },
+      {
+         "path": "Runtime_progressIndicator.css"
+      }
+   ]
+}
