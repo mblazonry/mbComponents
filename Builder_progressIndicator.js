@@ -100,48 +100,48 @@
 
 						// We only have one page of properties, basic in this case
 						var propertyPages = [
-						{
-							name: 'Basic',
-							props: [
-								{
-									id: 'label',
-									type: 'string',
-									label: 'Step Label',
-									onChange: function(val)
+							{
+								name: 'Basic',
+								props: [
 									{
-										// Update the text in the preview
-										stepComponent.previewElement.find('.progress-text .text-content').text(stepComponent.state.attr('label'));
+										id: 'label',
+										type: 'string',
+										label: 'Step Label',
+										onChange: function(val)
+										{
+											// Update the text in the preview
+											stepComponent.previewElement.find('.progress-text .text-content').text(stepComponent.state.attr('label'));
 
-										// Update the actual data
-										var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
-										component.state.find(findString).attr('label', stepComponent.state.attr('label'));
+											// Update the actual data
+											var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
+											component.state.find(findString).attr('label', stepComponent.state.attr('label'));
 
-										component.save();
-									}
+											component.save();
+										}
 								},
-								{
-									id: 'icon',
-									type: 'icon',
-									label: 'Icon',
-									onChange: function(val)
 									{
-										var text = stepComponent.previewElement.find('.progress-text');
-										var iconelem = text.children('.nx-step-icon');
-										if (iconelem.length)
+										id: 'icon',
+										type: 'icon',
+										label: 'Icon',
+										onChange: function(val)
 										{
-											iconelem.remove();
-										}
+											var text = stepComponent.previewElement.find('.progress-text');
+											var iconelem = text.children('.nx-step-icon');
+											if (iconelem.length)
+											{
+												iconelem.remove();
+											}
 
-										if (val)
-										{
-											iconelem = $('<div>').addClass('nx-step-icon ' + val + ' sk-icon inline');
-											text.prepend(iconelem);
-										}
+											if (val)
+											{
+												iconelem = $('<div>').addClass('nx-step-icon ' + val + ' sk-icon inline');
+												text.prepend(iconelem);
+											}
 
-										// Update the actual data
-										var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
-										component.state.find(findString).attr('icon', stepComponent.state.attr('icon'));
-									}
+											// Update the actual data
+											var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
+											component.state.find(findString).attr('icon', stepComponent.state.attr('icon'));
+										}
 								}
 							]
 						}];
@@ -238,7 +238,7 @@
 		// The inputtable properties
 		propertiesRenderer: function(propertiesObj, component)
 		{
-			propertiesObj.setTitle("Say Hello Component Properties");
+			propertiesObj.setTitle("ProgressIndicator Component Properties");
 			var state = component.state;
 			var propCategories = [];
 
@@ -306,25 +306,25 @@
 			];
 
 			var properties = [
-			{
-				id: "mode",
-				type: "picklist",
-				label: "Mode",
-				picklistEntries: [
-					{
-						value: "tabwiz",
-						label: "Tabset/Wizard"
+				{
+					id: "mode",
+					type: "picklist",
+					label: "Mode",
+					picklistEntries: [
+						{
+							value: "tabwiz",
+							label: "Tabset/Wizard"
 					},
-					{
-						value: "picklist",
-						label: "Picklist"
+						{
+							value: "picklist",
+							label: "Picklist"
 					}],
 
-				defaultValue: 'tabwiz',
-				onChange: function()
-				{
-					component.refresh().rebuildProps();
-				}
+					defaultValue: 'tabwiz',
+					onChange: function()
+					{
+						component.refresh().rebuildProps();
+					}
 			}];
 
 			if (component.state.attr('mode') === undefined || component.state.attr('mode') === 'tabwiz')
