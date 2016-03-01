@@ -1,21 +1,14 @@
 (function($)
 {
-
+	'use strict';
 
 	skuid.builder.core.registerBuilder(new skuid.builder.core.Builder(
 	{
 		id: "mblazonry__sayhello",
 		name: "Say Hello",
 		icon: "fa-comments-o",
-		description: "This component says Hello to someone",
+		description: "This component says Hello to someone.",
 		componentRenderer: function(component)
-		{
-			component.setTitle(component.builder.name);
-			component.body.html(
-				"<div class='hello-content'>Hello " + component.state.attr("person") + "!</div>"
-			);
-		},
-		mobileRenderer: function(component)
 		{
 			component.setTitle(component.builder.name);
 			component.body.html(
