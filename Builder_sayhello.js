@@ -1,4 +1,4 @@
-(function($)
+(function ($)
 {
 	'use strict';
 
@@ -8,28 +8,28 @@
 		name: "Say Hello",
 		icon: "fa-comments-o",
 		description: "This component says Hello to someone.",
-		componentRenderer: function(component)
+		componentRenderer: function (component)
 		{
 			component.setTitle(component.builder.name);
 			component.body.html(
 				"<div class='hello-content'>Hello " + component.state.attr("person") + "!</div>"
 			);
 		},
-		propertiesRenderer: function(propertiesObj, component)
+		propertiesRenderer: function (propertiesObj, component)
 		{
 			propertiesObj.setTitle("Say Hello Component Properties");
 			var state = component.state;
 			var propCategories = [];
 			var propsList = [
+			{
+				id: "person",
+				type: "string",
+				label: "Person to say Hello to",
+				helptext: "Pick a name, any name!",
+				onChange: function ()
 				{
-					id: "person",
-					type: "string",
-					label: "Person to say Hello to",
-					helptext: "Pick a name, any name!",
-					onChange: function()
-					{
-						component.refresh();
-					}
+					component.refresh();
+				}
 			}];
 			propCategories.push(
 			{
@@ -40,13 +40,13 @@
 			{
 				name: "Remove",
 				props: [
-					{
-						type: "remove"
+				{
+					type: "remove"
 				}]
 			});
 			propertiesObj.applyPropsWithCategories(propCategories, state);
 		},
-		defaultStateGenerator: function()
+		defaultStateGenerator: function ()
 		{
 			return skuid.utils.makeXMLDoc("<mblazonry__sayhello person='sys' />");
 		}
