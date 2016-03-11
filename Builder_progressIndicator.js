@@ -1,4 +1,4 @@
-(function($)
+(function ($)
 {
 	var $xml = skuid.utils.makeXMLDoc;
 
@@ -10,7 +10,7 @@
 		description: "Indicates the progress of a Wizard, a Tabset, or a Picklist.",
 
 		// How it's rendered in the composer view in desktop
-		componentRenderer: function(component)
+		componentRenderer: function (component)
 		{
 
 			// Create some shortcut variables
@@ -30,7 +30,7 @@
 				id: 'step',
 				name: 'Step',
 				hideWrapper: true,
-				componentRenderer: function(stepComponent)
+				componentRenderer: function (stepComponent)
 				{
 					// The main display of the stepBuilder
 					var disp = $('<div class="progress-chunk">');
@@ -56,7 +56,7 @@
 					// Adds the configurable parts to the specific div
 					component.stepsWrapper.append(disp);
 
-					disp.find('.progress-text').on('click', function(e)
+					disp.find('.progress-text').on('click', function (e)
 					{
 						stepComponent.element.click();
 						// Prevent the parent component from being selected
@@ -75,20 +75,20 @@
 
 					if (editable)
 					{
-						stepComponent.addActionItem('Remove Step', 'sk-bi-tab-delete', function()
+						stepComponent.addActionItem('Remove Step', 'sk-bi-tab-delete', function ()
 						{
 							// Remove the display portion
 							stepComponent.element.remove();
 							disp.remove();
 
-							// Remove it from the xml 
+							// Remove it from the xml
 							var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
 							component.state.find(findString).remove();
 							component.save();
 						});
 					}
 				},
-				propertiesRenderer: function(propertiesObj, stepComponent)
+				propertiesRenderer: function (propertiesObj, stepComponent)
 				{
 					var editable = stepComponent.state.attr('editable') === undefined || stepComponent.state.attr('editable') == "true"
 
@@ -100,50 +100,49 @@
 
 						// We only have one page of properties, basic in this case
 						var propertyPages = [
+						{
+							name: 'Basic',
+							props: [
 							{
-								name: 'Basic',
-								props: [
-									{
-										id: 'label',
-										type: 'string',
-										label: 'Step Label',
-										onChange: function(val)
-										{
-											// Update the text in the preview
-											stepComponent.previewElement.find('.progress-text .text-content').text(stepComponent.state.attr('label'));
+								id: 'label',
+								type: 'string',
+								label: 'Step Label',
+								onChange: function (val)
+								{
+									// Update the text in the preview
+									stepComponent.previewElement.find('.progress-text .text-content').text(stepComponent.state.attr('label'));
 
-											// Update the actual data
-											var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
-											component.state.find(findString).attr('label', stepComponent.state.attr('label'));
+									// Update the actual data
+									var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
+									component.state.find(findString).attr('label', stepComponent.state.attr('label'));
 
-											component.save();
-										}
-								},
-									{
-										id: 'icon',
-										type: 'icon',
-										label: 'Icon',
-										onChange: function(val)
-										{
-											var text = stepComponent.previewElement.find('.progress-text');
-											var iconelem = text.children('.nx-step-icon');
-											if (iconelem.length)
-											{
-												iconelem.remove();
-											}
-
-											if (val)
-											{
-												iconelem = $('<div>').addClass('nx-step-icon ' + val + ' sk-icon inline');
-												text.prepend(iconelem);
-											}
-
-											// Update the actual data
-											var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
-											component.state.find(findString).attr('icon', stepComponent.state.attr('icon'));
-										}
+									component.save();
 								}
-							]
+							},
+							{
+								id: 'icon',
+								type: 'icon',
+								label: 'Icon',
+								onChange: function (val)
+								{
+									var text = stepComponent.previewElement.find('.progress-text');
+									var iconelem = text.children('.nx-step-icon');
+									if (iconelem.length)
+									{
+										iconelem.remove();
+									}
+
+									if (val)
+									{
+										iconelem = $('<div>').addClass('nx-step-icon ' + val + ' sk-icon inline');
+										text.prepend(iconelem);
+									}
+
+									// Update the actual data
+									var findString = '[data-id="' + stepComponent.state.attr('data-id') + '"]';
+									component.state.find(findString).attr('icon', stepComponent.state.attr('icon'));
+								}
+							}]
 						}];
 
 						propertiesObj.applyPropsWithCategories(propertyPages, stepComponent.state);
@@ -155,14 +154,14 @@
 					}
 
 				},
-				defaultStateGenerator: function()
+				defaultStateGenerator: function ()
 				{
 					return $xml('<step label="I\'m a step!"/>').append($xml('<components/>'));
 				}
 			});
 
 			// Adds a new step to the display and data
-			var addStep = function(index, stepDef)
+			var addStep = function (index, stepDef)
 			{
 				// Default to creating a new step, if one is not defined
 				var newStep = stepDef === undefined;
@@ -182,7 +181,7 @@
 			};
 
 			// Add step button
-			component.addActionItem('Add Step', 'sk-bi-tab-add', function()
+			component.addActionItem('Add Step', 'sk-bi-tab-add', function ()
 			{
 				var steps = component.state.children('steps');
 
@@ -201,7 +200,7 @@
 
 				// A nice 'for each' 'loop' (not exactly either of those
 				// but it may help some to look at it that way)
-				state.children('steps').children().each(function(index, element)
+				state.children('steps').children().each(function (index, element)
 				{
 					// Seems like theres a better way to do this...
 					addStep(0, $(this));
@@ -218,9 +217,9 @@
 			{
 				// Add the picklist entries as steps
 				var tempModel = new skuid.model.Model(skuid.builder.core.getPageXML().find('model#' + state.attr('model')));
-				skuid.model.load([tempModel]).done(function()
+				skuid.model.load([tempModel]).done(function ()
 				{
-					$.each(tempModel.getField(state.attr('field')).picklistEntries, function(i, entry)
+					$.each(tempModel.getField(state.attr('field')).picklistEntries, function (i, entry)
 					{
 						addStep(0, $('<step label="' + entry.label + '" data-id="0" editable="false">'));
 					});
@@ -236,95 +235,93 @@
 		},
 
 		// The inputtable properties
-		propertiesRenderer: function(propertiesObj, component)
+		propertiesRenderer: function (propertiesObj, component)
 		{
-			propertiesObj.setTitle("ProgressIndicator Component Properties");
+			propertiesObj.setTitle("Progress Indicator Properties");
 			var state = component.state;
 			var propCategories = [];
 
 			var wizTabProps = [
+			{
+				id: "friendId",
+				type: "string",
+				label: "Tabset/Wizard Id",
+				helpText: "The id of the tabset or wizard component that you would like this progress indicator to be bound to.",
+				onChange: function ()
 				{
-					id: "friendId",
-					type: "string",
-					label: "Tabset/Wizard Id",
-					helpText: "The id of the tabset or wizard component that you would like this progress indicator to be bound to.",
-					onChange: function()
-					{
-						component.refresh();
-					}
-				},
-				{
-					id: "current-color",
-					type: "color",
-					label: "Current Step Color",
-					onChange: function()
-					{
-						component.refresh();
-					}
-				},
-				{
-					id: "done-color",
-					type: "color",
-					label: "Done Step Color",
-					onChange: function()
-					{
-						component.refresh();
-					}
-				},
-				{
-					id: "future-color",
-					type: "color",
-					label: "Future Step Color",
-					onChange: function()
-					{
-						component.refresh();
-					}
+					component.refresh();
 				}
-			];
+			},
+			{
+				id: "current-color",
+				type: "color",
+				label: "Current Step Color",
+				onChange: function ()
+				{
+					component.refresh();
+				}
+			},
+			{
+				id: "done-color",
+				type: "color",
+				label: "Done Step Color",
+				onChange: function ()
+				{
+					component.refresh();
+				}
+			},
+			{
+				id: "future-color",
+				type: "color",
+				label: "Future Step Color",
+				onChange: function ()
+				{
+					component.refresh();
+				}
+			}];
 
 			var picklistProps = [
+			{
+				id: "model",
+				type: "model",
+				label: "Model",
+				onChange: function ()
 				{
-					id: "model",
-					type: "model",
-					label: "Model",
-					onChange: function()
-					{
-						component.refresh();
-					}
-				},
+					component.refresh();
+				}
+			},
+			{
+				id: "field",
+				type: "field",
+				label: "Picklist Field",
+				modelprop: "model",
+				displayTypeFilter: ['PICKLIST'],
+				onChange: function ()
 				{
-					id: "field",
-					type: "field",
-					label: "Picklist Field",
-					modelprop: "model",
-					displayTypeFilter: ['PICKLIST'],
-					onChange: function()
-					{
-						component.refresh();
-					}
-				},
-			];
+					component.refresh();
+				}
+			}, ];
 
 			var properties = [
+			{
+				id: "mode",
+				type: "picklist",
+				label: "Mode",
+				picklistEntries: [
 				{
-					id: "mode",
-					type: "picklist",
-					label: "Mode",
-					picklistEntries: [
-						{
-							value: "tabwiz",
-							label: "Tabset/Wizard"
-					},
-						{
-							value: "picklist",
-							label: "Picklist"
-					}],
+					value: "tabwiz",
+					label: "Tabset/Wizard"
+				},
+				{
+					value: "picklist",
+					label: "Picklist"
+				}],
 
-					defaultValue: 'tabwiz',
-					onChange: function()
-					{
-						component.refresh().rebuildProps();
-					}
+				defaultValue: 'tabwiz',
+				onChange: function ()
+				{
+					component.refresh().rebuildProps();
+				}
 			}];
 
 			if (component.state.attr('mode') === undefined || component.state.attr('mode') === 'tabwiz')
@@ -345,7 +342,7 @@
 
 			propertiesObj.applyPropsWithCategories(propCategories, state);
 		},
-		defaultStateGenerator: function()
+		defaultStateGenerator: function ()
 		{
 			var progressIndicator = $xml('<mblazonry__progress_indicator/>')
 				.attr('id-index', '0')
@@ -364,15 +361,10 @@
 
 /*
 	The more you know!
-	
-	So you wanna make your subcomponents sortable, huh? Well the good news is that it
-	is totally possible, and supported. The bad news is it can be a bit tricky. Lets get
-	into it a little bit.
 
-	The first thing that you need is child components. You're going to have to build a 
-	child component builder (like the step builder I've made in this file), and additionally
-	add those child components to the XML of the main component. Also, when you add the child
-	components, you must give them a parent node that is not the root. For example
+	So you wanna make your subcomponents sortable, huh? Well the good news is that it is totally possible, and supported. The bad news is it can be a bit tricky. Lets get into it a little bit.
+
+	The first thing that you need is child components. You're going to have to build a child component builder (like the step builder I've made in this file), and additionally add those child components to the XML of the main component. Also, when you add the child components, you must give them a parent node that is not the root. For example
 
 	This is WRONG
 	<mycomponent>
@@ -393,9 +385,9 @@
 	Not only is this more verbose and clear when reading the XML, but also it is necessarry
 	for the jQuery.sortable plugin to work. Let's talk about that a bit now.
 
-	The .sortableComponent function is a jQuery plugin that is part of SkuidBuilderCoreJS. 
-	It is applied	to a dom element, then makes all the child elements of that element 
-	sortable, while simultaneously updating the XML of the given component. Lets look at 
+	The .sortableComponent function is a jQuery plugin that is part of SkuidBuilderCoreJS.
+	It is applied	to a dom element, then makes all the child elements of that element
+	sortable, while simultaneously updating the XML of the given component. Lets look at
 	how I did it in this file.
 
 		component.stepsWrapper.sortableComponent({
