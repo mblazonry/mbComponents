@@ -1,4 +1,4 @@
-(function($, $S, undefined)
+(function ($, $S, undefined)
 {
 	'use strict';
 
@@ -9,74 +9,67 @@
 		icon: 'sk-icon-popup',
 		description: 'This component provides hooks for popup dialog events.',
 		isJSCreateable: true, // required so that component can be added to popup, drawer, etc.
-		componentRenderer: function(component)
+		componentRenderer: function (component)
 		{
 			var self = component;
 			component.header.html(component.builder.name);
+
+
 		},
-		propertiesRenderer: function(propertiesObj, component)
+		propertiesRenderer: function (propertiesObj, component)
 		{
 			propertiesObj.clear();
 			propertiesObj.setHeaderText('Popup Controller Properties');
 			var basicPropsList = [
-				{
-					id: 'oncreate',
-					type: 'string',
-					label: 'OnCreate Snippet',
-					helptext: 'Called when dialog is created',
-					defaultValue: '',
-					required: false
-				},
-				{
-					id: 'onopen',
-					type: 'string',
-					label: 'OnOpen Snippet',
-					helptext: 'Called when dialog has opened',
-					defaultValue: '',
-					required: false
-				},
-				{
-					id: 'onbeforeclose',
-					type: 'string',
-					label: 'OnBeforeClose Snippet',
-					helptext: 'Called when dialog preparing to close',
-					defaultValue: '',
-					required: false
-				},
-				{
-					id: 'onclose',
-					type: 'string',
-					label: 'OnClose Snippet',
-					helptext: 'Called when dialog has closed',
-					defaultValue: '',
-					required: false
-				},
-				{
-					id: 'hideclose',
-					type: 'boolean',
-					label: 'Hide Close',
-					helptext: 'Hides the "X" in the dialog prohibiting close',
-					defaultValue: false,
-					required: false
-				},
-				{
-					id: 'disableescape',
-					type: 'boolean',
-					label: 'Disable Escape',
-					helptext: 'Disables the escape key from closing the dialog when it has focus',
-					defaultValue: false,
-					required: false
-				}
-			];
+			{
+				id: 'oncreate',
+				type: 'string',
+				label: 'OnCreate Snippet',
+				helptext: 'Called when dialog is created',
+				defaultValue: '',
+				required: false
+			},
+			{
+				id: 'onopen',
+				type: 'string',
+				label: 'OnOpen Snippet',
+				helptext: 'Called when dialog has opened',
+				defaultValue: '',
+				required: false
+			},
+			{
+				id: 'onbeforeclose',
+				type: 'string',
+				label: 'OnBeforeClose Snippet',
+				helptext: 'Called when dialog preparing to close',
+				defaultValue: '',
+				required: false
+			},
+			{
+				id: 'onclose',
+				type: 'string',
+				label: 'OnClose Snippet',
+				helptext: 'Called when dialog has closed',
+				defaultValue: '',
+				required: false
+			},
+			{
+				id: 'hideclose',
+				type: 'boolean',
+				label: 'Hide Close',
+				helptext: 'Hides the "X" in the dialog prohibiting close',
+				defaultValue: false,
+				required: false
+			},
+			{
+				id: 'disableescape',
+				type: 'boolean',
+				label: 'Disable Escape',
+				helptext: 'Disables the escape key from closing the dialog when it has focus',
+				defaultValue: false,
+				required: false
+			}];
 
-			// Note - Uncomment the following lines for Skuid 6.x			
-			// var advancedPropsList = [
-			// 	$S.builder.uniqueIdProp
-			// 	, $S.builder.cssClassProp			
-			// ];
-
-			// Note - The lines below are for Skuid 7.x
-			// If you need 6.x, comment out the 4 lines below and uncomment the 4 lines above under 6.x section
 			var advancedPropsList = [
 				$S.builder.core.coreProps.uniqueIdProp(
 				{
@@ -86,25 +79,24 @@
 			];
 
 			propertiesObj.applyPropsWithCategories([
-				{
-					name: 'Basic',
-					props: basicPropsList
-				},
-				{
-					name: 'Advanced',
-					props: advancedPropsList
-				},
-				{
-					id: 'hideheader',
-					type: 'boolean',
-					label: 'Hide Header',
-					helptext: 'Hides the dialog header if the \'Hide Close\' option is checked and the title is empty.',
-					defaultValue: false,
-					required: false
-				}
-			], component.state);
+			{
+				name: 'Basic',
+				props: basicPropsList
+			},
+			{
+				name: 'Advanced',
+				props: advancedPropsList
+			},
+			{
+				id: 'hideheader',
+				type: 'boolean',
+				label: 'Hide Header',
+				helptext: 'Hides the dialog header if the \'Hide Close\' option is checked and the title is empty.',
+				defaultValue: false,
+				required: false
+			}], component.state);
 		},
-		defaultStateGenerator: function()
+		defaultStateGenerator: function ()
 		{
 			return $S.utils.makeXMLDoc('<mblazonry__popupcontroller />');
 		}
