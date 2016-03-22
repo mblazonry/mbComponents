@@ -1,4 +1,4 @@
-(function ($, skuid, undefined)
+(function (skuid)
 {
 	'use strict';
 
