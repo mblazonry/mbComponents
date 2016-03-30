@@ -1,6 +1,7 @@
-(function ($)
+(function (skuid)
 {
 	var $xml = skuid.utils.makeXMLDoc;
+	var $j = skuid.jQuery.noConflict();
 
 	skuid.builder.core.registerBuilder(new skuid.builder.core.Builder(
 	{
@@ -228,7 +229,6 @@
 
 			component.setTitle(component.builder.name);
 
-
 			component.body.html('');
 			component.body.append(content.append(component.stepsWrapper));
 
@@ -300,7 +300,7 @@
 				{
 					component.refresh();
 				}
-			}, ];
+			}];
 
 			var properties = [
 			{
@@ -347,7 +347,7 @@
 			var progressIndicator = $xml('<mblazonry__progress_indicator/>')
 				.attr('id-index', '0')
 				.attr('future-color', '#eeeeee')
-				.attr('current-color', '#555')
+				.attr('current-color', '#555555')
 				.attr('done-color', '#888888')
 				.attr('mode', 'tabwiz');
 
@@ -364,7 +364,8 @@
 
 	So you wanna make your subcomponents sortable, huh? Well the good news is that it is totally possible, and supported. The bad news is it can be a bit tricky. Lets get into it a little bit.
 
-	The first thing that you need is child components. You're going to have to build a child component builder (like the step builder I've made in this file), and additionally add those child components to the XML of the main component. Also, when you add the child components, you must give them a parent node that is not the root. For example
+	The first thing that you need is child components.You 're going to have to build a child component builder (like the step builder I'
+	ve made in this file), and additionally add those child components to the XML of the main component.Also, when you add the child components, you must give them a parent node that is not the root.For example
 
 	This is WRONG
 	<mycomponent>
