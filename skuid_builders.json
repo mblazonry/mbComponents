@@ -42,5 +42,8 @@
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
+   },
+   {
+      "path": "mblazonry_timer/mblazonry_timer.css"
    }]
 }
