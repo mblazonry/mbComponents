@@ -8,7 +8,7 @@ Home of mBlazonry's primary custom component source!
 
 - The skuid ["progress indicator" sample component](http://help.skuidify.com/m/11720/l/451511?data-resolve-url=true&data-manual-id=11720) code from the skuid docs.
 
-- Barry Scnell's ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community.
+- Barry Scnell's old ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community forums.
 
 ## BSD License ##
 
