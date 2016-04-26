@@ -18,7 +18,7 @@
       "path": "mblazonry_sayHello/Runtime_sayhello.js"
    },
    {
-      "path": "Runtime_popupcontroller.js"
+      "path": "mblazonry_popupController/Runtime_popupController.js"
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
