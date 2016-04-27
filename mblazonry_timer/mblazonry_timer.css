@@ -79,6 +79,13 @@
   100% { color: yellow;  background: inherit }
 }
 
+
+/********* mblazonry-timer-button text **********/
+
+.mblazonry-timer-button .ui-button-text {
+   padding: .4em 1em .4em 2.1em;
+}
+
 /*********** timer-counter ***********/
 .mblazonry-timer:not(.recording) .mblazonry-timer-counter  {
    display: none;
