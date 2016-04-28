@@ -271,6 +271,13 @@
 				timer = component.body;
 			timer.addClass("mblazonry-timer");
 
+			$(document).ready(function ()
+			{
+				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').css('background', 'inherit');
+				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').addClass('nx-pagebuilder-component-transparent-darkbg');
+			});
+
+
 			var button = $("<div>").addClass("mblazonry-timer-button"),
 				counterStartLabel = timerState.attr("counterStartLabel") || "Start",
 				counterStopLabel = timerState.attr("counterStopLabel") || "Stop",
@@ -332,26 +339,24 @@
 				cssclass: "",
 				uniqueid: "",
 			});
-			// var onStartActions = $xml("<onstartactions/>"),
-			// 	onStartAction = $xml("<action/>"),
-			// 	onDoneActions = $xml("<ondoneactions/>"),
-			// 	onDoneAction = $xml("<action/>");
-			//
-			// onStartAction.attr(
-			// {
-			// 	type: 'publish',
-			// 	event: TIMER_STARTED_EVENT
-			// });
-			// onDoneAction.attr(
-			// {
-			// 	type: 'publish',
-			// 	event: TIMER_DONE_EVENT
-			// });
-			//
-			// onStartActions.append(onStartAction);
-			// onDoneActions.append(onDoneAction);
-			// timerXML.append(onStartActions);
-			// timerXML.append(onDoneActions);
+			var onStartActions = $xml("<onstartactions/>"),
+				onStartAction = $xml("<action/>"),
+				onDoneActions = $xml("<ondoneactions/>"),
+				onDoneAction = $xml("<action/>");
+
+			onStartAction.attr(
+			{
+				type: 'showPopup',
+			});
+			onDoneAction.attr(
+			{
+				type: 'showPopup',
+			});
+
+			onStartActions.append(onStartAction);
+			onDoneActions.append(onDoneAction);
+			timerXML.append(onStartActions);
+			timerXML.append(onDoneActions);
 			return timerXML;
 		}
 	}));
