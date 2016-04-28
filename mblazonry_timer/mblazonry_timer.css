@@ -8,8 +8,15 @@
    min-width: 316px;
 }
 
+/*
+    Note: in CSS3, this would be replaced with the following selector:
+        .mblazonry-timer < .sk-grid-division
+*/
+.sk-headerwrapper .timer-div {
+    flex: 0.1 0 auto !important;
+}
 /*********** timer-button ***********/
-:not(.nx-pagebuilder-component-body) >.mblazonry-timer-button {
+:not(.nx-pagebuilder-component-body) > .mblazonry-timer-button {
    opacity: 0.5;
    margin: 0px;
    border-color: #45A840;
@@ -63,7 +70,6 @@
    background: rgba(0, 151, 191, 0.9);
 }
 
-
 .mblazonry-timer.pending .mblazonry-timer-button  {
    animation: penPulse 2.7s infinite;
    -webkit-animation: penPulse 2.7s infinite;
@@ -102,6 +108,7 @@
 }
 
 /********** in page builder **********/
+
 .nx-pagebuilder-component-body .mblazonry-timer {
    overflow: hidden;
    padding: 5px;
