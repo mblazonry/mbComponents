@@ -25,7 +25,7 @@
    }],
    "js": [
    {
-      "path": "mblazonry_sayHello/Builder_sayhello.js"
+      "path": "mblazonry_sayHello/Builder_sayHello.js"
    },
    {
       "path": "mblazonry_popupController/Builder_popupController.js"
@@ -38,7 +38,7 @@
    }],
    "css": [
    {
-      "path": "mblazonry_sayHello/Builder_sayhello.css"
+      "path": "mblazonry_sayHello/Builder_sayHello.css"
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
