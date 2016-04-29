@@ -18,8 +18,10 @@
 	/* jshint -W004 */ // x is already defined.
 	/* jslint browser:true, lastsemic:true */
 	//var $j = $.noConflict();
-	var $t = skuid.time;
+	var $a = skuid.actions;
 	var $e = skuid.events;
+	var $t = skuid.time;
+	var $m = skuid.model;
 	/**
 	 *
 	 * @memberOf skuid
@@ -66,12 +68,13 @@
 			var counterStartLabel = xmlDefinition.attr("counterStartLabel"),
 				counterStopLabel = xmlDefinition.attr("counterStopLabel"),
 				recColor = xmlDefinition.attr("recColor"),
+				pollInterval = xmlDefinition.attr("pollInterval"),
 				timerIcon = xmlDefinition.attr("timerIcon"),
 				actions = xmlDefinition.children("actions"), // useless, only for debugging.
 				onStartActions = xmlDefinition.children("onstartactions"),
 				onDoneActions = xmlDefinition.children("ondoneactions");
 
-			var userModel = skuid.model.getModel(xmlDefinition.attr("model")),
+			var userModel = $m.getModel(xmlDefinition.attr("model")),
 				user = userModel && userModel.getFirstRow(), // this is our current User record
 				user_Name = user && userModel.getFieldValue(user, 'Name');
 
@@ -79,19 +82,19 @@
 				startTimeTempField = noStache(xmlDefinition.attr("startTimeTempField")),
 				endTimeDestination = noStache(xmlDefinition.attr("endTimeDestination")),
 				timerNotesDestination = noStache(xmlDefinition.attr("timerNotes")),
-				pendingActions = noStache(xmlDefinition.attr("pendingTimerActions")),
+				pendingActionsDest = noStache(xmlDefinition.attr("pendingTimerActions")),
 				timer_Started_Event = xmlDefinition.attr("onTimerStartedEvent"),
 				timer_Done_Event = xmlDefinition.attr("onTimerDoneEvent");
 
-			var start_Time_onLoad = user && userModel.getFieldValue(user, startTimeDestField),
-				end_Time_onLoad = user && userModel.getFieldValue(user, endTimeDestination),
-				pending_Actions_onLoad = user && userModel.getFieldValue(user, endTimeDestination);
+			var startTime = user && userModel.getFieldValue(user, startTimeDestField),
+				endTime = user && userModel.getFieldValue(user, endTimeDestination),
+				pendingActions = user && userModel.getFieldValue(user, pendingActionsDest);
 
 			//////////////////////////////////
 			// Top-level || mblazonry-timer //
 			//////////////////////////////////
 			var timer = element,
-				timeout;
+				timeout, queriedStartTime;
 
 			timer.addClass("mblazonry-timer");
 
@@ -125,9 +128,9 @@
 					"<li> userId: \'" + noStache(xmlDefinition.attr("userId")) + "\'</li>" +
 					"<li> user_name: \'" + user_Name + "\'</li>" +
 					"<li> userModel: \'" + (userModel ? "true" : "false") + "\'</li>" +
-					"<li> Start_Time: \'" + start_Time_onLoad + "\'</li>" +
-					"<li> End_Time: \'" + end_Time_onLoad + "\'</li>" +
-					"<li> Pending_Actions: \'" + pending_Actions_onLoad + "\'</li>" +
+					"<li> Start_Time: \'" + startTime + "\'</li>" +
+					"<li> End_Time: \'" + endTime + "\'</li>" +
+					"<li> Pending_Actions: \'" + pendingActions + "\'</li>" +
 					"<li> start_time_temp_field: \'" + startTimeTempField + "\'</li>" +
 					"<li> start_time_dest_field: \'" + startTimeDestField + "\'</li>" +
 					"<li> end_time_dest_field: \'" + endTimeDestination + "\'</li>" +
@@ -147,6 +150,7 @@
 					'<li> counterStartLabel: ' + (counterStartLabel ? "\'" + counterStartLabel + '\'' : "false") + ',</li>' +
 					'<li> counterStopLabel: ' + (counterStopLabel ? "\'" + counterStopLabel + '\'' : "false") + ',</li>' +
 					'<li> recColor: ' + (recColor ? "true: \'" + recColor + '\'' : "false") + ',</li>' +
+					'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' seconds' : "false") + ',</li>' +
 					'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
 					'<li> jQuery verison \'' + $.fn.jquery + '\'</li>' +
 					"</ul>");
@@ -166,6 +170,8 @@
 
 				//$('.mblazonry-timer').on(timer_Done_Event, timerDoneEventFired);
 				$e.subscribe(timer_Done_Event, timerDoneEventFired);
+
+				$e.subscribe('models.saved', handleModelSavedOutsideOfPending);
 
 				// Attach a function to the click event
 				$('.mblazonry-timer-button').on(
@@ -189,26 +195,33 @@
 					$('.nx-page-region').append(info);
 				}
 
-				// check for running task
-				if (end_Time_onLoad && start_Time_onLoad)
+				// There's a task running
+				if (endTime && startTime)
 				{
 					$(".mblazonry-timer-button .ui-button-text").text(counterStopLabel);
 
 					startCounterPending();
-					settings.initial = parseDateForCounter(elapsedInMilis(start_Time_onLoad));
-					$('.mblazonry-timer-counter').counter(settings);
-					stopCounterPending();
+					settings.initial = parseDateForCounter(elapsedInMilis(startTime));
+					resetCounter();
 
 					if (onDoneActions)
 					{
 						runActions(onDoneActions);
 					}
 				}
-				else if (start_Time_onLoad)
+				else if (startTime)
 				{
-					settings.initial = parseDateForCounter(elapsedInMilis(start_Time_onLoad));
+					settings.initial = parseDateForCounter(elapsedInMilis(startTime));
 					$(".mblazonry-timer").addClass("recording");
 					startCounter();
+				}
+				else if (pendingActions)
+				{
+					handleTimerClick();
+				}
+				else
+				{
+					pollTimer();
 				}
 
 				////////////////////////////////
@@ -245,7 +258,7 @@
 					}
 					else if (!isPending)
 					{
-						stopPending();
+						timerStopPending();
 					}
 				}
 			}); // End of (document).ready
@@ -258,16 +271,16 @@
 			function startPending()
 			{
 				startCounterPending();
-
-				userModel.updateRow(user, pendingActions, true);
+				pendingActions = true;
+				userModel.updateRow(user, pendingActionsDest, true);
 
 				$.when(userModel.save()).then(function ()
 				{
 					// Update UI-only field after the save so it doesn't get nerfed.
 					if (startTimeTempField)
 					{
-						var startTime = $t.getSFDateTime(new Date());
-						userModel.updateRow(user, startTimeTempField, startTime);
+						var tempStartTime = $t.getSFDateTime(new Date());
+						userModel.updateRow(user, startTimeTempField, tempStartTime);
 					}
 
 					// Run action framework actions if any
@@ -288,52 +301,56 @@
 
 				$.when(userModel.updateData()).then(function ()
 				{
-					var startTime;
+					var newStartTime;
 
 					if (startTimeTempField)
 					{
-						startTime = user && userModel.getFieldValue(user, startTimeTempField);
-						settings.initial = parseDateForCounter(elapsedInMilis(startTime));
+						newStartTime = user && userModel.getFieldValue(user, startTimeTempField);
+						settings.initial = parseDateForCounter(elapsedInMilis(newStartTime));
 					}
 					else
 					{
-						startTime = $t.getSFDateTime(new Date());
+						newStartTime = $t.getSFDateTime(new Date());
 						settings.initial = '00:00:00';
 					}
-
+					// Cleanup
 					userModel.updateRow(user, startTimeTempField, null);
-					userModel.updateRow(user, pendingActions, false);
-					userModel.updateRow(user, startTimeDestField, startTime);
+					userModel.updateRow(user, startTimeDestField, newStartTime);
+					userModel.updateRow(user, pendingActionsDest, false);
+					startTime = jsDateTimeRemoveMilis(newStartTime); // Update in-memory start-time
+					endTime = null;
 
 					$.when(userModel.save()).then(function ()
 					{
+						pendingActions = false;
 						startCounter();
+						// Start polling for updates
+						pollTimer();
 					});
 				});
-				// Remove timeout
-				//window.clearTimeout(timeout);
 			}
 
 			//////////////////
 			// Stop Section //
 			//////////////////
 
-			function stopPending()
+			function timerStopPending()
 			{
-				stopCounterPending();
-
+				stopPending();
+				pendingActions = true;
 				var stoptime = $t.getSFDateTime(new Date());
 				userModel.updateRow(user, endTimeDestination, stoptime);
-				userModel.updateRow(user, pendingActions, true);
+				userModel.updateRow(user, pendingActionsDest, true);
 
 				$.when(userModel.save()).then(function ()
 				{
 					if (onDoneActions)
 					{
-						$.when(runActions(onDoneActions)).then(function ()
-						{
-							userModel.updateData();
-						});
+						$.when(runActions(onDoneActions)).then(userModel.updateData());
+					}
+					else
+					{
+						userModel.updateData();
 					}
 				});
 			}
@@ -343,18 +360,18 @@
 				stopCounter();
 
 				// Cleanup
-				userModel.updateRow(user, pendingActions, false);
+				userModel.updateRow(user, pendingActionsDest, false);
 				userModel.updateRow(user, startTimeDestField, null);
 				userModel.updateRow(user, endTimeDestination, null);
 				userModel.updateRow(user, timerNotesDestination, null);
+				startTime = null;
+				endTime = null;
 
-				// $.when(userModel.save()).then(function ()
-				// {
-				// 	//userModel.updateData();
-				// });
-
-				//window.clearTimeout(timeout);
-				//pollTimer(30000);
+				$.when(userModel.save()).then(function ()
+				{
+					pendingActions = false;
+					pollTimer(1);
+				});
 			}
 
 			///////////////////
@@ -368,23 +385,59 @@
 					handleChangedStartTime();
 					return;
 				}
-
 				window.console.log("Event detected: Timer started!");
-
 				timerStarted();
-
-				// Start polling for updates
-				//pollTimer();
 			}
 
 			function timerDoneEventFired()
 			{
 				window.console.log("Event detected: Timer done!");
+				timerDone();
+			}
 
-				$.when(timerDone()).then(
-					//userModel.updateData
-					userModel.save()
-				);
+			/**
+			 * Handles userModel saves outside of actionPending contexts.
+			 * @param  {[type]} saveResult The result of the save operation.
+			 */
+			function handleModelSavedOutsideOfPending(saveResult)
+			{
+				if (!pendingActions && (userModel.id in saveResult.models) && (saveResult.totalsuccess))
+				{
+					window.console.log("Event detected: " + userModel.id + " model saved!");
+
+					userModel.updateData();
+					user = userModel.getFirstRow();
+					var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
+
+					if (changedStartTime && changedStartTime !== startTime)
+					{
+						startTime = changedStartTime;
+						settings.initial = parseDateForCounter(elapsedInMilis(startTime));
+						resetCounter();
+					}
+					else if (!changedStartTime) // it was deleted
+					{
+						stopCounter();
+						startTime = changedStartTime;
+					}
+
+					var newEndTime = userModel.getFieldValue(user, endTimeDestination);
+					if (newEndTime && newEndTime !== endTime)
+					{
+						endTime = newEndTime;
+						// do something?
+					}
+					else if (!newEndTime)
+					{
+						endTime = newEndTime;
+					}
+
+					var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
+					if (changedPendingActions !== pendingActions)
+					{
+						pendingActions = changedPendingActions;
+					}
+				}
 			}
 
 			/////////////
@@ -407,51 +460,77 @@
 				$('.mblazonry-timer-counter').counter(settings);
 			}
 
-			function stopCounterPending()
+			function stopPending()
 			{
 				$('.mblazonry-timer-counter').counter('stop');
 			}
 
 			function stopCounter()
 			{
+				stopPending();
+				settings.initial = '00:00:00';
 				$(".mblazonry-timer").removeClass("pending");
 				$(".mblazonry-timer").removeClass("recording");
 				$(".mblazonry-timer-button .ui-button-text").text(counterStartLabel);
+			}
+
+			function resetCounter()
+			{
+				$.when(stopPending()).then($('.mblazonry-timer-counter').counter(settings));
 			}
 
 			////////////////
 			// Timer Sync //
 			////////////////
 
-			function checkTimer()
-			{
-				if (!startTimeIsValid())
-				{
-					// FIXME
-					handleChangedStartTime();
-				}
-				else
-				{
-					pollTimer();
-				}
-			}
-
 			/**
-			 * Starts Timer asynchronous polling for timer updates
+			 * Starts Timer asynchronous polling for timer updates.
+			 * 	The value used by clearInterval() is returned from setInterval().
+			 * @example See {@link http://www.w3schools.com/js/js_timing.asp|JavaScript Timing Events}
+			 * @param  {Integer} interval The number of seconds between checks.
 			 */
-			function pollTimer()
+			function pollTimer(interval)
 			{
 				if (timeout) // reset
 				{
 					window.clearTimeout(timeout);
 				}
 
-				/**
-				 * The value used by clearInterval() is returned from setInterval().
-				 * @example See {@link http://www.w3schools.com/js/js_timing.asp|JavaScript Timing Events}
-				 */
-				//FIXME
-				timeout = window.setInterval(checkTimer, 5 * 1000);
+				if (interval) // supplied as an argument
+				{
+					timeout = window.setInterval(checkTimer, interval * 60 * 1000);
+				}
+				else if (pollInterval) // set by user
+				{
+					timeout = window.setInterval(checkTimer, pollInterval * 60 * 1000);
+				}
+				else // default value
+				{
+					timeout = window.setInterval(checkTimer, 5 * 60 * 1000);
+				}
+			}
+
+			function checkTimer()
+			{
+				if (!pendingActions)
+				{
+					$.when(userModel.updateData()).then(function ()
+					{
+						if (!startTimeIsValid())
+						{
+							handleChangedStartTime();
+							window.console.log("Polled: invalid start time");
+						}
+						else
+						{
+							// start the timer
+							window.console.log("Polled: start time valid!");
+						}
+					});
+
+					// FIXME?
+					pollTimer();
+				}
 			}
 
 			/**
@@ -460,24 +539,47 @@
 			 */
 			function startTimeIsValid()
 			{
-				return (start_Time_onLoad == queryStartTime());
+				queriedStartTime = queryStartTime();
+
+				return (startTime == queriedStartTime);
 			}
 
 			/**
-			 * Checks for changes in the timer_Start_Time value.
-			 * @return {String} The updated timer_Start_Time if one is found when querying the userModel, returning false otherwise;
+			 * Queries for a changed timer Start Time value.
+			 * @return {String} The updated timer_Start_Time if one is found when
+			 *                      querying the userModel, returning false otherwise;
 			 */
 			function queryStartTime()
 			{
-				userModel.updateData();
-				user = userModel.getFirstRow(); // XXX may cause issues
-				return userModel.getFieldValue(user, startTimeDestField);
+				var queryUserModel = $m.getModel(xmlDefinition.attr("model"));
+				var queryUser = queryUserModel.getFirstRow();
+				var sfDateTime = queryUserModel.getFieldValue(queryUser, startTimeDestField);
+				return sfDateTime;
 			}
 
 			function handleChangedStartTime()
 			{
 				// FIXME
+				// this should probably either stop the timer or
+				// reset it with the new start time
 				//userModel.updateRow(user, pendingActions, true);
+
+				if (queriedStartTime) // means we have a new start time
+				{
+					if (startTime !== queriedStartTime)
+					{
+						// Another tab has finished the current job.
+						// Cancel and restart
+						startTime = queriedStartTime;
+						settings.initial = parseDateForCounter(elapsedInMilis(queriedStartTime));
+						resetCounter();
+					}
+				}
+				else // means the start time has gone
+				{
+					// Stop the timer
+
+				}
 			}
 
 			/**
@@ -488,9 +590,9 @@
 			{
 				if (actionsNode && actionsNode.length)
 				{
-					var test = skuid.actions.runActionsNode(actionsNode, component, component.context ||
+					var res = $a.runActionsNode(actionsNode, component, component.context ||
 					{});
-					return test;
+					return res;
 				}
 			}
 
@@ -511,6 +613,12 @@
 				// Get the time now
 				var today = new Date();
 				return Math.abs(today - jsDate);
+			}
+
+			function jsDateTimeRemoveMilis(jsDateTime)
+			{
+				var sfDateTime = jsDateTime.split('.');
+				return (sfDateTime[0] + ".000+0000");
 			}
 
 			function parseDateForCounter(E)
