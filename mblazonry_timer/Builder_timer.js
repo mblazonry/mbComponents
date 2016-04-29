@@ -59,7 +59,7 @@
 				},
 				{
 					id: "userId",
-					type: "template",
+					type: "integer",
 					location: "attribute",
 					label: "CurrentUser Id"
 				},
@@ -231,6 +231,19 @@
 					},
 					required: true
 				},
+				{
+					id: "pollInterval",
+					type: "string",
+					label: "Poll Interval",
+					helptext: "Number of minutes between timer polls. Should be no less than 2 minutes.",
+					defaultValue: "2",
+					placeholder: "poll every x minutes",
+					onChange: function ()
+					{
+						component.refresh();
+					},
+					required: true
+				},
 				skuid.builder.core.coreProps.cssClassProp(),
 				skuid.builder.core.coreProps.uniqueIdProp(
 				{
@@ -335,6 +348,7 @@
 				counterStopLabel: "Stop",
 				timerIcon: "sk-icon-opportunities",
 				recColor: "red",
+				pollInterval: "2",
 				timerNotes: "",
 				cssclass: "",
 				uniqueid: "",
