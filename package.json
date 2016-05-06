@@ -42,8 +42,5 @@
     "build-dev": "gulp build-dev",
     "build-docs": "gulp build-docs",
     "lint": "gulp lint"
-  },
-  "pre-commit": [
-    "lint"
-  ]
+  }
 }
