@@ -38,7 +38,7 @@
 
 					var text = $('<div class="progress-text">');
 					var icon = stepComponent.state.attr('icon');
-					var editable = stepComponent.state.attr('editable') === undefined || stepComponent.state.attr('editable') == "true"
+					var editable = stepComponent.state.attr('editable') === undefined || stepComponent.state.attr('editable') == "true";
 
 					if (icon)
 					{
@@ -91,7 +91,7 @@
 				},
 				propertiesRenderer: function (propertiesObj, stepComponent)
 				{
-					var editable = stepComponent.state.attr('editable') === undefined || stepComponent.state.attr('editable') == "true"
+					var editable = stepComponent.state.attr('editable') === undefined || stepComponent.state.attr('editable') == "true";
 
 					if (editable)
 					{

@@ -1,6 +1,6 @@
-(function(skuid)
+(function (skuid)
 {
-	skuid.componentType.register('mblazonry__progress_indicator', function(element, xmlDef, component)
+	skuid.componentType.register('mblazonry__progress_indicator', function (element, xmlDef, component)
 	{
 		var $ = skuid.jQuery;
 		var id = component.element.attr('id');
@@ -16,7 +16,7 @@
 		var steps;
 		if (mode == 'tabwiz')
 		{
-			steps = xmlDef.children('steps').children().map(function(index, step)
+			steps = xmlDef.children('steps').children().map(function (index, step)
 			{
 				return {
 					dataId: step.attributes['data-id'].value,
@@ -30,7 +30,7 @@
 			steps = [];
 			var picklistField = skuid.$M(xmlDef.attr('model')).getField(xmlDef.attr('field'));
 
-			$.each(picklistField.picklistEntries, function(i, entry)
+			$.each(picklistField.picklistEntries, function (i, entry)
 			{
 				steps.push(
 				{
@@ -40,7 +40,7 @@
 			});
 		}
 
-		// Iterate through each of our step, and create a 
+		// Iterate through each of our step, and create a
 		// corresponding td element with the proper classes
 		// and content
 		for (var i = 0; i < steps.length; i++)
@@ -70,30 +70,31 @@
 		var currentStepColor = xmlDef.attr('current-color');
 		var futureStepColor = xmlDef.attr('future-color');
 		var doneStepColor = xmlDef.attr('done-color');
+		var style;
 
 		// Make sure it's not undefined or white space
 		if (currentStepColor !== undefined && currentStepColor.split(/\s*/).join() !== '')
 		{
-			var style = '<style>#' + id + ' .progress-chunk.current {background: red !important;} #' + id + ' .progress-chunk.current .progress-triangle {border-left-color: red;}</style>';
+			style = '<style>#' + id + ' .progress-chunk.current {background: red !important;} #' + id + ' .progress-chunk.current .progress-triangle {border-left-color: red;}</style>';
 			style = style.split('red').join(currentStepColor);
 			component.element.append(style);
 		}
 
 		if (doneStepColor !== undefined && doneStepColor.split(/\s*/).join() !== '')
 		{
-			var style = '<style>#' + id + ' .progress-chunk.done {background: red !important;} #' + id + ' .progress-chunk.done .progress-triangle {border-left-color: red;}</style>';
+			style = '<style>#' + id + ' .progress-chunk.done {background: red !important;} #' + id + ' .progress-chunk.done .progress-triangle {border-left-color: red;}</style>';
 			style = style.split('red').join(doneStepColor);
 			component.element.append(style);
 		}
 
 		if (futureStepColor !== undefined && futureStepColor.split(/\s*/).join() !== '')
 		{
-			var style = '<style>#' + id + ' .progress-chunk {background: red !important;} #' + id + ' .progress-chunk .progress-triangle {border-left-color: red;}</style>';
+			style = '<style>#' + id + ' .progress-chunk {background: red !important;} #' + id + ' .progress-chunk .progress-triangle {border-left-color: red;}</style>';
 			style = style.split('red').join(futureStepColor);
 			component.element.append(style);
 		}
 
-		var updateIndex = function(index)
+		var updateIndex = function (index)
 		{
 			for (var i = 0; i < steps.length; i++)
 			{
@@ -118,11 +119,11 @@
 			}
 		};
 
-		// Set the step initial index 
+		// Set the step initial index
 		updateIndex(0);
 
 		// Bind this component to its firend component
-		var bindFriend = function()
+		var bindFriend = function ()
 		{
 			// If it's already been set
 			if (friendComponent)
@@ -146,14 +147,14 @@
 					updateIndex(friendComponent.tabs('option', 'active'));
 
 					// Add a listener to when the tabs are activated
-					friendComponent.on('tabsbeforeactivate', function(e, ui)
+					friendComponent.on('tabsbeforeactivate', function (e, ui)
 					{
 						var index = ui.newTab.index();
 						updateIndex(index);
 					});
 
 					// Add a listener to when our steps are activated
-					content.find('td').on('click', function(e)
+					content.find('td').on('click', function (e)
 					{
 						var $el = $(this);
 						friendComponent.tabs('option', 'active', $el.index());
@@ -163,7 +164,7 @@
 				else
 				{
 					// Add a listener to when the steps are progressed
-					skuid.events.subscribe('skuid.wizard.stepShow', function(data)
+					skuid.events.subscribe('skuid.wizard.stepShow', function (data)
 					{
 						if (data.wizard.element.attr('id') == friendId)
 						{
@@ -177,7 +178,7 @@
 
 		if (mode == 'tabwiz')
 		{
-			// This first call will call whenever the Progress Indicator is actually 
+			// This first call will call whenever the Progress Indicator is actually
 			// rendered
 			bindFriend();
 			// This second one will be called when the page is done loading
@@ -187,12 +188,12 @@
 		{
 			if (skuid.$M(xmlDef.attr('model')).getRows())
 			{
-				var setPicklist = function()
+				var setPicklist = function ()
 				{
 					var row = skuid.$M(xmlDef.attr('model')).getRows()[0];
 					var entries = skuid.$M(xmlDef.attr('model')).getField(xmlDef.attr('field')).picklistEntries;
 					updateIndex(entries.indexOf(row[xmlDef.attr('field')]));
-					$.each(entries, function(i, entry)
+					$.each(entries, function (i, entry)
 					{
 						if (entry.label == row[xmlDef.attr('field')])
 						{
@@ -200,9 +201,9 @@
 							return false;
 						}
 					});
-				}
+				};
 				setPicklist();
-				skuid.events.subscribe('row.updated', function(updateResult)
+				skuid.events.subscribe('row.updated', function (updateResult)
 				{
 					if ((updateResult.modelId === xmlDef.attr('model')))
 					{
