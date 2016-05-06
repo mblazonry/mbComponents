@@ -5,6 +5,7 @@ Builder_button.js
 # Ignore always
 .sublime-gulp.cache
 node_modules
+mblazonryComponents*.zip
 
 # end mblazonry-configs #
 #########################
@@ -56,4 +57,4 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-mblazonryComponents.zip
+
