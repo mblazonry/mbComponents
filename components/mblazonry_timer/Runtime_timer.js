@@ -201,8 +201,7 @@
 					$(".mblazonry-timer-button .ui-button-text").text(counterStopLabel);
 
 					startCounterPending();
-					settings.initial = parseDateForCounter(elapsedInMilis(startTime));
-					resetCounter();
+					restartCounter();
 
 					if (onDoneActions)
 					{
@@ -299,34 +298,32 @@
 					return;
 				}
 
-				$.when(userModel.updateData()).then(function ()
+				var newStartTime;
+
+				if (startTimeTempField)
 				{
-					var newStartTime;
-
-					if (startTimeTempField)
-					{
-						newStartTime = user && userModel.getFieldValue(user, startTimeTempField);
-						settings.initial = parseDateForCounter(elapsedInMilis(newStartTime));
-					}
-					else
-					{
-						newStartTime = $t.getSFDateTime(new Date());
-						settings.initial = '00:00:00';
-					}
-					// Cleanup
+					newStartTime = userModel.getFieldValue(user, startTimeTempField);
+					newStartTime = jsDateTimeRemoveMilis(newStartTime);
+					settings.initial = parseDateForCounter(elapsedInMilis(newStartTime));
 					userModel.updateRow(user, startTimeTempField, null);
-					userModel.updateRow(user, startTimeDestField, newStartTime);
-					userModel.updateRow(user, pendingActionsDest, false);
-					startTime = jsDateTimeRemoveMilis(newStartTime); // Update in-memory start-time
-					endTime = null;
+				}
+				else
+				{
+					newStartTime = jsDateTimeRemoveMilis($t.getSFDateTime(new Date()));
+					settings.initial = '00:00:00';
+				}
+				// Cleanup
+				userModel.updateRow(user, startTimeDestField, newStartTime);
+				userModel.updateRow(user, pendingActionsDest, false);
+				startTime = newStartTime;
+				endTime = null;
 
-					$.when(userModel.save()).then(function ()
-					{
-						pendingActions = false;
-						startCounter();
-						// Start polling for updates
-						pollTimer();
-					});
+				$.when(userModel.save()).done(function ()
+				{
+					pendingActions = false;
+					startCounter();
+					// Start polling for updates
+					pollTimer();
 				});
 			}
 
@@ -357,15 +354,14 @@
 
 			function timerDone()
 			{
-				stopCounter();
-
 				// Cleanup
+				startTime = null;
+				endTime = null;
+				stopCounter();
 				userModel.updateRow(user, pendingActionsDest, false);
 				userModel.updateRow(user, startTimeDestField, null);
 				userModel.updateRow(user, endTimeDestination, null);
 				userModel.updateRow(user, timerNotesDestination, null);
-				startTime = null;
-				endTime = null;
 
 				$.when(userModel.save()).then(function ()
 				{
@@ -412,8 +408,7 @@
 					if (changedStartTime && changedStartTime !== startTime)
 					{
 						startTime = changedStartTime;
-						settings.initial = parseDateForCounter(elapsedInMilis(startTime));
-						resetCounter();
+						restartCounter();
 					}
 					else if (!changedStartTime) // it was deleted
 					{
@@ -467,16 +462,30 @@
 
 			function stopCounter()
 			{
-				stopPending();
-				settings.initial = '00:00:00';
+				//stopPending();
+				resetCounter();
 				$(".mblazonry-timer").removeClass("pending");
 				$(".mblazonry-timer").removeClass("recording");
 				$(".mblazonry-timer-button .ui-button-text").text(counterStartLabel);
 			}
 
+			function restartCounter()
+			{
+				if (startTime)
+				{
+					settings.initial = parseDateForCounter(elapsedInMilis(startTime));
+				}
+				else
+				{
+					settings.initial = '00:00:00';
+				}
+				$.when(stopPending()).then($('.mblazonry-timer-counter').counter(settings));
+			}
+
 			function resetCounter()
 			{
-				$.when(stopPending()).then($('.mblazonry-timer-counter').counter(settings));
+				settings.initial = '00:00:00';
+				$('.mblazonry-timer-counter').counter('reset');
 			}
 
 			////////////////
@@ -527,9 +536,11 @@
 							window.console.log("Polled: start time valid!");
 						}
 					});
-
-					// FIXME?
 					pollTimer();
+				}
+				else
+				{
+					window.setTimeout(checkTimer, 20 * 1000);
 				}
 			}
 
@@ -571,14 +582,12 @@
 						// Another tab has finished the current job.
 						// Cancel and restart
 						startTime = queriedStartTime;
-						settings.initial = parseDateForCounter(elapsedInMilis(queriedStartTime));
-						resetCounter();
+						restartCounter();
 					}
 				}
 				else // means the start time has gone
 				{
 					// Stop the timer
-
 				}
 			}
 
