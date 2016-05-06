@@ -6,7 +6,7 @@
       "name": "mB Custom",
       "icon": "fa-th-large"
    }],
-   "components": [
+   "components": [ /* start-build-timer */
    {
       "id": "sayhello",
       "folderId": "mblazonry"
@@ -18,12 +18,12 @@
    {
       "id": "progress_indicator",
       "folderId": "mblazonry"
-   },
+   }, /* end-build-timer */
    {
       "id": "timer",
       "folderId": "mblazonry"
    }],
-   "js": [
+   "js": [ /* start-build-timer */
    {
       "path": "mblazonry_sayHello/Builder_sayHello.js"
    },
@@ -32,17 +32,17 @@
    },
    {
       "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
-   },
+   }, /* end-build-timer */
    {
       "path": "mblazonry_timer/Builder_timer.js"
    }],
-   "css": [
+   "css": [ /* start-build-timer */
    {
       "path": "mblazonry_sayHello/Builder_sayHello.css"
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   },
+   }, /* end-build-timer */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"
    }]

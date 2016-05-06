@@ -1,6 +1,6 @@
 {
    "id": "mblazonry",
-   "components": [
+   "components": [ /* start-build-timer */
    {
       "id": "sayhello"
    },
@@ -9,11 +9,11 @@
    },
    {
       "id": "progress_indicator"
-   },
+   }, /* end-build-timer */
    {
       "id": "timer"
    }],
-   "js": [
+   "js": [ /* start-build-timer */
    {
       "path": "mblazonry_sayHello/Runtime_sayHello.js"
    },
@@ -22,17 +22,17 @@
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
-   },
+   }, /* end-build-timer */
    {
       "path": "mblazonry_timer/Runtime_timer.js"
    }],
-   "css": [
+   "css": [ /* start-build-timer */
    {
       "path": "mblazonry_sayHello/Runtime_sayHello.css"
    },
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   },
+   }, /* end-build-timer */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"
    }]
