@@ -1,0 +1,49 @@
+{
+  "name": "mblazonrycomponents",
+  "version": "0.0.2-beta.0",
+  "license": "BSD-3-Clause",
+  "author": "Andréas Kaytar-Lefrançois <andreas@mblazonry.com>",
+  "description": "mBlazonry's custom components!",
+  "keywords": [
+    "skuid",
+    "component"
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/aklef/mblazonryComponents.git"
+  },
+  "engines":
+  {
+    "node": ">= 4.2.6",
+    "npm": ">= 2.14.12"
+  },
+  "devDependencies":
+  {
+    "grunt": "^0.4.5",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.7",
+    "gulp-grunt": "^0.5.3",
+    "gulp-header": "^1.7.1",
+    "gulp-jshint": "^2.0.0",
+    "gulp-jsonminify": "^1.0.0",
+    "gulp-strip-code": "^0.1.4",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "^3.2.0",
+    "jshint": "^2.9.2",
+    "merge-stream": "^1.0.0",
+    "pre-commit": "^1.1.2",
+    "skuid-grunt": "^1.1.2"
+  },
+  "scripts":
+  {
+    "build-dev": "gulp build-dev",
+    "build-docs": "gulp build-docs",
+    "lint": "gulp lint"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
