@@ -1,7 +1,13 @@
-# custom
+# Ignore temporarily
 docs
 Builder_button.js
 
+# Ignore always
+.sublime-gulp.cache
+node_modules
+
+# end mblazonry-configs #
+#########################
 
 # Windows image file caches
 Thumbs.db
