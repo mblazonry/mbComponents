@@ -219,7 +219,7 @@
 				{
 					handleTimerClick();
 				}
-				else
+				else if (timeout != "0")
 				{
 					pollTimer();
 				}
