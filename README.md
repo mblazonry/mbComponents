@@ -17,17 +17,19 @@ This section has two parts. You already did the initial setup part by downloadin
 First part:
 
 
-1.  [download](https://nodejs.org/en/download/) and [install](http://blog.teamtreehouse.com/install-node-js-npm-windows) [Node.js](https://nodejs.org/en/) From the console you should now be able to run `npm`.
+1.  [download](https://nodejs.org/en/download/) and [install](http://blog.teamtreehouse.com/install-node-js-npm-windows) [Node.js](https://nodejs.org/en/) 
 
-2.  In the repo directory, run `npm install mblazonrycomponents`
+2.  From the console you should now be able to run `npm`.
 
-3.  That sets up the app, automatically grabbing all dependencies needed by the project and installing them to a node_modules folder locally.
+3.  From this repo's directory, run `npm install`
 
-4.  If you run any of the automation now you'll get an error saying Gulp needs to be installed globally. So from the repo dir run `npm install gulp -g`
+4.  That sets up the app, automatically grabbing all dependencies needed by the project and installing them to a node_modules folder locally.
 
-5.  Once that's done installing, make sure `npm ls` returns a load of stuff.
+5.  If you run any of the automation now you'll get an error saying Gulp needs to be installed globally. So from the repo dir run `npm install gulp -g`
 
-6.  Now you're good to go.
+6.  Once that's done installing, make sure `npm ls` returns a load of stuff.
+
+7.  Now you're good to go.
 
 Second, there are instructions for Sublime Text 3. These were tested only on Windows 7 64-bit round feb 2016. YMMV
 
