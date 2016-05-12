@@ -303,7 +303,8 @@
 
 				if (startTimeTempField)
 				{
-					newStartTime = userModel.getFieldValue(user, startTimeTempField);
+					//newStartTime = userModel.getFieldValue(user, startTimeTempField); // not consistent
+					newStartTime = userModel.data[0][startTimeTempField];
 					newStartTime = jsDateTimeRemoveMilis(newStartTime);
 					settings.initial = parseDateForCounter(elapsedInMilis(newStartTime));
 					userModel.updateRow(user, startTimeTempField, null);
