@@ -34,7 +34,7 @@
 	 * 	A registered Component Type acts like a constructor
 	 * 	or initializer for that Component.
 	 * @example $S.componentType.register()
-	 * @inner
+	 *
 	 * @function
 	 * @name register
 	 * @memberOf skuid.componentType
@@ -395,7 +395,9 @@
 
 			/**
 			 * Handles userModel saves outside of actionPending contexts.
-			 * @param  {[type]} saveResult The result of the save operation.
+			 * @function
+			 * @memberOf skuid.componentType.Runtime_timer
+			 * @param  {Event} saveResult The result of the save operation.
 			 */
 			function handleModelSavedOutsideOfPending(saveResult)
 			{
