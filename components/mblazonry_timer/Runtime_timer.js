@@ -22,6 +22,7 @@
 	var $e = skuid.events;
 	var $t = skuid.time;
 	var $m = skuid.model;
+	var $p = skuid.page;
 	/**
 	 *
 	 * @memberOf skuid
@@ -121,7 +122,7 @@
 			timer.append(button);
 
 			{ // DEBUG
-				var info = $("<div>"),
+				var info = $("<div>").addClass("mblazonry-timer-debug"),
 					d1 = $("<td>").append("<h2>Debug info:</h2>");
 				d1.append(
 					"<ul> " +
@@ -188,8 +189,8 @@
 				// 	snip("Test_of_params");
 				// });
 
-				// for Test Page only
-				if (skuid.page.name.match(/test/i))
+				// for Debug Page only
+				if ($p.name.match(/Timer_Debug_Page/i) && $('.mblazonry-timer-debug').length === 0)
 				{
 					// Append useful debug info to body
 					$('.nx-page-region').append(info);
