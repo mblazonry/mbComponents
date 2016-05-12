@@ -4,8 +4,6 @@
 // include gulp & grunt
 var gulp = require('gulp');
 
-require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp
-
 // include plug-ins
 var merge = require('merge-stream'),
    jshint = require("gulp-jshint"),
