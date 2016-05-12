@@ -1,6 +1,6 @@
 # Ignore temporarily
-docs
 Builder_button.js
+docs/doc
 
 # Ignore always
 .sublime-gulp.cache
