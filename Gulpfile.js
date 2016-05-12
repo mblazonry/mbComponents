@@ -60,11 +60,36 @@ gulp.task('clean-min-release', function ()
       .pipe(clean());
 });
 
-
+gulp.task('deploy-dev', function ()
+{
+   gulp.src('./pkg') // , { base: "." }
+   .pipe(zip('pkg.zip'))
+   // Deploy
+   .pipe(forceDeploy(
+   {
+      username: process.env.SF_USERNAME,
+      password: process.env.SF_PASSWORD,
+      loginUrl: 'https://mblazonry.my.salesforce.com',
+      //pollInterval: 10 * 1000,
+      version: '33.0'
+   }));
+});
 
 ////////////
 // Builds //
 ////////////
+
+// get data from package.json
+var pkg = require('./package.json');
+var banner = ['/**',
+   ' * <%= pkg.name %> - <%= pkg.description %>',
+   ' * @version v<%= pkg.version %>',
+   //' * @link <%= pkg.link %>',
+   ' * @license <%= pkg.license %>',
+   ' * @author <%= pkg.author %>',
+   ' */',
+   ''
+].join('\n');
 
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
 {
@@ -87,18 +112,6 @@ gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
    // combine
    var min_src = merge(min_js, min_css);
 
-   // TODO refactor this out
-   // get data from package.json
-   var pkg = require('./package.json');
-   var banner = ['/**',
-      ' * <%= pkg.name %> - <%= pkg.description %>',
-      ' * @version v<%= pkg.version %>',
-      //' * @link <%= pkg.link %>',
-      ' * @license <%= pkg.license %>',
-      ' * @author <%= pkg.author %>',
-      ' */',
-      ''
-   ].join('\n');
    // configs
    var min_configs = gulp.src('./skuid_*.json')
       // strip non-timer stuff
@@ -125,6 +138,16 @@ gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
 
 gulp.task('build-dev', ['clean-dev', 'lint'], function ()
 {
-   return gulp.src(['./components/**/*.*', './skuid_*.json']).pipe(zip('./mblazonryComponents-dev.zip'))
+   // src
+   var src = gulp.src(['./components/**/*.*']);
+
+   // configs
+   var min_configs = gulp.src('./skuid_*.json')
+      // minify configs
+      .pipe(jsonminify());
+
+   return merge(src, min_configs)
+      // zip files
+      .pipe(zip('./mblazonryComponents-dev.zip'))
       .pipe(gulp.dest('./'));
 });
