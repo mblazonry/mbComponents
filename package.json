@@ -32,6 +32,7 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.2.0",
+    "jsdocs": "^0.1.0",
     "jshint": "^2.9.2",
     "merge-stream": "^1.0.0",
     "pre-commit": "^1.1.2"
