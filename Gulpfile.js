@@ -14,6 +14,7 @@ var merge = require('merge-stream'),
    gutil = require('gulp-util'),
    clean = require('gulp-clean'),
    stripCode = require('gulp-strip-code'),
+   exec = require('child_process').exec,
    header = require('gulp-header');
 
 ///////////
@@ -150,4 +151,14 @@ gulp.task('build-dev', ['clean-dev', 'lint'], function ()
       // zip files
       .pipe(zip('./mblazonryComponents-dev.zip'))
       .pipe(gulp.dest('./'));
+});
+
+/**
+ * Generate component documentation
+ */
+gulp.task('gen-docs', function() {
+  exec('jsdoc -c docs/jsdoc.conf -r', function(err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+  });
 });
