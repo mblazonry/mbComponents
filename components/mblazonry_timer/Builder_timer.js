@@ -50,21 +50,28 @@
 					id: 'model',
 					type: 'model',
 					label: 'CurrentUser Model',
-					required: true,
+					helptext: "Model representing the Id of the current session user",
 					onChange: function ()
 					{
 						component.updateAutoCreatedEditorCondition && component.updateAutoCreatedEditorCondition(),
 						component.save().rebuildProps().refresh();
-					}
+					},
+					required: true,
 				},
 				{
 					id: "userId",
-					type: "integer",
+					type: "template",
 					location: "attribute",
-					label: "CurrentUser Id"
+					label: "CurrentUser Id",
+					helptext: "User Id Field in CurrentUser Model.",
+					onChange: function ()
+					{
+						component.refresh();
+					},
+					required: true
 				},
 				{ // spacer.
-					label: "IMPORTANT! fire the events to the right->",
+					label: "IMPORTANT! fire the events to the right →",
 					value: "What!"
 				},
 				{ // spacer.
@@ -110,12 +117,12 @@
 			var fieldsList =
 				[
 				{ // spacer.
-					label: "Destination Fields on 'user' Model :"
+					label: "Destination fields on 'user' Model :"
 				},
 				{
 					id: "startTimeDestField",
 					type: "template",
-					helptext: "Field to store our Start time to. The value type is Datetime.",
+					helptext: "Field to store the Start Time in. The value type is Datetime.",
 					location: "attribute",
 					label: "Start Time destination field",
 					onChange: function ()
@@ -127,7 +134,7 @@
 				{
 					id: "endTimeDestination",
 					type: "template",
-					helptext: "Field to store the Timer Stop time to. The value type is Datetime.",
+					helptext: "Field to store the Stop Time in. The value type is Datetime.",
 					location: "attribute",
 					label: "End Time destination field",
 					onChange: function ()
@@ -142,7 +149,7 @@
 				{
 					id: "startTimeTempField",
 					type: "template",
-					helptext: "Field to temporarily store the Timer Start time to. We reccomend storing this value to the 'CurrenUser' model as (UI-Only). Value is of type Datetime.",
+					helptext: "Field to temporarily store the intermediary Start Time to. We suggest storing this value in a UI-Only field. Value is of type Datetime.",
 					location: "attribute",
 					label: "Start Time Temp Field",
 					onChange: function ()
@@ -236,10 +243,32 @@
 					type: "string",
 					label: "Poll Interval",
 					helptext: "Number of minutes between timer polls. Should be no less than 2 minutes.",
-					defaultValue: "2",
+					defaultValue: "4",
 					placeholder: "poll every x minutes",
-					onChange: function ()
+					onChange: function (newValue, oldValue)
 					{
+						var msg;
+						if (newValue === 0)
+						{
+							msg = 'Timeout disabled';
+						}
+						else if (newValue == 1)
+						{
+							msg = 'A Timeout of 1 minute is incredibly dangerous! Beware!!';
+						}
+						else if (1 < newValue && newValue < 5)
+						{
+							msg = 'A Timeout of ' + newValue + ' minutes is dangerously short! Beware!';
+							if (oldValue > 4 && newValue != oldValue)
+							{
+								msg += '\n Your old setting of ' + oldValue + ' minutes is better!';
+							}
+						}
+
+						if (msg)
+						{
+							window.alert(msg);
+						}
 						component.refresh();
 					},
 					required: true
@@ -253,7 +282,9 @@
 						component.refresh();
 					}
 				}),
-				{}, // spacer.
+				{
+					label: "➿"
+				}, // spacer.
 			];
 
 			// Properties
@@ -349,9 +380,9 @@
 				counterStopLabel: "Stop",
 				timerIcon: "sk-icon-opportunities",
 				recColor: "red",
-				pollInterval: "2",
+				pollInterval: "4",
 				timerNotes: "",
-				cssclass: "",
+				cssclass: "mblazonry-timer",
 				uniqueid: "",
 			});
 			var onStartActions = $xml("<onstartactions/>"),
