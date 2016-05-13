@@ -8,22 +8,20 @@
     "skuid",
     "component"
   ],
-  "repository":
-  {
+  "repository": {
     "type": "git",
     "url": "https://github.com/aklef/mblazonryComponents.git"
   },
-  "engines":
-  {
+  "engines": {
     "node": ">= 4.2.6",
     "npm": ">= 2.14.12"
   },
-  "devDependencies":
-  {
+  "devDependencies": {
     "grunt": "^0.4.5",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-clean-css": "^2.0.7",
+    "gulp-exec": "^2.1.2",
     "gulp-grunt": "^0.5.3",
     "gulp-header": "^1.7.1",
     "gulp-jshint": "^2.0.0",
@@ -36,8 +34,7 @@
     "merge-stream": "^1.0.0",
     "pre-commit": "^1.1.2"
   },
-  "scripts":
-  {
+  "scripts": {
     "build-dev": "gulp build-dev",
     "build-docs": "gulp build-docs",
     "lint": "gulp lint"
