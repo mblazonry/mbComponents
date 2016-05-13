@@ -286,8 +286,9 @@
 
 			$(document).ready(function ()
 			{
-				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').css('background', 'inherit');
-				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').addClass('nx-pagebuilder-component-transparent-darkbg');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-header-component .nx-pagebuilder-component:has(> .mblazonry-timer)').css('background', 'inherit');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-header-component .nx-pagebuilder-component:has(> .mblazonry-timer)').addClass('nx-pagebuilder-component-transparent-darkbg');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-acceptor .nx-pagebuilder-component:has(> .mblazonry-timer)').removeClass('nx-pagebuilder-component-transparent-darkbg');
 			});
 
 
