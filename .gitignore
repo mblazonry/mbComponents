@@ -3,13 +3,24 @@
 
 # Ignore temporarily
 Builder_button.js
-docs/doc
+docs/doc/
+
+# Ignore maybe
+unpackaged/
+metadata.zip
 
 # Ignore always
+*.sublime-project
+*.sublime-workspace
+*.log
 *.sublime-gulp.cache
-node_modules
+node_modules/
 mblazonryComponents*.zip
+resource-bundles/
+src/staticresources/
 config/
+deploy/
+debug/
 
 #  end mblazonry-configs  #
 ###########################
