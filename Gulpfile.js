@@ -12,9 +12,11 @@ var merge = require('merge-stream'),
    jsonminify = require('gulp-jsonminify'),
    zip = require('gulp-zip'),
    gutil = require('gulp-util'),
+   rename = require('gulp-rename'),
    clean = require('gulp-clean'),
    stripCode = require('gulp-strip-code'),
-   header = require('gulp-header');
+   header = require('gulp-header'),
+   mavensmate = require('mavensmate');
 
 ///////////
 // Tasks //
@@ -27,24 +29,19 @@ gulp.task('default', function ()
 });
 
 /**
- * Lint files project source files using jshint for errors and fail if any are found.
- */
-gulp.task('lint', function ()
-{
-   gulp.src('./components/**/*.js') // path to your files
-   .pipe(jshint())
-      .pipe(jshint.reporter()); // Dump results
-});
-
-/**
  * Remove old dev files from directory.
  */
 gulp.task('clean-dev', function ()
 {
-   return gulp.src('./*-dev.zip',
-      {
-         read: false
-      })
+   return gulp.src(
+         [
+            './*-dev.zip',
+            './resource-bundles/mBlazonryComponents.resource'
+         ],
+         {
+            read: false,
+            base: '.'
+         })
       .pipe(clean());
 });
 
@@ -60,27 +57,58 @@ gulp.task('clean-min-release', function ()
       .pipe(clean());
 });
 
-gulp.task('deploy-dev', function ()
+/**
+ * Lint files project source files using jshint for errors and fail if any are found.
+ */
+gulp.task('lint', function ()
 {
-   gulp.src('./pkg') // , { base: "." }
-   .pipe(zip('pkg.zip'))
-   // Deploy
-   .pipe(forceDeploy(
+   gulp.src('components/**/*.js') // path to your files
+   .pipe(jshint())
+   // Dump results
+   .pipe(jshint.reporter());
+});
+
+////////////////
+// Deployment //
+////////////////
+
+gulp.task('mBlazonry-dev-deploy', ['static-resource-dev'], function ()
+{
+   var client = mavensmate.createClient(
    {
-      username: process.env.SF_USERNAME,
-      password: process.env.SF_PASSWORD,
-      loginUrl: 'https://mblazonry.my.salesforce.com',
-      //pollInterval: 10 * 1000,
-      version: '33.0'
-   }));
+      name: 'mm-mBlazonry-Production'
+   });
+
+   client.addProjectByPath('.')
+      .then(function (res)
+      {
+         return client.executeCommand('mavensmate deploy-resource-bundle ./resource-bundles/mBlazonryComponents.resource');
+      })
+      .then(function (res)
+      {
+         console.log('command result', res);
+      });
+});
+
+// possibly unnecesary
+gulp.task('static-resource-dev', ['build-dev'], function ()
+{
+   gulp.src('./*-dev.zip',
+   {
+      base: "."
+   })
+   // rename
+   .pipe(rename('mBlazonryComponents.resource'))
+   // move to SF package
+   .pipe(gulp.dest('src/staticresources'));
 });
 
 ////////////
 // Builds //
 ////////////
-
-// get data from package.json
-var pkg = require('./package.json');
+///
+// Get useful data from package.json
+var npm_pkg = require('./package.json');
 var banner = ['/**',
    ' * <%= pkg.name %> - <%= pkg.description %>',
    ' * @version v<%= pkg.version %>',
@@ -117,15 +145,15 @@ gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
       // strip non-timer stuff
       .pipe(stripCode(
       {
-         start_comment: "start-build-timer",
-         end_comment: "end-build-timer"
+         start_comment: "start-timer-build-excludes",
+         end_comment: "end-timer-build-excludes"
       }))
       // minify configs
       .pipe(jsonminify())
       // append header to config files
       .pipe(header(banner,
       {
-         pkg: pkg
+         pkg: npm_pkg
       }));
 
    // Zip all files
@@ -138,16 +166,17 @@ gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
 
 gulp.task('build-dev', ['clean-dev', 'lint'], function ()
 {
-   // src
    var src = gulp.src(['./components/**/*.*']);
 
-   // configs
    var min_configs = gulp.src('./skuid_*.json')
       // minify configs
       .pipe(jsonminify());
 
    return merge(src, min_configs)
-      // zip files
-      .pipe(zip('./mblazonryComponents-dev.zip'))
+      // then make them into a resource bundle
+      .pipe(gulp.dest('./resource-bundles/mBlazonryComponents.resource'))
+      // zip the files
+      .pipe(zip('./mblazonryComponents-dev.zip')) // eventually remove this
+      // drop the zip in the top level folder
       .pipe(gulp.dest('./'));
 });
