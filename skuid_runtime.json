@@ -1,38 +1,38 @@
 {
    "id": "mblazonry",
-   "components": [ /* start-build-timer */
+   "components": [ /* start-timer-build-excludes */
+   {
+      "id": "progress_indicator"
+   },
    {
       "id": "sayhello"
    },
    {
       "id": "popupcontroller"
-   },
-   {
-      "id": "progress_indicator"
-   }, /* end-build-timer */
+   }, /* end-timer-build-excludes */
    {
       "id": "timer"
    }],
-   "js": [ /* start-build-timer */
+   "js": [ /* start-timer-build-excludes */
+   {
+      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
+   },
    {
       "path": "mblazonry_sayHello/Runtime_sayHello.js"
    },
    {
       "path": "mblazonry_popupController/Runtime_popupController.js"
-   },
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
-   }, /* end-build-timer */
+   }, /* end-timer-build-excludes */
    {
       "path": "mblazonry_timer/Runtime_timer.js"
    }],
-   "css": [ /* start-build-timer */
-   {
-      "path": "mblazonry_sayHello/Runtime_sayHello.css"
-   },
+   "css": [ /* start-timer-build-excludes */
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   }, /* end-build-timer */
+   },
+   {
+      "path": "mblazonry_sayHello/Runtime_sayHello.css"
+   }, /* end-timer-build-excludes */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"
    }]
