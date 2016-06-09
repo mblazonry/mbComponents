@@ -1,10 +1,16 @@
 /* jshint node: true */
 /*********************/
 
-// include gulp & grunt
+"use strict";
+
+//////////
+// gulp //
+//////////
 var gulp = require('gulp');
 
-// include plug-ins
+///////////////////
+// gulp plug-ins //
+///////////////////
 var merge = require('merge-stream'),
    jshint = require("gulp-jshint"),
    uglify = require("gulp-uglify"),
@@ -22,16 +28,29 @@ var merge = require('merge-stream'),
 // Tasks //
 ///////////
 
-// create a default task and just log a message
+// Delegate functions used in these calls
+// are implemented below.
+
+// Default task that tests gulp by logging a message
 gulp.task('default', function ()
 {
    return gutil.log('Gulp is running!');
 });
+gulp.task('lint', lint);
+gulp.task('clean-dev', clean_dev);
+gulp.task('clean-min-release', clean_min_release);
+gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
+gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
+gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
+gulp.task('mBlazonry-dev-deploy', ['static-resource-dev'], mBlazonry_dev_deploy);
 
+///////////////////
+// Utility Tasks //
+///////////////////
 /**
  * Remove old dev files from directory.
  */
-gulp.task('clean-dev', function ()
+function clean_dev()
 {
    return gulp.src(
          [
@@ -43,36 +62,57 @@ gulp.task('clean-dev', function ()
             base: '.'
          })
       .pipe(clean());
-});
+}
 
 /**
  * Remove old release files from directory.
  */
-gulp.task('clean-min-release', function ()
+function clean_min_release()
 {
    return gulp.src('./*-min-release.zip',
       {
          read: false
       })
       .pipe(clean());
-});
+}
 
 /**
- * Lint files project source files using jshint for errors and fail if any are found.
+ * Lint project source files using JShint.
+ * Fails if any errors are found.
  */
-gulp.task('lint', function ()
+function lint()
 {
    gulp.src('components/**/*.js') // path to your files
    .pipe(jshint())
    // Dump results
    .pipe(jshint.reporter());
-});
+}
+
+////////////
+// Builds //
+////////////
+
+// Get useful data from package.json
+var npm_pkg = require('./package.json');
+var banner = ['/**',
+   ' * <%= pkg.name %> - <%= pkg.description %>',
+   ' * @version v<%= pkg.version %>',
+   //' * @link <%= pkg.link %>',
+   ' * @license <%= pkg.license %>',
+   ' * @author <%= pkg.author %>',
+   ' */',
+   ''
+].join('\n');
+
 
 ////////////////
 // Deployment //
 ////////////////
 
-gulp.task('mBlazonry-dev-deploy', ['static-resource-dev'], function ()
+/**
+ * Deploy development build
+ */
+function mBlazonry_dev_deploy()
 {
    var client = mavensmate.createClient(
    {
@@ -88,10 +128,10 @@ gulp.task('mBlazonry-dev-deploy', ['static-resource-dev'], function ()
       {
          console.log('command result', res);
       });
-});
+}
 
 // possibly unnecesary
-gulp.task('static-resource-dev', ['build-dev'], function ()
+function static_resource_dev()
 {
    gulp.src('./*-dev.zip',
    {
@@ -101,25 +141,30 @@ gulp.task('static-resource-dev', ['build-dev'], function ()
    .pipe(rename('mBlazonryComponents.resource'))
    // move to SF package
    .pipe(gulp.dest('src/staticresources'));
-});
+}
 
-////////////
-// Builds //
-////////////
-///
-// Get useful data from package.json
-var npm_pkg = require('./package.json');
-var banner = ['/**',
-   ' * <%= pkg.name %> - <%= pkg.description %>',
-   ' * @version v<%= pkg.version %>',
-   //' * @link <%= pkg.link %>',
-   ' * @license <%= pkg.license %>',
-   ' * @author <%= pkg.author %>',
-   ' */',
-   ''
-].join('\n');
+///////////////////////////////////////
+// Delegate functions for gulp tasks //
+///////////////////////////////////////
 
-gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
+function build_dev()
+{
+   var src = gulp.src(['./components/**/*.*']);
+
+   var min_configs = gulp.src('./skuid_*.json')
+      // minify configs
+      .pipe(jsonminify());
+
+   return merge(src, min_configs)
+      // then make them into a resource bundle
+      .pipe(gulp.dest('./resource-bundles/mBlazonryComponents.resource'))
+      // zip the files
+      .pipe(zip('./mblazonryComponents-dev.zip')) // eventually remove this
+      // drop the zip in the top level folder
+      .pipe(gulp.dest('./'));
+}
+
+function build_min_timer()
 {
    // minify-js
    var min_js = gulp.src('./components/*_timer/*.js')
@@ -162,21 +207,4 @@ gulp.task('build-min-timer', ['clean-min-release', 'lint'], function ()
       .pipe(gulp.dest('./'));
 
    return zip_files;
-});
-
-gulp.task('build-dev', ['clean-dev', 'lint'], function ()
-{
-   var src = gulp.src(['./components/**/*.*']);
-
-   var min_configs = gulp.src('./skuid_*.json')
-      // minify configs
-      .pipe(jsonminify());
-
-   return merge(src, min_configs)
-      // then make them into a resource bundle
-      .pipe(gulp.dest('./resource-bundles/mBlazonryComponents.resource'))
-      // zip the files
-      .pipe(zip('./mblazonryComponents-dev.zip')) // eventually remove this
-      // drop the zip in the top level folder
-      .pipe(gulp.dest('./'));
-});
+}
