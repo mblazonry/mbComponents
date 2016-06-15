@@ -22,7 +22,8 @@ var merge = require('merge-stream'),
    clean = require('gulp-clean'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
-   mavensmate = require('mavensmate');
+   forceDeploy = require('gulp-jsforce-deploy'),
+   taskListing = require('gulp-task-listing');
 
 ///////////
 // Tasks //
@@ -31,11 +32,10 @@ var merge = require('merge-stream'),
 // Delegate functions used in these calls
 // are implemented below.
 
-// Default task that tests gulp by logging a message
-gulp.task('default', function ()
-{
-   return gutil.log('Gulp is running!');
-});
+/**
+ * Default task that tests gulp by logging a message.
+ */
+gulp.task('default', taskListing);
 gulp.task('lint', lint);
 gulp.task('clean-dev', clean_dev);
 gulp.task('clean-min-release', clean_min_release);
