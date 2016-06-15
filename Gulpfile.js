@@ -23,6 +23,7 @@ var merge = require('merge-stream'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
    forceDeploy = require('gulp-jsforce-deploy'),
+   fileExists = require('file-exists'),
    taskListing = require('gulp-task-listing');
 
 ///////////
@@ -42,7 +43,8 @@ gulp.task('clean-min-release', clean_min_release);
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
-gulp.task('mBlazonry-dev-deploy', ['static-resource-dev'], mBlazonry_dev_deploy);
+gulp.task('deploy', ['static-resource-dev', 'env-dev'], mB_jsforce_deploy_dev);
+gulp.task('env-dev', false, env_dev);
 
 ///////////////////
 // Utility Tasks //
@@ -92,7 +94,9 @@ function lint()
 // Builds //
 ////////////
 
-// Get useful data from package.json
+/**
+ * Gets useful data from package.json
+ */
 var npm_pkg = require('./package.json');
 var banner = ['/**',
    ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -110,24 +114,47 @@ var banner = ['/**',
 ////////////////
 
 /**
- * Deploy development build
+ * Deploy development build to mBlazonry using jsforce
+ * This will only update server if files are non-identical
  */
-function mBlazonry_dev_deploy()
+function mB_jsforce_deploy_dev()
 {
-   var client = mavensmate.createClient(
+   gulp.src('./src/**',
    {
-      name: 'mm-mBlazonry-Production'
-   });
+      base: "."
+   })
+      .pipe(zip('pkg.zip'))
+      .pipe(
+         forceDeploy(
+         {
+            username: process.env.SF_USERNAME,
+            password: process.env.SF_PASSWORD,
+            loginUrl: 'https://mblazonry.my.salesforce.com',
+            pollTimeout: 120 * 1000,
+            pollInterval: 10 * 1000,
+            version: '34.0',
+            verbose: true,
+            logLevel: "DEBUG",
+            rollbackOnError: true
+         })
+   );
+}
 
-   client.addProjectByPath('.')
-      .then(function (res)
-      {
-         return client.executeCommand('mavensmate deploy-resource-bundle ./resource-bundles/mBlazonryComponents.resource');
-      })
-      .then(function (res)
-      {
-         console.log('command result', res);
-      });
+/**
+ * Check for existing environment configs
+ */
+function env_dev()
+{
+   var envFileExists = fileExists('./.env');
+
+   gutil.log((envFileExists ? "Found" : "Couldn't find") + " .env file!");
+
+   if (envFileExists)
+   {
+      require('dotenv').config();
+   }
+
+   return envFileExists;
 }
 
 // possibly unnecesary
@@ -178,8 +205,8 @@ function build_min_timer()
          debug: true
       }, function (details)
       {
-         console.log(details.name + ': ' + details.stats.originalSize);
-         console.log(details.name + ': ' + details.stats.minifiedSize);
+         gutil.log(details.name + ': ' + details.stats.originalSize);
+         gutil.log(details.name + ': ' + details.stats.minifiedSize);
       }));
 
    // combine
@@ -208,4 +235,3 @@ function build_min_timer()
 
    return zip_files;
 }
- 
