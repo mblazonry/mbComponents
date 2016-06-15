@@ -5,13 +5,14 @@
 	/*jslint browser:true, lastsemic:true, unused:false */
 
 	// Create some shortcut variables
-	$ = skuid.$; // should equiv skuid.jquery
-	var bc = skuid.builder.core;
-	var $xml = skuid.utils.makeXMLDoc;
-	var $j = $.noConflict();
 	var $S = skuid;
+	var $b = $S.builder;
+	var $bc = $b.core;
+	var $u = $S.utils;
+	var $xml = $u.makeXMLDoc;
+	var $j = $.noConflict();
 
-	skuid.builder.registerBuilder(new skuid.builder.Builder(
+	$b.registerBuilder(new $b.Builder(
 	{
 		id: 'mblazonry__timer',
 		name: 'Timer',
@@ -22,11 +23,11 @@
 			var changeEvent = "model.idChange" === event.type,
 				removeEvent = "model.remove" === event.type,
 				update = false;
-			removeEvent && skuid.builder.core.handleModelRemove(c, event,
+			removeEvent && $bc.handleModelRemove(c, event,
 			{
 				component: f
 			}),
-			changeEvent && skuid.builder.core.handleModelIdChange(c, event), (removeEvent || changeEvent) && c.children("actions").first().children('action[type="savecancel"]').each(function ()
+			changeEvent && $bc.handleModelIdChange(c, event), (removeEvent || changeEvent) && c.children("actions").first().children('action[type="savecancel"]').each(function ()
 			{
 				$(this).children("models").first().children("model").each(function ()
 				{
@@ -170,7 +171,7 @@
 					}
 				}];
 			var actionsTree = [
-				$S.builder.core.getActionsTree(
+				$b.core.getActionsTree(
 				{
 					customNodeId: "onstartactions",
 					label: "Timer Started:",
@@ -182,7 +183,7 @@
 						html: "'Timer Started' actions will be run when the timer is started."
 					}]
 				}),
-				$S.builder.core.getActionsTree(
+				$b.core.getActionsTree(
 				{
 					customNodeId: "ondoneactions",
 					label: "Timer Done:",
@@ -273,8 +274,8 @@
 					},
 					required: true
 				},
-				skuid.builder.core.coreProps.cssClassProp(),
-				skuid.builder.core.coreProps.uniqueIdProp(
+				$bc.coreProps.cssClassProp(),
+				$bc.coreProps.uniqueIdProp(
 				{
 					component: this,
 					onChange: function ()
@@ -362,7 +363,7 @@
 			var TIMER_DONE_EVENT = 'mblazonryTimerDoneEvent';
 
 			// Almost useless to have this
-			var lastModel = skuid.builder.core.getLastSelectedModelComponent(),
+			var lastModel = $bc.getLastSelectedModelComponent(),
 				model = lastModel && lastModel.state ? lastModel.state.attr("id") : null;
 
 			var timerXML = $xml('<mblazonry__timer/>');
