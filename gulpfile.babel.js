@@ -6,7 +6,8 @@
 //////////
 // gulp //
 //////////
-import gulp from 'gulp';
+// import gulp from 'gulp';
+var gulp = require('gulp');
 
 ///////////////////
 // gulp plug-ins //
@@ -99,8 +100,8 @@ function lint()
 /**
  * Gets useful data from package.json
  */
-var npm_pkg = require('./package.json');
-var banner = ['/**',
+const npm_pkg = require('./package.json');
+const banner = ['/**',
    ' * <%= pkg.name %> - <%= pkg.description %>',
    ' * @version v<%= pkg.version %>',
    //' * @link <%= pkg.link %>',
@@ -133,7 +134,7 @@ function mB_jsforce_deploy_dev()
             password: process.env.SF_PASSWORD,
             loginUrl: 'https://mblazonry.my.salesforce.com',
             pollTimeout: 120 * 1000,
-            pollInterval: 10 * 1000,
+            pollInterval: 5 * 1000,
             version: '34.0',
             verbose: true,
             logLevel: "DEBUG",
@@ -214,8 +215,8 @@ function build_min_components(comps, exclude)
 
    comps.forEach(function (comp)
    {
-      js.push("./components/*_" + comp + '/*.js');
-      css.push("./components/*_" + comp + '/*.css');
+      js.push(`./components/*_${comp}/*.js`);
+      css.push(`./components/*_${comp}/*.css`);
    });
 
    // minify-js
@@ -229,8 +230,8 @@ function build_min_components(comps, exclude)
          debug: true
       }, function (details)
       {
-         gutil.log(details.name + ': ' + details.stats.originalSize);
-         gutil.log(details.name + ': ' + details.stats.minifiedSize);
+         gutil.log(`${details.name} : ${details.stats.originalSize}`);
+         gutil.log(`${details.name} : ${details.stats.minifiedSize}`);
       }));
 
    // combine
@@ -238,8 +239,8 @@ function build_min_components(comps, exclude)
 
    // configs
    var crc32 = crc.crc32(comps.sort()).toString(16),
-      excludeStart = exclude ? "start-" + exclude + "-excludes" : "",
-      excludeEnd = exclude ? "end-" + exclude + "-excludes" : "",
+      excludeStart = exclude ? `start-${exclude}-excludes` : "",
+      excludeEnd = exclude ? `end-${exclude}-excludes` : "",
       min_configs = gulp.src('./skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
@@ -257,7 +258,7 @@ function build_min_components(comps, exclude)
 
    // Zip all files
    var zip_files = merge(min_src, min_configs)
-      .pipe(zip('./mblazonryComponents-min-' + crc32 + '-release.zip'))
+      .pipe(zip(`./mblazonryComponents-min-${crc32}-release.zip`))
       .pipe(gulp.dest('./'));
 
    return zip_files;

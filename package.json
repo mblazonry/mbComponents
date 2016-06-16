@@ -13,12 +13,6 @@
     "type": "git",
     "url": "https://github.com/aklef/mblazonryComponents.git"
   },
-  "babel":
-  {
-    "presets": [
-      "es2015"
-    ]
-  },
   "engines":
   {
     "node": ">= 4.2.6",
