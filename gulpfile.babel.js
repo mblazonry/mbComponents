@@ -6,7 +6,6 @@
 //////////
 // gulp //
 //////////
-// import gulp from 'gulp';
 var gulp = require('gulp');
 
 ///////////////////
