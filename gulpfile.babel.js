@@ -39,13 +39,13 @@ var merge = require('merge-stream'),
  */
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
-gulp.task('clean-dev', clean_dev);
 gulp.task('clean-min-release', clean_min_release);
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
 gulp.task('build-min-pI', ['clean-min-release', 'lint'], build_min_progressIndicator);
 gulp.task('build-min', ['clean-min-release', 'lint'], build_min);
 gulp.task('build-min-all', ['clean-min-release', 'lint'], build_min_all);
 gulp.task('build-min-util', ['clean-min-release', 'lint'], build_min_util);
+gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
 gulp.task('deploy', ['static-resource-dev', 'env-dev'], mB_jsforce_deploy_dev);
@@ -89,10 +89,10 @@ function clean_min_release()
  */
 function lint()
 {
-   gulp.src('components/**/*.js') // path to your files
-   .pipe(jshint())
-   // Dump results
-   .pipe(jshint.reporter());
+   return gulp.src('components/**/*.js') // path to your files
+      .pipe(jshint())
+      // Dump results
+      .pipe(jshint.reporter());
 }
 
 ////////////
@@ -126,10 +126,10 @@ const ALL_COMPS = ['timer'].concat(UTIL_COMPS);
  */
 function mB_jsforce_deploy_dev()
 {
-   gulp.src('./src/**',
-   {
-      base: "."
-   })
+   return gulp.src('./src/**',
+      {
+         base: "."
+      })
       .pipe(zip('pkg.zip'))
       .pipe(
          forceDeploy(
@@ -139,12 +139,12 @@ function mB_jsforce_deploy_dev()
             loginUrl: 'https://mblazonry.my.salesforce.com',
             pollTimeout: 120 * 1000,
             pollInterval: 5 * 1000,
-            version: '34.0',
+            version: '37.0',
             verbose: true,
             logLevel: "DEBUG",
             rollbackOnError: true
          })
-   );
+      );
 }
 
 /**
@@ -167,14 +167,14 @@ function env_dev()
 // possibly unnecesary
 function static_resource_dev()
 {
-   gulp.src('./*-dev.zip',
-   {
-      base: "."
-   })
-   // rename
-   .pipe(rename('mBlazonryComponents.resource'))
-   // move to SF package
-   .pipe(gulp.dest('src/staticresources'));
+   return gulp.src('./*-dev.zip',
+      {
+         base: "."
+      })
+      // rename
+      .pipe(rename('mBlazonryComponents.resource'))
+      // move to SF package
+      .pipe(gulp.dest('src/staticresources'));
 }
 
 ///////////////////////////////////////
@@ -244,6 +244,7 @@ function build_min_all()
 
 function build_min_util()
 {
+
    return build_min_components(UTIL_COMPS);
 }
 
@@ -309,9 +310,7 @@ function build_min_components(comps, exclude)
       .pipe(jsonminify());
 
    // Zip all files
-   var zip_files = merge(min_src, min_configs)
+   return merge(min_src, min_configs)
       .pipe(zip(`./mblazonryComponents-min-${crc32}-release.zip`))
       .pipe(gulp.dest('./'));
-
-   return zip_files;
 }
