@@ -25,7 +25,10 @@
    },
    {
       "path": "mblazonry_popupController/Runtime_popupController.js"
-   }, /* end-timer-build-excludes */
+   },
+   {
+      "path": "mblazonry_template/Runtime_template.js"
+   }, /* end-timer-excludes */
    {
       "path": "mblazonry_timer/Runtime_timer.js"
    } /* end-pI-excludes */ ],

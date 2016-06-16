@@ -38,7 +38,10 @@
    },
    {
       "path": "mblazonry_popupController/Builder_popupController.js"
-   }, /* end-timer-build-excludes */
+   },
+   {
+      "path": "mblazonry_template/Builder_template.js"
+   }, /* end-timer-excludes */
    {
       "path": "mblazonry_timer/Builder_timer.js"
    } /* end-pI-excludes */ ],
