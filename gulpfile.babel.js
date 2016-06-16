@@ -267,7 +267,7 @@ function build_min_components(comps, exclude)
    var js = [],
       css = [];
 
-   comps.forEach(function (comp)
+   comps.forEach(comp =>
    {
       js.push(`./components/*_${comp}/*.js`);
       css.push(`./components/*_${comp}/*.css`);
@@ -282,10 +282,7 @@ function build_min_components(comps, exclude)
       .pipe(cleanCSS(
       {
          debug: true
-      }, function (details)
-      {
-         gutil.log(`${details.name} : ${details.stats.originalSize} → ${details.stats.minifiedSize}`);
-      }));
+      }, res => gutil.log(`${res.name} : ${res.stats.originalSize} → ${res.stats.minifiedSize}`)));
 
    // combine
    var min_src = merge(min_js, min_css)
