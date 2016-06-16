@@ -7,11 +7,11 @@
       "icon": "fa-th-large"
    }],
 
-   "components": [ /* start-timer-build-excludes */
+   "components": [ /* start-timer-excludes */
    {
       "id": "progress_indicator",
       "folderId": "mblazonry"
-   } /* start-progressIndicator-build-excludes */ ,
+   } /* start-pI-excludes */ ,
    {
       "id": "sayhello",
       "folderId": "mblazonry"
@@ -19,16 +19,20 @@
    {
       "id": "popupcontroller",
       "folderId": "mblazonry"
-   }, /* end-timer-build-excludes */
+   },
+   {
+      "id": "template",
+      "folderId": "mblazonry"
+   }, /* end-timer-excludes */
    {
       "id": "timer",
       "folderId": "mblazonry"
-   } /* end-progressIndicator-build-excludes */ ],
+   } /* end-pI-excludes */ ],
 
-   "js": [ /* start-timer-build-excludes */
+   "js": [ /* start-timer-excludes */
    {
       "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
-   } /* start-progressIndicator-build-excludes */ ,
+   } /* start-pI-excludes */ ,
    {
       "path": "mblazonry_sayHello/Builder_sayHello.js"
    },
@@ -37,16 +41,16 @@
    }, /* end-timer-build-excludes */
    {
       "path": "mblazonry_timer/Builder_timer.js"
-   } /* end-progressIndicator-build-excludes */ ],
+   } /* end-pI-excludes */ ],
 
-   "css": [ /* start-timer-build-excludes */
+   "css": [ /* start-timer-excludes */
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   },
-   { /* start-progressIndicator-build-excludes */
+   } /* start-pI-excludes */ ,
+   {
       "path": "mblazonry_sayHello/Builder_sayHello.css"
-   }, /* end-timer-build-excludes */
+   }, /* end-timer-excludes */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"
-   } /* end-progressIndicator-build-excludes */ ]
+   } /* end-pI-excludes */ ]
 }

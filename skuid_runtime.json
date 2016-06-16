@@ -1,22 +1,25 @@
 {
    "id": "mblazonry",
-   "components": [ /* start-timer-build-excludes */
+   "components": [ /* start-timer-excludes */
    {
       "id": "progress_indicator"
-   },
+   } /* start-pI-excludes */ ,
    {
       "id": "sayhello"
    },
    {
       "id": "popupcontroller"
-   }, /* end-timer-build-excludes */
+   },
+   {
+      "id": "template"
+   }, /* end-timer-excludes */
    {
       "id": "timer"
-   }],
-   "js": [ /* start-timer-build-excludes */
+   } /* end-pI-excludes */ ],
+   "js": [ /* start-timer-excludes */
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
-   },
+   } /* start-pI-excludes */ ,
    {
       "path": "mblazonry_sayHello/Runtime_sayHello.js"
    },
@@ -25,15 +28,15 @@
    }, /* end-timer-build-excludes */
    {
       "path": "mblazonry_timer/Runtime_timer.js"
-   }],
-   "css": [ /* start-timer-build-excludes */
+   } /* end-pI-excludes */ ],
+   "css": [ /* start-timer-excludes */
    {
       "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   },
+   } /* start-pI-excludes */ ,
    {
       "path": "mblazonry_sayHello/Runtime_sayHello.css"
-   }, /* end-timer-build-excludes */
+   }, /* end-timer-excludes */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"
-   }]
+   } /* end-pI-excludes */ ]
 }

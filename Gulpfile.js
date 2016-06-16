@@ -16,6 +16,7 @@ var merge = require('merge-stream'),
    uglify = require("gulp-uglify"),
    cleanCSS = require('gulp-clean-css'),
    jsonminify = require('gulp-jsonminify'),
+   crc = require('crc'),
    zip = require('gulp-zip'),
    gutil = require('gulp-util'),
    rename = require('gulp-rename'),
@@ -41,6 +42,7 @@ gulp.task('lint', lint);
 gulp.task('clean-dev', clean_dev);
 gulp.task('clean-min-release', clean_min_release);
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
+gulp.task('build-min-pI', ['clean-min-release', 'lint'], build_min_progressIndicator);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
 gulp.task('deploy', ['static-resource-dev', 'env-dev'], mB_jsforce_deploy_dev);
@@ -71,7 +73,7 @@ function clean_dev()
  */
 function clean_min_release()
 {
-   return gulp.src('./*-min-release.zip',
+   return gulp.src('./*-min*-release.zip',
       {
          read: false
       })
@@ -193,13 +195,35 @@ function build_dev()
 
 function build_min_timer()
 {
+   var comp = ["timer"],
+      exclude = comp;
+   return build_min_components(comp, exclude);
+}
+
+function build_min_progressIndicator()
+{
+   var comp = ["progressIndicator"],
+      exclude = "pI";
+   return build_min_components(comp, exclude);
+}
+
+function build_min_components(comps, exclude)
+{
+   var js = [],
+      css = [];
+
+   comps.forEach(function (comp)
+   {
+      js.push("./components/*_" + comp + '/*.js');
+      css.push("./components/*_" + comp + '/*.css');
+   });
+
    // minify-js
-   var min_js = gulp.src('./components/*_timer/*.js')
+   var min_js = gulp.src(js)
       .pipe(uglify());
 
    //minify-css
-   var min_css = gulp.src('./components/*_timer/*.css')
-      // .pipe(cleanCSS())
+   var min_css = gulp.src(css)
       .pipe(cleanCSS(
       {
          debug: true
@@ -213,12 +237,15 @@ function build_min_timer()
    var min_src = merge(min_js, min_css);
 
    // configs
-   var min_configs = gulp.src('./skuid_*.json')
-      // strip non-timer stuff
+   var crc32 = crc.crc32(comps.sort()).toString(16),
+      excludeStart = exclude ? "start-" + exclude + "-excludes" : "",
+      excludeEnd = exclude ? "end-" + exclude + "-excludes" : "",
+      min_configs = gulp.src('./skuid_*.json')
+      // strip unrelated stuff
       .pipe(stripCode(
       {
-         start_comment: "start-timer-build-excludes",
-         end_comment: "end-timer-build-excludes"
+         start_comment: excludeStart,
+         end_comment: excludeEnd
       }))
       // minify configs
       .pipe(jsonminify())
@@ -230,7 +257,7 @@ function build_min_timer()
 
    // Zip all files
    var zip_files = merge(min_src, min_configs)
-      .pipe(zip('./mblazonryComponents-min-release.zip'))
+      .pipe(zip('./mblazonryComponents-min-' + crc32 + '-release.zip'))
       .pipe(gulp.dest('./'));
 
    return zip_files;
