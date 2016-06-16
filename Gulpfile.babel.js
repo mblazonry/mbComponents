@@ -1,12 +1,12 @@
-/* jshint node: true */
-/*********************/
+/* jshint node:true, esnext:true */
+/*********************************/
 
 "use strict";
 
 //////////
 // gulp //
 //////////
-var gulp = require('gulp');
+import gulp from 'gulp';
 
 ///////////////////
 // gulp plug-ins //

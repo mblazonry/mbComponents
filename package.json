@@ -13,6 +13,12 @@
     "type": "git",
     "url": "https://github.com/aklef/mblazonryComponents.git"
   },
+  "babel":
+  {
+    "presets": [
+      "es2015"
+    ]
+  },
   "engines":
   {
     "node": ">= 4.2.6",
@@ -27,6 +33,7 @@
     "file-exists": "^1.0.0",
     "grunt": "^0.4.5",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.2",
     "gulp-clean-css": "^2.0.7",
     "gulp-grunt": "^0.5.3",
