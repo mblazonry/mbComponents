@@ -140,7 +140,7 @@
 			info.append(debugTable);
 		}
 		// ################################################################
-		// document.ready. event hook
+		// document.ready event hook
 		//
 		$(document).ready(function ()
 		{
