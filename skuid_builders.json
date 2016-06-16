@@ -52,6 +52,9 @@
    } /* start-pI-excludes */ ,
    {
       "path": "mblazonry_sayHello/Builder_sayHello.css"
+   },
+   {
+      "path": "mblazonry_template/Builder_template.css"
    }, /* end-timer-excludes */
    {
       "path": "mblazonry_timer/mblazonry_timer.css"

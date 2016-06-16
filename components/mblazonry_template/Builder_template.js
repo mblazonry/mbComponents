@@ -94,7 +94,7 @@
 					props: [
 					{
 						type: "helptext",
-						html: "Actions here are triggered by a click in the template area."
+						html: "Actions created on the left will be triggered by the event selected below"
 					},
 					{
 						id: "event",
@@ -105,13 +105,16 @@
 						{
 							label: "On Mouse Click",
 							value: "click"
-						}]
-						// ,
-						// onChange: function (oldVal, newVal)
-						// {
-						// 	component.save().refresh().rebuildProps();
-						// }
-					}]
+						}],
+						onChange: function (oldVal, newVal)
+						{
+							component.save().refresh().rebuildProps();
+						}
+					}],
+					onChange: function (oldVal, newVal)
+					{
+						window.alert("It works!");
+					}
 				})
 			];
 
@@ -148,7 +151,10 @@
 		},
 		componentRenderer: function (component)
 		{
+			component.setTitle(component.builder.name);
+			// Create some shortcut variables
 			var state = component.state,
+				template = component.body,
 				allowHTML = ("true" === state.attr("allowhtml")),
 				contents = state.children("contents").first();
 
@@ -163,30 +169,19 @@
 				state.empty().append(contents);
 				component.save();
 			}
-
-			var template = $("<div>").css(
-			{
-				padding: "0.5em"
-			}).appendTo(component.body);
-
-			component.setTitle(component.builder.name);
 			component.element.css(
 			{
-				background: "none"
+				display: "inline-block"
 			});
-			component.body.css(
-			{
-				padding: "0"
-			});
+
 			component.refreshText = refreshText;
-			refreshText();
 
 			function refreshText()
 			{
 				var text = contents.text();
 				if (allowHTML)
 				{
-					var e = $("<div>").html(text);
+					var e = $("<div>").addClass("mblazonry-template").html(text);
 					$("iframe", e).replaceWith($('<div class="sk-iframe-placeholder">'));
 					$("script", e).replaceWith($('<div class="sk-script-placeholder">'));
 					$("style", e).replaceWith($('<div class="sk-style-placeholder">'));
@@ -200,6 +195,8 @@
 					template.html($u.nl2br($("<div>").text(text).html()));
 				}
 			}
+
+			refreshText();
 		},
 
 		defaultStateGenerator: function ()
