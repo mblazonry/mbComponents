@@ -43,6 +43,9 @@ gulp.task('clean-dev', clean_dev);
 gulp.task('clean-min-release', clean_min_release);
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
 gulp.task('build-min-pI', ['clean-min-release', 'lint'], build_min_progressIndicator);
+gulp.task('build-min', ['clean-min-release', 'lint'], build_min);
+gulp.task('build-min-all', ['clean-min-release', 'lint'], build_min_all);
+gulp.task('build-min-util', ['clean-min-release', 'lint'], build_min_util);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
 gulp.task('deploy', ['static-resource-dev', 'env-dev'], mB_jsforce_deploy_dev);
@@ -110,6 +113,8 @@ const banner = ['/**',
    ''
 ].join('\n');
 
+const UTIL_COMPS = ['template', 'progressIndicator', 'popupController'];
+const ALL_COMPS = ['timer'].concat(UTIL_COMPS);
 
 ////////////////
 // Deployment //
@@ -193,6 +198,55 @@ function build_dev()
       .pipe(gulp.dest('./'));
 }
 
+function build_min()
+{
+   const SPECIAL = {
+      pI: "progressIndicator",
+      ppC: "popupController"
+   };
+
+   var comp = [],
+      exclude,
+      argv = require('yargs')
+      .usage(gutil.log('Usage: $0 $1 --c [name]'))
+      .demand(['c'])
+      .alias('c', 'component')
+      .describe('name', 'specify a component name')
+      .choices('name', ['timer', 'template', 'pI', 'ppC'])
+      .example('gulp build-min --c ppC', 'Make a minifed build of the popupController.')
+      .argv;
+
+   if (SPECIAL[argv.c])
+   {
+      comp.push(SPECIAL[argv.c]);
+   }
+   else
+   {
+      comp.push(argv.c);
+   }
+
+   if (comp.contains("timer"))
+   {
+      exclude = "timer";
+   }
+   else if (comp.contains("progressIndicator"))
+   {
+      exclude = "progressIndicator";
+   }
+   return build_min_components(comp, exclude);
+}
+
+function build_min_all()
+{
+
+   return build_min_components(ALL_COMPS);
+}
+
+function build_min_util()
+{
+   return build_min_components(UTIL_COMPS);
+}
+
 function build_min_timer()
 {
    var comp = ["timer"],
@@ -229,12 +283,16 @@ function build_min_components(comps, exclude)
          debug: true
       }, function (details)
       {
-         gutil.log(`${details.name} : ${details.stats.originalSize}`);
-         gutil.log(`${details.name} : ${details.stats.minifiedSize}`);
+         gutil.log(`${details.name} : ${details.stats.originalSize} → ${details.stats.minifiedSize}`);
       }));
 
    // combine
-   var min_src = merge(min_js, min_css);
+   var min_src = merge(min_js, min_css)
+      // append header to config files
+      .pipe(header(banner,
+      {
+         pkg: npm_pkg
+      }));
 
    // configs
    var crc32 = crc.crc32(comps.sort()).toString(16),
@@ -248,12 +306,7 @@ function build_min_components(comps, exclude)
          end_comment: excludeEnd
       }))
       // minify configs
-      .pipe(jsonminify())
-      // append header to config files
-      .pipe(header(banner,
-      {
-         pkg: npm_pkg
-      }));
+      .pipe(jsonminify());
 
    // Zip all files
    var zip_files = merge(min_src, min_configs)
