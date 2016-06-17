@@ -155,7 +155,7 @@ function env_dev()
 {
    var envFileExists = fileExists('./.env');
 
-   gutil.log((envFileExists ? "Discovered" + gcl.cyan(' .env') : "Couldn't find" + gcl.cyan('.env')) + " file!");
+   gutil.log((envFileExists ? "Discovered" + gcl.cyan(' .env') : gcl.cyan("Couldn't find") + '.env') + " file!");
 
    if (envFileExists)
    {
