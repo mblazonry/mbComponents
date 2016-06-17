@@ -115,6 +115,7 @@ const banner = ['/**',
 
 const UTIL_COMPS = ['template', 'progressIndicator', 'popupController'];
 const ALL_COMPS = ['timer'].concat(UTIL_COMPS);
+const gcl = gutil.colors;
 
 ////////////////
 // Deployment //
@@ -154,7 +155,7 @@ function env_dev()
 {
    var envFileExists = fileExists('./.env');
 
-   gutil.log((envFileExists ? "Found" : "Couldn't find") + " .env file!");
+   gutil.log((envFileExists ? "Discovered" + gcl.cyan(' .env') : "Couldn't find" + gcl.cyan('.env')) + " file!");
 
    if (envFileExists)
    {
