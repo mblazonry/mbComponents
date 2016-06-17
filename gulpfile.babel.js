@@ -138,10 +138,10 @@ function mB_jsforce_deploy_dev()
             password: process.env.SF_PASSWORD,
             loginUrl: 'https://mblazonry.my.salesforce.com',
             pollTimeout: 120 * 1000,
-            pollInterval: 5 * 1000,
+            pollInterval: 2 * 1000,
             version: '37.0',
-            verbose: true,
-            logLevel: "DEBUG",
+            verbose: false,
+            logLevel: "WARNING", // "DEBUG"
             rollbackOnError: true
          })
       );
