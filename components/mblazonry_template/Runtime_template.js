@@ -1,4 +1,3 @@
-/* jshint -W098 */ // x is unused.
 /* jshint -W030 */ // useless and unnecessary code.
 /* jshint -W004 */ // x is already defined.
 /* jslint browser:true, lastsemic:true, esnext:true */
@@ -18,7 +17,9 @@
         var context = (component ? component.context : null),
             model = $m.getModel(xmlDefinition.attr("model")),
             contents = xmlDefinition.children("contents").first(),
-            actions = xmlDefinition.children("actions");
+            actions = xmlDefinition.children("actions"),
+            eventType = actions.attr("event"),
+            isClickEvent = ("click" === eventType);
 
         contents = contents.length ? contents[0] : xmlDefinition[0];
 
@@ -30,7 +31,8 @@
         var text = contents.textContent || contents.text,
             conditions = component.createConditionsFromXml(xmlDefinition),
             multiple = xmlDefinition.attr("multiple"),
-            isMultiRow = multiple && multiple === "true";
+            isMultiRow = multiple && multiple === "true",
+            allowHTML = "true" === xmlDefinition.attr("allowhtml");
 
         ///////////////////////////
         // Creating the template //
@@ -38,7 +40,7 @@
         var templateComponent = new $u.TemplateComponent(element,
         {
             model: model,
-            allowHTML: "true" === xmlDefinition.attr("allowhtml"),
+            allowHTML: allowHTML,
             templateBody: text,
             isMultiRow: isMultiRow,
             context: context,
@@ -54,25 +56,30 @@
             };
         }
 
-        //////////////////////////////////
-        // Top-level || mblazonry-timer //
-        //////////////////////////////////
+        /////////////////////////////////////
+        // Top-level || mblazonry-template //
+        /////////////////////////////////////
         var template = element;
 
         template.addClass("mblazonry-template");
+
+        if (isClickEvent)
+        {
+            template.addClass("clickable");
+        }
+
+        if (allowHTML)
+        {
+            template.addClass("allowHMTL");
+        }
 
         // ################################################################
         // document.ready. event hook
         //
         $(document).ready(function ()
         {
-            // Attach a function to the click event
-            $('.mblazonry-template').on(
-                /**
-                 * This event is unique. If a running task is detected there will be no click.
-                 * The current user must be on the page and click willingly to fire this event.
-                 */
-                'click', handleTimerClick);
+            // Attach a function to the template event
+            $('.mblazonry-template').on(eventType, handleTimerClick);
 
             function handleTimerClick(event)
             {

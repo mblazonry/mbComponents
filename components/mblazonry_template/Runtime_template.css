@@ -1,2 +1,15 @@
-.mblazonry-template {
+.mblazonry-template
+{
+   min-width: 50px;
+   display: inline-block;
+}
+
+.clickable
+{
+   cursor: pointer;
+}
+
+.mblazonry-template.allowHTML > div > *
+{
+   margin-bottom: -4px;
 }

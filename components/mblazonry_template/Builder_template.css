@@ -1,4 +1,16 @@
-.mblazonry-template {
-   /*Because the HMTL contents haev their own styling*/
+.mblazonry-template
+{
+   min-width: 200px;
+   display: inline-block;
+}
+
+.allowHTML
+{
+   /*Because HTML has its own styling*/
    padding: 0;
+}
+
+.mblazonry-template.allowHTML > div > *
+{
+   margin-bottom: -4px;
 }
