@@ -1,16 +1,10 @@
 .mblazonry-template
 {
-   min-width: 210px;
-   display: inline-block;
+   /*min-width: 210px;*/
 }
 
 .allowHTML
 {
    /*Because HTML has its own styling*/
    padding: 0;
-}
-
-.mblazonry-template.allowHTML > div > *
-{
-   margin-bottom: -4px;
 }
