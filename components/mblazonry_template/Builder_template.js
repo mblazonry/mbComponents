@@ -232,14 +232,17 @@
 				var templates = $('.nx-dropzone.ui-droppable + .nx-pagebuilder-component:has(> .mblazonry-template)');
 				var dropzones = $('.nx-pagebuilder-component:has(> .mblazonry-template) ~ .nx-dropzone.ui-droppable');
 
-				for (var i = templates.length - 1; i >= 0; i--)
+				if (templates.length > 1)
 				{
-					$(dropzones[i]).css(
+					for (var i = templates.length - 1; i >= 0; i--)
 					{
-						height: ($(templates[i]).height() - 24) + "px",
-						width: "8px",
-						display: "inline-block"
-					});
+						$(dropzones[i]).css(
+						{
+							height: ($(templates[i]).height() - 24) + "px",
+							width: "8px",
+							display: "inline-block"
+						});
+					}
 				}
 			}
 			if (window.addEventListener)
