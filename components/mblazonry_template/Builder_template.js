@@ -198,7 +198,8 @@
 			}
 			component.element.css(
 			{
-				display: "inline-block"
+				display: "inline-block",
+				"vertical-align": "top",
 			});
 
 			template.addClass("mblazonry-template");
