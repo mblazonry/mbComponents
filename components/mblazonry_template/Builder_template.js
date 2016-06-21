@@ -30,7 +30,7 @@
 		},
 		propertiesRenderer: function (propertiesObj, component)
 		{
-			propertiesObj.setTitle("Template Properties");
+			propertiesObj.setTitle("mB Template Properties");
 			var state = component.state,
 				eventType = state.children("actions").attr("event"),
 				isCustomEventType = ("custom" === eventType),
