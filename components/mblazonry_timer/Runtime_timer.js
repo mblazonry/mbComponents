@@ -501,28 +501,45 @@
 			}
 		}
 
+		/**
+		 * Checks whether a session has expired using a JS cookie, and then polls the server.
+		 *
+		 * @returns null
+		 */
 		function checkTimer()
 		{
-			if (!pendingActions)
-			{
-				$.when(userModel.updateData()).then(function ()
+			// cookie checking logic
+			// if the cookie is expired, it is removed from scope by the runtime.
+			var session_cookie_set = false;
+			var cs = document.cookie.split(";").map(trim);
+			cs.map(function(c) {
+				if (c.startsWith("sid=")) {
+					session_cookie_set = true;
+				};
+			});
+		
+			if (session_cookie_set) {
+				if (!pendingActions)
 				{
-					if (!startTimeIsValid())
+					$.when(userModel.updateData()).then(function ()
 					{
-						handleChangedStartTime();
-						window.console.log("Polled: invalid start time");
-					}
-					else
-					{
-						// start the timer
-						window.console.log("Polled: start time valid!");
-					}
-				});
-				pollTimer();
-			}
-			else
-			{
-				window.setTimeout(checkTimer, 20 * 1000);
+						if (!startTimeIsValid())
+						{
+							handleChangedStartTime();
+							window.console.log("Polled: invalid start time");
+						}
+						else
+						{
+							// start the timer
+							window.console.log("Polled: start time valid!");
+						}
+					});
+					pollTimer();
+				}
+				else
+				{
+					window.setTimeout(checkTimer, 20 * 1000);
+				}
 			}
 		}
 
