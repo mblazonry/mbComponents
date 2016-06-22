@@ -30,32 +30,38 @@ var merge = require('merge-stream'),
 ///////////
 // Tasks //
 ///////////
-
+///
 // Delegate functions used in these calls
-// are implemented below.
+// are implemented in functions below.
 
 /**
- * Default task that tests gulp by logging a message.
+ * Default task that tests gulp by listing tasks
  */
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
+// Release builds
 gulp.task('clean-min-release', clean_min_release);
+gulp.task('build-release', ['clean-min-release', 'lint'], build_min_release);
+// Special builds
 gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
 gulp.task('build-min-pI', ['clean-min-release', 'lint'], build_min_progressIndicator);
-gulp.task('build-min', ['clean-min-release', 'lint'], build_min);
-gulp.task('build-min-all', ['clean-min-release', 'lint'], build_min_all);
-gulp.task('build-min-util', ['clean-min-release', 'lint'], build_min_util);
+// Interactive Build
+gulp.task('build-min', ['clean-min-release', 'lint'], build_min_components);
+// Utility builds
+gulp.task('clean-min-util', clean_min_util);
+gulp.task('build-util', ['clean-min-util', 'lint'], build_min_util);
+// Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
-gulp.task('deploy', ['static-resource-dev', 'env-dev'], mB_jsforce_deploy_dev);
 gulp.task('env-dev', false, env_dev);
+gulp.task('deploy', ['static-resource-dev', 'env-dev'], deploy_dev);
 
 ///////////////////
 // Utility Tasks //
 ///////////////////
 /**
- * Remove old dev files from directory.
+ * Remove old dev files.
  */
 function clean_dev()
 {
@@ -72,11 +78,31 @@ function clean_dev()
 }
 
 /**
- * Remove old release files from directory.
+ * Remove old release files
  */
 function clean_min_release()
 {
-   return gulp.src('./*-min*-release.zip',
+   return clean_min("release");
+}
+/**
+ * Remove files from working directory
+ */
+function clean_min_util()
+{
+   return clean_min("util");
+}
+/**
+ * Remove old files from directory.
+ */
+function clean_min(type)
+{
+   var build_type;
+   if (!type)
+   {
+      build_type = "release";
+   }
+
+   return gulp.src('./*-min*-${build_type}.zip',
       {
          read: false
       })
@@ -113,8 +139,7 @@ const banner = ['/**',
    ''
 ].join('\n');
 
-const UTIL_COMPS = ['template', 'progressIndicator', 'popupController'];
-const ALL_COMPS = ['timer'].concat(UTIL_COMPS);
+const RELEASE = ['timer', 'template', 'progressIndicator'];
 const gcl = gutil.colors;
 
 ////////////////
@@ -125,7 +150,7 @@ const gcl = gutil.colors;
  * Deploy development build to mBlazonry using jsforce
  * This will only update server if files are non-identical
  */
-function mB_jsforce_deploy_dev()
+function deploy_dev()
 {
    return gulp.src('./src/**',
       {
@@ -135,8 +160,8 @@ function mB_jsforce_deploy_dev()
       .pipe(
          forceDeploy(
          {
-            username: process.env.SF_USERNAME,
-            password: process.env.SF_PASSWORD,
+            username: process.env.MB_USERNAME,
+            password: process.env.MB_PASSWORD,
             loginUrl: 'https://mblazonry.my.salesforce.com',
             pollTimeout: 120 * 1000,
             pollInterval: 2 * 1000,
@@ -199,7 +224,11 @@ function build_dev()
       .pipe(gulp.dest('./'));
 }
 
-function build_min()
+/**
+ * This method allows the user to state explicitly by name
+ * which packages to build, from the command line.
+ */
+function build_min_components()
 {
    const SPECIAL = {
       pI: "progressIndicator",
@@ -234,36 +263,37 @@ function build_min()
    {
       exclude = "progressIndicator";
    }
-   return build_min_components(comp, exclude);
+   return build_min(comp, exclude);
 }
 
-function build_min_all()
+function build_min_release()
 {
 
-   return build_min_components(ALL_COMPS);
+   return build_min(RELEASE);
 }
 
 function build_min_util()
 {
+   const UTIL = RELEASE.splice(0, 1);
 
-   return build_min_components(UTIL_COMPS);
+   return build_min(UTIL);
 }
 
 function build_min_timer()
 {
    var comp = ["timer"],
       exclude = comp;
-   return build_min_components(comp, exclude);
+   return build_min(comp, exclude);
 }
 
 function build_min_progressIndicator()
 {
    var comp = ["progressIndicator"],
-      exclude = "pI";
-   return build_min_components(comp, exclude);
+      excludes = "pI";
+   return build_min(comp, excludes);
 }
 
-function build_min_components(comps, exclude)
+function build_min(comps, excludes, type)
 {
    var js = [],
       css = [];
@@ -295,8 +325,8 @@ function build_min_components(comps, exclude)
 
    // configs
    var crc32 = crc.crc32(comps.sort()).toString(16),
-      excludeStart = exclude ? `start-${exclude}-excludes` : "",
-      excludeEnd = exclude ? `end-${exclude}-excludes` : "",
+      excludeStart = excludes ? `start-${excludes}-excludes` : "",
+      excludeEnd = excludes ? `end-${excludes}-excludes` : "",
       min_configs = gulp.src('./skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
@@ -307,8 +337,14 @@ function build_min_components(comps, exclude)
       // minify configs
       .pipe(jsonminify());
 
+   var build_type;
+   if (!type)
+   {
+      build_type = "release";
+   }
+
    // Zip all files
    return merge(min_src, min_configs)
-      .pipe(zip(`./mblazonryComponents-min-${crc32}-release.zip`))
+      .pipe(zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`))
       .pipe(gulp.dest('./'));
 }
