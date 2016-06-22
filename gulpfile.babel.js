@@ -50,6 +50,7 @@ gulp.task('build-min', ['clean-min-release', 'lint'], build_min_components);
 // Utility builds
 gulp.task('clean-min-util', clean_min_util);
 gulp.task('build-util', ['clean-min-util', 'lint'], build_min_util);
+gulp.task('util', ['build-util']);
 // Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
@@ -274,7 +275,8 @@ function build_min_release()
 
 function build_min_util()
 {
-   const UTIL = RELEASE.splice(0, 1);
+   var UTIL = RELEASE;
+   UTIL.splice(0, 1);
 
    return build_min(UTIL);
 }
