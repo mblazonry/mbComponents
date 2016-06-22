@@ -300,6 +300,18 @@ function build_min(comps, excludes, type)
    var js = [],
       css = [];
 
+   if (comps.length < 2) // checking
+   {
+      if (comps.contains("timer"))
+      {
+         return build_min_timer();
+      }
+      else if (comps.contains("progressIndicator"))
+      {
+         return build_min_progressIndicator();
+      }
+   }
+
    comps.forEach(comp =>
    {
       js.push(`./components/*_${comp}/*.js`);
