@@ -508,17 +508,17 @@
 		 */
 		function checkTimer()
 		{
-			// cookie checking logic
-			// if the cookie is expired, it is removed from scope by the runtime.
-			var session_cookie_set = false;
-			var cs = document.cookie.split(";").map(trim);
-			cs.map(function(c) {
-				if (c.startsWith("sid=")) {
-					session_cookie_set = true;
-				};
+
+			var sess_timeout = false;
+
+			var nx_problem_divs = document.getElementsByClassName('nx-problem');
+			nx_problems.map(function(nxpd) {
+				if (nxpd.innerHTML == "1. Unable to connect to the server (communication failure).") {
+					sess_timeout = true;
+				}
 			});
-		
-			if (session_cookie_set) {
+
+			if (session_timeout) {
 				if (!pendingActions)
 				{
 					$.when(userModel.updateData()).then(function ()
