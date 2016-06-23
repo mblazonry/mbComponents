@@ -501,28 +501,48 @@
 			}
 		}
 
+		/**
+		 * Checks whether a session has expired
+		 *  by presence of a skuid error banner,
+		 *  it then polls the server.
+		 */
 		function checkTimer()
 		{
-			if (!pendingActions)
+
+			var session_timeout = false;
+
+			var nx_problem_divs = document.getElementsByClassName('nx-problem');
+			nx_problem_divs.map(function (nxpd)
 			{
-				$.when(userModel.updateData()).then(function ()
+				if (nxpd.innerHTML == "1. Unable to connect to the server (communication failure).")
 				{
-					if (!startTimeIsValid())
-					{
-						handleChangedStartTime();
-						window.console.log("Polled: invalid start time");
-					}
-					else
-					{
-						// start the timer
-						window.console.log("Polled: start time valid!");
-					}
-				});
-				pollTimer();
-			}
-			else
+					session_timeout = true;
+				}
+			});
+
+			if (session_timeout)
 			{
-				window.setTimeout(checkTimer, 20 * 1000);
+				if (!pendingActions)
+				{
+					$.when(userModel.updateData()).then(function ()
+					{
+						if (!startTimeIsValid())
+						{
+							handleChangedStartTime();
+							window.console.log("Polled: invalid start time");
+						}
+						else
+						{
+							// start the timer
+							window.console.log("Polled: start time valid!");
+						}
+					});
+					pollTimer();
+				}
+				else
+				{
+					window.setTimeout(checkTimer, 20 * 1000);
+				}
 			}
 		}
 
