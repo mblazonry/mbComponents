@@ -171,8 +171,8 @@ function deploy(targetPrefix)
       pollTimeout: 120 * 1000,
       pollInterval: 2 * 1000,
       version: '37.0',
-      verbose: true,
-      logLevel: "DEBUG", // "WARNING"
+      verbose: false,
+      logLevel: "WARNING", // "DEBUG"
       rollbackOnError: true
    };
 
