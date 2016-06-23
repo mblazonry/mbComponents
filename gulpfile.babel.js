@@ -39,18 +39,12 @@ var merge = require('merge-stream'),
  */
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
+gulp.task('build', ['build-release']);
 // Release builds
-gulp.task('clean-min-release', clean_min_release);
+gulp.task('clean-min-release', clean_release);
 gulp.task('build-release', ['clean-min-release', 'lint'], build_min_release);
-// Special builds
-gulp.task('build-min-timer', ['clean-min-release', 'lint'], build_min_timer);
-gulp.task('build-min-pI', ['clean-min-release', 'lint'], build_min_progressIndicator);
 // Interactive Build
 gulp.task('build-min', ['clean-min-release', 'lint'], build_min_components);
-// Utility builds
-gulp.task('clean-min-util', clean_min_util);
-gulp.task('build-util', ['clean-min-util', 'lint'], build_min_util);
-gulp.task('util', ['build-util']);
 // Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
@@ -79,31 +73,19 @@ function clean_dev()
 }
 
 /**
- * Remove old release files
+ * Remove old release build files
  */
-function clean_min_release()
+function clean_release()
 {
    return clean_min("release");
 }
-/**
- * Remove files from working directory
- */
-function clean_min_util()
-{
-   return clean_min("util");
-}
+
 /**
  * Remove old files from directory.
  */
-function clean_min(type)
+function clean_min(build_type)
 {
-   var build_type;
-   if (!type)
-   {
-      build_type = "release";
-   }
-
-   return gulp.src('./*-min*-${build_type}.zip',
+   return gulp.src(`./*-min*-${build_type}.zip`,
       {
          read: false
       })
@@ -139,9 +121,12 @@ const banner = ['/**',
    ' */',
    ''
 ].join('\n');
-
-const RELEASE = ['timer', 'template', 'progressIndicator'];
 const gcl = gutil.colors;
+const RELEASE_BUILD = [
+   'progressIndicator',
+   'timer',
+   'template',
+];
 
 ////////////////
 // Deployment //
@@ -264,53 +249,18 @@ function build_min_components()
    {
       exclude = "progressIndicator";
    }
-   return build_min(comp, exclude);
+   return build_min(comp);
 }
 
 function build_min_release()
 {
-
-   return build_min(RELEASE);
+   return build_min(RELEASE_BUILD, "release");
 }
 
-function build_min_util()
-{
-   var UTIL = RELEASE;
-   UTIL.splice(0, 1);
-
-   return build_min(UTIL);
-}
-
-function build_min_timer()
-{
-   var comp = ["timer"],
-      exclude = comp;
-   return build_min(comp, exclude);
-}
-
-function build_min_progressIndicator()
-{
-   var comp = ["progressIndicator"],
-      excludes = "pI";
-   return build_min(comp, excludes);
-}
-
-function build_min(comps, excludes, type)
+function build_min(comps, build_type)
 {
    var js = [],
       css = [];
-
-   if (comps.length < 2) // checking
-   {
-      if (comps.contains("timer"))
-      {
-         return build_min_timer();
-      }
-      else if (comps.contains("progressIndicator"))
-      {
-         return build_min_progressIndicator();
-      }
-   }
 
    comps.forEach(comp =>
    {
@@ -339,8 +289,8 @@ function build_min(comps, excludes, type)
 
    // configs
    var crc32 = crc.crc32(comps.sort()).toString(16),
-      excludeStart = excludes ? `start-${excludes}-excludes` : "",
-      excludeEnd = excludes ? `end-${excludes}-excludes` : "",
+      excludeStart = `start-${build_type}-excludes`,
+      excludeEnd = `end-${build_type}-excludes`,
       min_configs = gulp.src('./skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
@@ -350,12 +300,6 @@ function build_min(comps, excludes, type)
       }))
       // minify configs
       .pipe(jsonminify());
-
-   var build_type;
-   if (!type)
-   {
-      build_type = "release";
-   }
 
    // Zip all files
    return merge(min_src, min_configs)

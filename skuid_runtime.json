@@ -1,48 +1,60 @@
 {
    "id": "mblazonry",
-   "components": [ /* start-timer-excludes */
-   {
-      "id": "progress_indicator"
-   } /* start-pI-excludes */ ,
-   {
-      "id": "sayhello"
-   },
-   {
-      "id": "popupcontroller"
-   },
-   {
-      "id": "template"
-   }, /* end-timer-excludes */
-   {
-      "id": "timer"
-   } /* end-pI-excludes */ ],
-   "js": [ /* start-timer-excludes */
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
-   } /* start-pI-excludes */ ,
-   {
-      "path": "mblazonry_sayHello/Runtime_sayHello.js"
-   },
-   {
-      "path": "mblazonry_popupController/Runtime_popupController.js"
-   },
-   {
-      "path": "mblazonry_template/Runtime_template.js"
-   }, /* end-timer-excludes */
-   {
-      "path": "mblazonry_timer/Runtime_timer.js"
-   } /* end-pI-excludes */ ],
-   "css": [ /* start-timer-excludes */
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   } /* start-pI-excludes */ ,
-   {
-      "path": "mblazonry_sayHello/Runtime_sayHello.css"
-   },
-   {
-      "path": "mblazonry_template/Runtime_template.css"
-   }, /* end-timer-excludes */
-   {
-      "path": "mblazonry_timer/mblazonry_timer.css"
-   } /* end-pI-excludes */ ]
+
+   "components": [
+      /* start-release-excludes */
+      {
+         "id": "sayhello"
+      },
+      {
+         "id": "popupcontroller"
+      },
+      /* end-release-excludes */
+      {
+         "id": "progress_indicator"
+      },
+      {
+         "id": "timer"
+      },
+      {
+         "id": "template"
+      }
+   ],
+
+   "js": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Runtime_sayHello.js"
+      },
+      {
+         "path": "mblazonry_popupController/Runtime_popupController.js"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
+      },
+      {
+         "path": "mblazonry_timer/Runtime_timer.js"
+      },
+      {
+         "path": "mblazonry_template/Runtime_template.js"
+      }
+   ],
+
+   "css": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Runtime_sayHello.css"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
+      },
+      {
+         "path": "mblazonry_timer/mblazonry_timer.css"
+      },
+      {
+         "path": "mblazonry_template/Runtime_template.css"
+      }
+   ]
 }
