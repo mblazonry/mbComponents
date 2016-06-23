@@ -509,16 +509,19 @@
 		function checkTimer()
 		{
 
-			var sess_timeout = false;
+			var session_timeout = false;
 
 			var nx_problem_divs = document.getElementsByClassName('nx-problem');
-			nx_problems.map(function(nxpd) {
-				if (nxpd.innerHTML == "1. Unable to connect to the server (communication failure).") {
-					sess_timeout = true;
+			nx_problem_divs.map(function (nxpd)
+			{
+				if (nxpd.innerHTML == "1. Unable to connect to the server (communication failure).")
+				{
+					session_timeout = true;
 				}
 			});
 
-			if (session_timeout) {
+			if (session_timeout)
+			{
 				if (!pendingActions)
 				{
 					$.when(userModel.updateData()).then(function ()
