@@ -4,12 +4,17 @@
    display: inline-block;
 }
 
-.clickable
+.mblazonry-template.clickable
 {
    cursor: pointer;
 }
 
-.mblazonry-template.allowHTML > div > *
+.mblazonry-template.allowHTML
 {
-   margin-bottom: -4px;
+   text-align: center;
+}
+
+.mblazonry-template.allowHTML > div > img
+{
+   vertical-align: text-bottom;
 }
