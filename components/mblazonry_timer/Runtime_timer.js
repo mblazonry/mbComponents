@@ -501,6 +501,13 @@
 			}
 		}
 
+		function setCookie(name, expiration) {
+			var exp = expiration.toString();
+			
+			n = name.replace(' ', '');
+			document.cookie += n + '=' + expiration.toString();
+		}
+
 		/**
 		 * Checks whether a session has expired
 		 *  by presence of a skuid error banner,
@@ -512,13 +519,17 @@
 			var session_timeout = false;
 
 			var nx_problem_divs = document.getElementsByClassName('nx-problem');
-			nx_problem_divs.map(function (nxpd)
-			{
-				if (nxpd.innerHTML == "1. Unable to connect to the server (communication failure).")
+			if (nx_problem_divs) {
+				nx_problem_divs.map(function (nxpd)
 				{
-					session_timeout = true;
-				}
-			});
+					if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).')
+					{
+						session_timeout = true;
+					} else {
+						set_cookie('server_active', new Date());
+					}
+				});
+			}
 
 			if (session_timeout)
 			{
