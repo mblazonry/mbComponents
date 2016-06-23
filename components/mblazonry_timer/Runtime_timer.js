@@ -502,9 +502,9 @@
 		}
 
 		/**
-		 * Checks whether a session has expired using a JS cookie, and then polls the server.
-		 *
-		 * @returns null
+		 * Checks whether a session has expired
+		 *  by presence of a skuid error banner,
+		 *  it then polls the server.
 		 */
 		function checkTimer()
 		{
