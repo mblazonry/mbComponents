@@ -16,7 +16,7 @@
 	/* jshint -W098 */ // x is unused.
 	/* jshint -W030 */ // useless and unnecessary code.
 	/* jshint -W004 */ // x is already defined.
-	/* jslint browser:true, lastsemic:true */
+
 	//var $j = $.noConflict();
 	var $a = skuid.actions;
 	var $e = skuid.events;
@@ -591,7 +591,10 @@
 		{
 			size = (typeof size !== 'undefined' ? size : 2);
 			var s = num + "";
-			while (s.length < size) s = "0" + s;
+			while (s.length < size)
+			{
+				s = "0" + s;
+			}
 			return s;
 		}
 

@@ -1,8 +1,9 @@
-(function(window, $, $S, undefined)
+(function (window, $, $S, undefined)
 {
 	'use strict';
+	/* jslint unused:false */
 
-	$S.componentType.register('mblazonry__popupcontroller', function(domElement, xmlConfig, component)
+	$S.componentType.register('mblazonry__popupcontroller', function (domElement, xmlConfig, component)
 	{
 		// obtain component properties
 		var self = domElement,
@@ -33,7 +34,7 @@
 		if (!state)
 		{
 			// hook dialogcreate event
-			$(popup).on('dialogcreate', function(event, ui)
+			$(popup).on('dialogcreate', function (event, ui)
 			{
 				// if onCreate snippet is specified
 				if (oncreate)
@@ -53,7 +54,7 @@
 			});
 
 			// hook dialogopen event
-			$(popup).on('dialogopen', function(event, ui)
+			$(popup).on('dialogopen', function (event, ui)
 			{
 				// if hiding the 'X'
 				if (hideclose)
@@ -77,7 +78,7 @@
 				if (onopen)
 				{
 					var snippet = $S.snippet.getSnippet(onopen);
-					// if we have the snippet, call it else log warning		        	
+					// if we have the snippet, call it else log warning
 					if (snippet)
 					{
 						snippet();
@@ -89,10 +90,10 @@
 				}
 			});
 
-			// hook dialogbeforeclose event	        
-			$(popup).on('dialogbeforeclose', function(event, ui)
+			// hook dialogbeforeclose event
+			$(popup).on('dialogbeforeclose', function (event, ui)
 			{
-				// if onBeforeClose snippet is specified	        	
+				// if onBeforeClose snippet is specified
 				if (onbeforeclose)
 				{
 					var snippet = $S.snippet.getSnippet(onbeforeclose);
@@ -121,9 +122,9 @@
 				}
 			});
 
-			$(popup).on('dialogclose', function(event, ui)
+			$(popup).on('dialogclose', function (event, ui)
 			{
-				// if onClose snippet is specified	        	
+				// if onClose snippet is specified
 				if (onclose)
 				{
 					// if we have the snippet, call it else log warning

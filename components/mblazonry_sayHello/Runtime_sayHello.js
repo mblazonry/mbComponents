@@ -4,4 +4,4 @@
    {
       element.addClass("hello-content").html("<b>Hello " + xmlDef.attr("person") + "</b>");
    });
-})(skuid);
+})(window.skuid);

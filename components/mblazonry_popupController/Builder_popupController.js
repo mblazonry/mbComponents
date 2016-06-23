@@ -1,6 +1,7 @@
 (function ($, $S, undefined)
 {
 	'use strict';
+	/* jslint unused:false */
 
 	$S.builder.registerBuilder(new $S.builder.Builder(
 	{
@@ -11,9 +12,8 @@
 		isJSCreateable: true, // required so that component can be added to popup, drawer, etc.
 		componentRenderer: function (component)
 		{
-			var self = component;
+			// var self = component;
 			component.header.html(component.builder.name);
-
 
 		},
 		propertiesRenderer: function (propertiesObj, component)

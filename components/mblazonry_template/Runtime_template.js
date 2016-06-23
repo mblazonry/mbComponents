@@ -1,6 +1,5 @@
 /* jshint -W030 */ // useless and unnecessary code.
 /* jshint -W004 */ // x is already defined.
-/* jslint browser:true, lastsemic:true, esnext:true */
 
 (function ($, skuid, window, undefined)
 {
