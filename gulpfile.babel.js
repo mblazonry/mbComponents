@@ -22,6 +22,7 @@ var merge = require('merge-stream'),
    // print = require('gulp-print'),
    rename = require('gulp-rename'),
    clean = require('gulp-clean'),
+   stylish = require('jshint-stylish'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
    forceDeploy = require('gulp-jsforce-deploy'),
@@ -99,10 +100,10 @@ function clean_min(build_type)
  */
 function lint()
 {
-   return gulp.src('components/**/*.js') // path to your files
+   return gulp.src('./components/**/*.js') // path to your files
       .pipe(jshint())
-      // Dump results
-      .pipe(jshint.reporter());
+      .pipe(jshint.reporter(stylish))
+      .pipe(jshint.reporter('fail'));
 }
 
 ////////////

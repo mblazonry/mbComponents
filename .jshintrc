@@ -1,0 +1,33 @@
+{
+   "maxdepth": 5,
+   "maxstatements": 200,
+   "maxcomplexity": 12,
+   "maxparams": 4,
+   "maxerr": 33,
+
+   "curly": true,
+   "eqeqeq": false,
+   "immed": true,
+   "latedef": false,
+   "noarg": true,
+   "nonew": true,
+
+   "undef": true,
+   "globals": "skuid",
+   "unused": "vars",
+   "trailing": true,
+   "lastsemic": true,
+
+   "quotmark": false,
+   "expr": true,
+   "asi": true,
+
+   "browser": true,
+   "esnext": true,
+   "devel": false,
+   "jquery": true,
+   "node": false,
+   "nonstandard": false,
+
+   "predef": ["require", "module", "__dirname", "__filename"]
+}
