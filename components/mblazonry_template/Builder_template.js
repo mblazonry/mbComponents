@@ -200,6 +200,7 @@
 			{
 				display: "inline-block",
 				"vertical-align": "top",
+				margin: "8px",
 			});
 
 			template.addClass("mblazonry-template");
