@@ -7,6 +7,7 @@
 
     var $a = skuid.actions;
     var $c = skuid.component;
+    var $e = skuid.events;
     var $m = skuid.model;
     var $u = skuid.utils;
 
@@ -81,8 +82,10 @@
         {
             // Attach a function to the template event
             $('.mblazonry-template').on(eventType, handleTimerClick);
+            $e.subscribe(eventType, handleTimerClick);
 
-            function handleTimerClick(event)
+            // function handleTimerClick(event)
+            function handleTimerClick()
             {
                 event.stopImmediatePropagation();
 
