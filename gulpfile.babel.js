@@ -43,10 +43,10 @@ gulp.task('default', taskListing);
 gulp.task('lint', lint);
 gulp.task('build', ['build-release']);
 // Release builds
-gulp.task('clean-min-release', clean_release);
-gulp.task('build-release', ['clean-min-release', 'lint'], build_min_release);
+gulp.task('clean-min-release', ['lint'], clean_release);
+gulp.task('build-release', ['clean-min-release'], build_min_release);
 // Interactive Build
-gulp.task('build-min', ['clean-min-release', 'lint'], build_min_components);
+gulp.task('build-min', ['clean-min-release'], build_min_components);
 // Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
