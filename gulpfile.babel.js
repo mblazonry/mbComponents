@@ -6,12 +6,12 @@
 //////////
 // gulp //
 //////////
-var gulp = require('gulp');
+const gulp = require('gulp');
 
 ///////////////////
 // gulp plug-ins //
 ///////////////////
-var merge = require('merge-stream'),
+const merge = require('merge-stream'),
    jshint = require("gulp-jshint"),
    uglify = require("gulp-uglify"),
    cleanCSS = require('gulp-clean-css'),
@@ -19,7 +19,7 @@ var merge = require('merge-stream'),
    crc = require('crc'),
    zip = require('gulp-zip'),
    gutil = require('gulp-util'),
-   // print = require('gulp-print'),
+   list = require('gulp-print'),
    rename = require('gulp-rename'),
    clean = require('gulp-clean'),
    stylish = require('jshint-stylish'),
@@ -44,9 +44,13 @@ gulp.task('lint', lint);
 gulp.task('build', ['build-release']);
 // Release builds
 gulp.task('clean-min-release', ['lint'], clean_release);
-gulp.task('build-release', ['clean-min-release'], build_min_release);
+gulp.task('build-min-release', ['clean-min-release'], build_min_release);
+gulp.task('static-resource-min-release', ['build-min-release'], static_resource_min_release);
 // Interactive Build
-gulp.task('build-min', ['clean-min-release'], build_min_components);
+gulp.task('build-interactive', ['clean-min-release'], build_min_components);
+// Client Builds
+gulp.task('env-ip', false, env_IP);
+gulp.task('deploy-ip', ['static-resource-min-release', 'env-ip'], deploy_IP);
 // Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
@@ -129,59 +133,175 @@ const RELEASE_BUILD = [
    'timer',
    'template',
 ];
+const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
 
 ////////////////
 // Deployment //
 ////////////////
 
 /**
- * Deploy development build to mBlazonry using jsforce
- * This will only update server if files are non-identical
+ * Deploy release build to Ideal Protein.
+ */
+function deploy_IP()
+{
+   return deploy('IP');
+}
+
+/**
+ * Deploy development build to mBlazonry.
  */
 function deploy_dev()
 {
+   return deploy('mB');
+}
+
+/**
+ * Deploy builds using jsforce. This will only update
+ * a server if the files on both ends are non-identical .
+ */
+function deploy(targetPrefix)
+{
+   var username = process.env[`${targetPrefix}_USERNAME`],
+      password = process.env[`${targetPrefix}_PASSWORD`],
+      loginUrl = process.env[`${targetPrefix}_LOGIN_URL`];
+
+   var org = {
+      username: username,
+      password: password,
+      pollTimeout: 120 * 1000,
+      pollInterval: 2 * 1000,
+      version: '37.0',
+      verbose: true,
+      logLevel: "DEBUG", // "WARNING"
+      rollbackOnError: true
+   };
+
+   if (loginUrl)
+   {
+      org.loginUrl = loginUrl;
+   }
+
    return gulp.src('./src/**',
       {
          base: "."
       })
       .pipe(zip('pkg.zip'))
-      .pipe(
-         forceDeploy(
-         {
-            username: process.env.MB_USERNAME,
-            password: process.env.MB_PASSWORD,
-            loginUrl: 'https://mblazonry.my.salesforce.com',
-            pollTimeout: 120 * 1000,
-            pollInterval: 2 * 1000,
-            version: '37.0',
-            verbose: false,
-            logLevel: "WARNING", // "DEBUG"
-            rollbackOnError: true
-         })
-      );
+      .pipe(forceDeploy(org));
+}
+
+//////////////////
+// Build Events //
+//////////////////
+
+function gulpFail(origin, message)
+{
+   throw new gutil.PluginError(
+   {
+      plugin: origin,
+      message: gutil.colors.red(message || "Task was forced to fail."),
+      showStack: false
+   });
+}
+
+////////////////////////
+// .env configuration //
+////////////////////////
+
+/**
+ * Check for mB environment configs
+ */
+function env_dev()
+{
+   return env('mB');
+}
+
+/**
+ * Check for IP environment configs
+ */
+function env_IP()
+{
+   return env('IP');
 }
 
 /**
  * Check for existing environment configs
  */
-function env_dev()
+function env(clientPrefix)
+{
+   var valid = env_vars(clientPrefix);
+
+   if (!valid)
+   {
+      gulpFail("env", `${clientPrefix} environment variables not found`);
+   }
+}
+
+/**
+ * Check for existing environment variables
+ */
+function env_vars(clientPrefix)
+{
+   var valid = false;
+
+   if (env_exists())
+   {
+      env_require();
+
+      if (process.env[`${clientPrefix}_USERNAME`] && process.env[`${clientPrefix}_PASSWORD`])
+      {
+         gutil.log("Found" + gcl.magenta(` ${clientPrefix}`) + " config!");
+         valid = true;
+      }
+   }
+   return valid;
+}
+
+/**
+ * Check for existing .env file
+ */
+function env_exists(client)
 {
    var envFileExists = fileExists('./.env');
 
-   gutil.log((envFileExists ? "Discovered" + gcl.cyan(' .env') : gcl.cyan("Couldn't find") + '.env') + " file!");
-
-   if (envFileExists)
-   {
-      require('dotenv').config();
-   }
+   gutil.log((envFileExists ? "Discovered" + gcl.cyan(' .env') : gcl.cyan("Couldn't find") + '.env') + " file");
 
    return envFileExists;
 }
 
-// possibly unnecesary
+/**
+ * Require .env configs
+ */
+function env_require()
+{
+   require('dotenv').config();
+}
+
+///////////////////////////////
+// Static Ressource Building //
+///////////////////////////////
+
+/**
+ * Build the release static resource.
+ */
+function static_resource_min_release()
+{
+   return static_resource(`${RELEASE_CRC32}-release`);
+}
+/**
+ * Build the dev static resource.
+ */
 function static_resource_dev()
 {
-   return gulp.src('./*-dev.zip',
+   return static_resource('dev');
+}
+
+/**
+ * This builds the deployemnt package
+ * for deployment with jsforce and the SF APIs.
+ */
+function static_resource(build_type)
+{
+   return gulp.src(`./*-${build_type}.zip`,
       {
          base: "."
       })
@@ -213,8 +333,9 @@ function build_dev()
 }
 
 /**
- * This method allows the user to state explicitly by name
- * which packages to build, from the command line.
+ * This is an interactive method.
+ * It allows the user, from the command line,
+ * to state by name which packages to build.
  */
 function build_min_components()
 {
@@ -272,10 +393,12 @@ function build_min(comps, build_type)
 
    // minify-js
    var min_js = gulp.src(js)
+      .pipe(list())
       .pipe(uglify());
 
    //minify-css
    var min_css = gulp.src(css)
+      .pipe(list())
       .pipe(cleanCSS(
       {
          debug: true
@@ -290,10 +413,20 @@ function build_min(comps, build_type)
       }));
 
    // configs
-   var crc32 = crc.crc32(comps.sort()).toString(16),
+   var crc32,
       excludeStart = `start-${build_type}-excludes`,
-      excludeEnd = `end-${build_type}-excludes`,
-      min_configs = gulp.src('./skuid_*.json')
+      excludeEnd = `end-${build_type}-excludes`;
+
+   if (build_type === "release")
+   {
+      crc32 = RELEASE_CRC32;
+   }
+   else
+   {
+      crc32 = crc.crc32(comps.sort()).toString(16);
+   }
+
+   var min_configs = gulp.src('./skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
       {
