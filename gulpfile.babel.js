@@ -1,4 +1,4 @@
-/* jshint node:true, esnext:true */
+/* jshint node:true */
 /*********************************/
 
 "use strict";
