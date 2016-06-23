@@ -1,5 +1,7 @@
 (function (skuid)
 {
+	'use strict';
+
 	var $xml = skuid.utils.makeXMLDoc;
 	var $j = skuid.jQuery.noConflict();
 

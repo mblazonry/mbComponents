@@ -1,5 +1,7 @@
 (function (skuid)
 {
+	'use strict';
+
 	skuid.componentType.register('mblazonry__progress_indicator', function (element, xmlDef, component)
 	{
 		var $ = skuid.jQuery;

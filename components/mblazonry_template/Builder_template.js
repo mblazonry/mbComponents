@@ -4,6 +4,8 @@
 
 (function ($, skuid, undefined)
 {
+	'use strict';
+
 	var $S = skuid;
 	var $b = $S.builder;
 	var $bc = $b.core;

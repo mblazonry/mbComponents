@@ -3,6 +3,8 @@
 
 (function ($, skuid, window, undefined)
 {
+    'use strict';
+
     var $a = skuid.actions;
     var $c = skuid.component;
     var $m = skuid.model;
