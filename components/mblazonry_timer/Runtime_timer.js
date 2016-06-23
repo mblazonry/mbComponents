@@ -7,15 +7,18 @@
  * @param  {object} skuid - a reference to the $skuid framework
  * @param  {object} window - A reference to the window object
  */
+
+
 (function ($, skuid, window, undefined)
 {
 	/**
 	 * @namespace skuid
 	 */
-	'use strict';
 	/* jshint -W098 */ // x is unused.
 	/* jshint -W030 */ // useless and unnecessary code.
 	/* jshint -W004 */ // x is already defined.
+
+	"use strict";
 
 	//var $j = $.noConflict();
 	var $a = skuid.actions;
@@ -501,12 +504,15 @@
 			}
 		}
 
-		function setCookie(name, expiration) {
-			var exp = expiration.toString();
-			
-			n = name.replace(' ', '');
-			document.cookie += n + '=' + expiration.toString();
-		}
+		// deprecated on dev branch in favour of local storage method
+		/*
+		 *function setCookie(name, expiration) {
+		 *    var exp = expiration.toString();
+		 *    
+		 *    var n = name.replace(' ', '');
+		 *    document.cookie += n + '=' + expiration.toString();
+		 *}
+		 */
 
 		/**
 		 * Checks whether a session has expired
@@ -525,8 +531,10 @@
 					if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).')
 					{
 						session_timeout = true;
-					} else {
-						set_cookie('server_active', new Date());
+					/*
+					 *} else {
+					 *    setCookie('server_active', new Date());
+					 */
 					}
 				});
 			}
