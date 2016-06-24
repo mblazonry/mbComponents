@@ -27,6 +27,10 @@
 	var $m = skuid.model;
 	var $p = skuid.page;
 
+	// timeout interval for server polling, in ms
+	const TIMEOUT_INTERVAL = 12 * 60 * 1000;
+	let SESSION_TIMEOUT = false;
+
 	/**
 	 * @author aklef
 	 * @function
@@ -504,15 +508,57 @@
 			}
 		}
 
-		// deprecated on dev branch in favour of local storage method
-		/*
-		 *function setCookie(name, expiration) {
-		 *    var exp = expiration.toString();
-		 *    
-		 *    var n = name.replace(' ', '');
-		 *    document.cookie += n + '=' + expiration.toString();
-		 *}
+		/**
+		 * Checks whether an entry has already been made in local storage
+		 * and allows server polling and/or updates local storage as appropriate
 		 */
+		function updateLS() {
+			if (typeof(Storage) !== undefined) {
+
+				// the current tab is the master tab (first tab opened)
+				// OR the master tab was closed and the current tab can be
+				// assigned as the master tab
+				if (localStorage.masterTabId === undefined) {
+					// create a window-scoped unique ID for the tab setting the
+					// timeout interval
+					window.masterTabId = Math.floor(Math.random() * 10e5);
+					localStorage.masterTabId = window.masterTabId;
+
+					// create a timestamp with offset of TIMEOUT_INTERVAL minutes
+					var d = (new Date());
+					d = d.setMinutes(d.getMinutes() + (TIMEOUT_INTERVAL / 6e4));
+					localStorage.expiryDate = d;
+
+					// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
+					// and update SERVER_TIMEOUT as appropriate
+					var updateFunc = setTimeout(() => {
+						var nx_problem_divs = document.getElementsByClassName('nx-problem');
+						if (nx_problem_divs.length !== 0) {
+							nx_problem_divs.map((nxpd) => {
+								if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).') {
+									SESSION_TIMEOUT = true;
+								} else {
+									var d = new Date(localStorage.expiryDate);
+									localStorage.expiryDate = d.setMinutes(d.getMinutes() + TIMEOUT_INTERVAL / 6e4);
+								}
+							});
+						}
+					}, TIMEOUT_INTERVAL);
+
+					// clear the master tab ID before closing the tab
+					window.onunload = (() => {
+						clearInterval(updateFunc);
+						localStorage.masterTabId = undefined;
+					});
+				}
+
+				// the current tab is not the master tab
+				else if (localStorage.masterTabId !== undefined) {
+					
+				}
+			}
+		}
+
 		/**
 		 * Checks whether a session has expired
 		 *  by presence of a skuid error banner,
@@ -521,6 +567,7 @@
 		function checkTimer()
 		{
 
+<<<<<<< HEAD
 			var session_timeout = false;
 
 			var nx_problem_divs = document.getElementsByClassName('nx-problem');
@@ -539,6 +586,28 @@
 			}
 
 			if (session_timeout)
+||||||| merged common ancestors
+			var session_timeout = false;
+
+			var nx_problem_divs = document.getElementsByClassName('nx-problem');
+			if (nx_problem_divs) {
+				nx_problem_divs.map(function (nxpd)
+				{
+					if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).')
+					{
+						session_timeout = true;
+					/*
+					 *} else {
+					 *    setCookie('server_active', new Date());
+					 */
+					}
+				});
+			}
+
+			if (session_timeout)
+=======
+			if (SESSION_TIMEOUT)
+>>>>>>> timer_polling_overhead_fix
 			{
 				if (!pendingActions)
 				{
