@@ -524,7 +524,7 @@
 			var session_timeout = false;
 
 			var nx_problem_divs = document.getElementsByClassName('nx-problem');
-			if (nx_problem_divs != []) {
+			if (nx_problem_divs != [] && nx_problem_divs !== undefined && nx_problem_divs.length !== 0) {
 				nx_problem_divs.map(function (nxpd)
 				{
 					if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).')
