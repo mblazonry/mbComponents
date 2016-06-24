@@ -147,8 +147,12 @@
 		//
 		$(document).ready(function ()
 		{
+			//$('.mblazonry-timer').on(timer_Started_Event, timerStartedEventFired);
 			$e.subscribe(timer_Started_Event, timerStartedEventFired);
+
+			//$('.mblazonry-timer').on(timer_Done_Event, timerDoneEventFired);
 			$e.subscribe(timer_Done_Event, timerDoneEventFired);
+
 			$e.subscribe('models.saved', handleModelSavedOutsideOfPending);
 
 			// Attach a function to the click event
@@ -504,12 +508,11 @@
 		/*
 		 *function setCookie(name, expiration) {
 		 *    var exp = expiration.toString();
-		 *
+		 *    
 		 *    var n = name.replace(' ', '');
 		 *    document.cookie += n + '=' + expiration.toString();
 		 *}
 		 */
-
 		/**
 		 * Checks whether a session has expired
 		 *  by presence of a skuid error banner,
@@ -521,17 +524,16 @@
 			var session_timeout = false;
 
 			var nx_problem_divs = document.getElementsByClassName('nx-problem');
-			if (nx_problem_divs)
-			{
+			if (nx_problem_divs != []) {
 				nx_problem_divs.map(function (nxpd)
 				{
 					if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).')
 					{
 						session_timeout = true;
-						/*
-						 *} else {
-						 *    setCookie('server_active', new Date());
-						 */
+					/*
+					 *} else {
+					 *    setCookie('server_active', new Date());
+					 */
 					}
 				});
 			}
