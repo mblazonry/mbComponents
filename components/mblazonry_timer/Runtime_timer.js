@@ -508,16 +508,6 @@
 			}
 		}
 
-		// deprecated on dev branch in favour of local storage method
-		/*
-		 *function setCookie(name, expiration) {
-		 *    var exp = expiration.toString();
-		 *    
-		 *    var n = name.replace(' ', '');
-		 *    document.cookie += n + '=' + expiration.toString();
-		 *}
-		 */
-
 		/**
 		 * Checks whether an entry has already been made in local storage
 		 * and allows server polling and/or updates local storage as appropriate
