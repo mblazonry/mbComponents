@@ -5,13 +5,14 @@
 	/*jslint browser:true, lastsemic:true, unused:false */
 
 	// Create some shortcut variables
-	$ = skuid.$; // should equiv skuid.jquery
-	var bc = skuid.builder.core;
-	var $xml = skuid.utils.makeXMLDoc;
-	var $j = $.noConflict();
 	var $S = skuid;
+	var $b = $S.builder;
+	var $bc = $b.core;
+	var $u = $S.utils;
+	var $xml = $u.makeXMLDoc;
+	var $j = $.noConflict();
 
-	skuid.builder.registerBuilder(new skuid.builder.Builder(
+	$b.registerBuilder(new $b.Builder(
 	{
 		id: 'mblazonry__timer',
 		name: 'Timer',
@@ -22,11 +23,11 @@
 			var changeEvent = "model.idChange" === event.type,
 				removeEvent = "model.remove" === event.type,
 				update = false;
-			removeEvent && skuid.builder.core.handleModelRemove(c, event,
+			removeEvent && $bc.handleModelRemove(c, event,
 			{
 				component: f
 			}),
-			changeEvent && skuid.builder.core.handleModelIdChange(c, event), (removeEvent || changeEvent) && c.children("actions").first().children('action[type="savecancel"]').each(function ()
+			changeEvent && $bc.handleModelIdChange(c, event), (removeEvent || changeEvent) && c.children("actions").first().children('action[type="savecancel"]').each(function ()
 			{
 				$(this).children("models").first().children("model").each(function ()
 				{
@@ -50,21 +51,28 @@
 					id: 'model',
 					type: 'model',
 					label: 'CurrentUser Model',
-					required: true,
+					helptext: "Model representing the Id of the current session user",
 					onChange: function ()
 					{
 						component.updateAutoCreatedEditorCondition && component.updateAutoCreatedEditorCondition(),
 						component.save().rebuildProps().refresh();
-					}
+					},
+					required: true,
 				},
 				{
 					id: "userId",
-					type: "integer",
+					type: "template",
 					location: "attribute",
-					label: "CurrentUser Id"
+					label: "CurrentUser Id",
+					helptext: "User Id Field in CurrentUser Model.",
+					onChange: function ()
+					{
+						component.refresh();
+					},
+					required: true
 				},
 				{ // spacer.
-					label: "IMPORTANT! fire the events to the right->",
+					label: "IMPORTANT! fire the events to the right →",
 					value: "What!"
 				},
 				{ // spacer.
@@ -110,12 +118,12 @@
 			var fieldsList =
 				[
 				{ // spacer.
-					label: "Destination Fields on 'user' Model :"
+					label: "Destination fields on 'user' Model :"
 				},
 				{
 					id: "startTimeDestField",
 					type: "template",
-					helptext: "Field to store our Start time to. The value type is Datetime.",
+					helptext: "Field to store the Start Time in. The value type is Datetime.",
 					location: "attribute",
 					label: "Start Time destination field",
 					onChange: function ()
@@ -127,7 +135,7 @@
 				{
 					id: "endTimeDestination",
 					type: "template",
-					helptext: "Field to store the Timer Stop time to. The value type is Datetime.",
+					helptext: "Field to store the Stop Time in. The value type is Datetime.",
 					location: "attribute",
 					label: "End Time destination field",
 					onChange: function ()
@@ -142,7 +150,7 @@
 				{
 					id: "startTimeTempField",
 					type: "template",
-					helptext: "Field to temporarily store the Timer Start time to. We reccomend storing this value to the 'CurrenUser' model as (UI-Only). Value is of type Datetime.",
+					helptext: "Field to temporarily store the intermediary Start Time to. We suggest storing this value in a UI-Only field. Value is of type Datetime.",
 					location: "attribute",
 					label: "Start Time Temp Field",
 					onChange: function ()
@@ -163,7 +171,7 @@
 					}
 				}];
 			var actionsTree = [
-				$S.builder.core.getActionsTree(
+				$b.core.getActionsTree(
 				{
 					customNodeId: "onstartactions",
 					label: "Timer Started:",
@@ -175,7 +183,7 @@
 						html: "'Timer Started' actions will be run when the timer is started."
 					}]
 				}),
-				$S.builder.core.getActionsTree(
+				$b.core.getActionsTree(
 				{
 					customNodeId: "ondoneactions",
 					label: "Timer Done:",
@@ -236,16 +244,38 @@
 					type: "string",
 					label: "Poll Interval",
 					helptext: "Number of minutes between timer polls. Should be no less than 2 minutes.",
-					defaultValue: "2",
+					defaultValue: "4",
 					placeholder: "poll every x minutes",
-					onChange: function ()
+					onChange: function (newValue, oldValue)
 					{
+						var msg;
+						if (newValue === 0)
+						{
+							msg = 'Timeout disabled';
+						}
+						else if (newValue == 1)
+						{
+							msg = 'A Timeout of 1 minute is incredibly dangerous! Beware!!';
+						}
+						else if (1 < newValue && newValue < 5)
+						{
+							msg = 'A Timeout of ' + newValue + ' minutes is dangerously short! Beware!';
+							if (oldValue > 4 && newValue != oldValue)
+							{
+								msg += '\n Your old setting of ' + oldValue + ' minutes is better!';
+							}
+						}
+
+						if (msg)
+						{
+							window.alert(msg);
+						}
 						component.refresh();
 					},
 					required: true
 				},
-				skuid.builder.core.coreProps.cssClassProp(),
-				skuid.builder.core.coreProps.uniqueIdProp(
+				$bc.coreProps.cssClassProp(),
+				$bc.coreProps.uniqueIdProp(
 				{
 					component: this,
 					onChange: function ()
@@ -253,7 +283,9 @@
 						component.refresh();
 					}
 				}),
-				{}, // spacer.
+				{
+					label: "➿"
+				}, // spacer.
 			];
 
 			// Properties
@@ -286,8 +318,9 @@
 
 			$(document).ready(function ()
 			{
-				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').css('background', 'inherit');
-				$('.nx-pagebuilder-component:has(> .mblazonry-timer)').addClass('nx-pagebuilder-component-transparent-darkbg');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-header-component .nx-pagebuilder-component:has(> .mblazonry-timer)').css('background', 'inherit');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-header-component .nx-pagebuilder-component:has(> .mblazonry-timer)').addClass('nx-pagebuilder-component-transparent-darkbg');
+				$('.nx-pagebuilder-workspace > .nx-pagebuilder-component > .nx-pagebuilder-component-body > .nx-pagebuilder-acceptor .nx-pagebuilder-component:has(> .mblazonry-timer)').removeClass('nx-pagebuilder-component-transparent-darkbg');
 			});
 
 
@@ -330,7 +363,7 @@
 			var TIMER_DONE_EVENT = 'mblazonryTimerDoneEvent';
 
 			// Almost useless to have this
-			var lastModel = skuid.builder.core.getLastSelectedModelComponent(),
+			var lastModel = $bc.getLastSelectedModelComponent(),
 				model = lastModel && lastModel.state ? lastModel.state.attr("id") : null;
 
 			var timerXML = $xml('<mblazonry__timer/>');
@@ -348,9 +381,9 @@
 				counterStopLabel: "Stop",
 				timerIcon: "sk-icon-opportunities",
 				recColor: "red",
-				pollInterval: "2",
+				pollInterval: "4",
 				timerNotes: "",
-				cssclass: "",
+				cssclass: "mblazonry-timer",
 				uniqueid: "",
 			});
 			var onStartActions = $xml("<onstartactions/>"),

@@ -6,44 +6,66 @@
       "name": "mB Custom",
       "icon": "fa-th-large"
    }],
-   "components": [ /* start-build-timer */
-   {
-      "id": "sayhello",
-      "folderId": "mblazonry"
-   },
-   {
-      "id": "popupcontroller",
-      "folderId": "mblazonry"
-   },
-   {
-      "id": "progress_indicator",
-      "folderId": "mblazonry"
-   }, /* end-build-timer */
-   {
-      "id": "timer",
-      "folderId": "mblazonry"
-   }],
-   "js": [ /* start-build-timer */
-   {
-      "path": "mblazonry_sayHello/Builder_sayHello.js"
-   },
-   {
-      "path": "mblazonry_popupController/Builder_popupController.js"
-   },
-   {
-      "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
-   }, /* end-build-timer */
-   {
-      "path": "mblazonry_timer/Builder_timer.js"
-   }],
-   "css": [ /* start-build-timer */
-   {
-      "path": "mblazonry_sayHello/Builder_sayHello.css"
-   },
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   }, /* end-build-timer */
-   {
-      "path": "mblazonry_timer/mblazonry_timer.css"
-   }]
+
+   "components": [
+      /* start-release-excludes */
+      {
+         "id": "sayhello",
+         "folderId": "mblazonry"
+      },
+      {
+         "id": "popupcontroller",
+         "folderId": "mblazonry"
+      },
+      /* end-release-excludes */
+      {
+         "id": "progress_indicator",
+         "folderId": "mblazonry"
+      },
+      {
+         "id": "timer",
+         "folderId": "mblazonry"
+      },
+      {
+         "id": "template",
+         "folderId": "mblazonry"
+      }
+   ],
+
+   "js": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Builder_sayHello.js"
+      },
+      {
+         "path": "mblazonry_popupController/Builder_popupController.js"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
+      },
+      {
+         "path": "mblazonry_timer/Builder_timer.js"
+      },
+      {
+         "path": "mblazonry_template/Builder_template.js"
+      }
+   ],
+
+   "css": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Builder_sayHello.css"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
+      },
+      {
+         "path": "mblazonry_timer/mblazonry_timer.css"
+      },
+      {
+         "path": "mblazonry_template/Builder_template.css"
+      }
+   ]
 }

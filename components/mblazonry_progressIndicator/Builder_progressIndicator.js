@@ -1,5 +1,7 @@
 (function (skuid)
 {
+	'use strict';
+
 	var $xml = skuid.utils.makeXMLDoc;
 	var $j = skuid.jQuery.noConflict();
 
@@ -184,7 +186,7 @@
 			// Add step button
 			component.addActionItem('Add Step', 'sk-bi-tab-add', function ()
 			{
-				var steps = component.state.children('steps');
+				// var steps = component.state.children('steps');
 
 				addStep(0);
 
@@ -352,12 +354,15 @@
 				.attr('mode', 'tabwiz');
 
 			// Always wrap lists in plural nodes
-			steps = $xml('<steps/>').appendTo(progressIndicator);
+			var steps = $xml('<steps/>');
+
 			steps.append($xml('<step label="New Step"/>').append($xml('<components/>')));
+			steps.appendTo(progressIndicator);
+
 			return progressIndicator;
 		}
 	}));
-})(skuid);
+})(window.skuid);
 
 /*
 	The more you know!

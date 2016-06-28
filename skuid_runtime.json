@@ -1,39 +1,60 @@
 {
    "id": "mblazonry",
-   "components": [ /* start-build-timer */
-   {
-      "id": "sayhello"
-   },
-   {
-      "id": "popupcontroller"
-   },
-   {
-      "id": "progress_indicator"
-   }, /* end-build-timer */
-   {
-      "id": "timer"
-   }],
-   "js": [ /* start-build-timer */
-   {
-      "path": "mblazonry_sayHello/Runtime_sayHello.js"
-   },
-   {
-      "path": "mblazonry_popupController/Runtime_popupController.js"
-   },
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
-   }, /* end-build-timer */
-   {
-      "path": "mblazonry_timer/Runtime_timer.js"
-   }],
-   "css": [ /* start-build-timer */
-   {
-      "path": "mblazonry_sayHello/Runtime_sayHello.css"
-   },
-   {
-      "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
-   }, /* end-build-timer */
-   {
-      "path": "mblazonry_timer/mblazonry_timer.css"
-   }]
+
+   "components": [
+      /* start-release-excludes */
+      {
+         "id": "sayhello"
+      },
+      {
+         "id": "popupcontroller"
+      },
+      /* end-release-excludes */
+      {
+         "id": "progress_indicator"
+      },
+      {
+         "id": "timer"
+      },
+      {
+         "id": "template"
+      }
+   ],
+
+   "js": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Runtime_sayHello.js"
+      },
+      {
+         "path": "mblazonry_popupController/Runtime_popupController.js"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.js"
+      },
+      {
+         "path": "mblazonry_timer/Runtime_timer.js"
+      },
+      {
+         "path": "mblazonry_template/Runtime_template.js"
+      }
+   ],
+
+   "css": [
+      /* start-release-excludes */
+      {
+         "path": "mblazonry_sayHello/Runtime_sayHello.css"
+      },
+      /* end-release-excludes */
+      {
+         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
+      },
+      {
+         "path": "mblazonry_timer/mblazonry_timer.css"
+      },
+      {
+         "path": "mblazonry_template/Runtime_template.css"
+      }
+   ]
 }

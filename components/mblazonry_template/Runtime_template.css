@@ -1,0 +1,20 @@
+.mblazonry-template
+{
+   min-width: 50px;
+   display: inline-block;
+}
+
+.mblazonry-template.clickable
+{
+   cursor: pointer;
+}
+
+.mblazonry-template.allowHTML
+{
+   text-align: center;
+}
+
+.mblazonry-template.allowHTML > div > img
+{
+   vertical-align: text-bottom;
+}

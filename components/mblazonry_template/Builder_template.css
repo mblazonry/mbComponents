@@ -1,0 +1,16 @@
+.mblazonry-template
+{
+   /*min-width: 210px;*/
+}
+
+.allowHTML
+{
+   /*Because HTML has its own styling*/
+   padding: 0;
+   text-align: center;
+}
+
+.mblazonry-template.allowHTML > div > img
+{
+   vertical-align: text-bottom;
+}

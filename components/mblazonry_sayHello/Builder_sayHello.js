@@ -36,14 +36,17 @@
 				name: "",
 				props: propsList,
 			});
-			if (skuid.mobile) propCategories.push(
+			if (skuid.mobile)
 			{
-				name: "Remove",
-				props: [
+				propCategories.push(
 				{
-					type: "remove"
-				}]
-			});
+					name: "Remove",
+					props: [
+					{
+						type: "remove"
+					}]
+				});
+			}
 			propertiesObj.applyPropsWithCategories(propCategories, state);
 		},
 		defaultStateGenerator: function ()
@@ -51,4 +54,4 @@
 			return skuid.utils.makeXMLDoc("<mblazonry__sayhello person='sys' />");
 		}
 	}));
-})(skuid);
+})(window.skuid);

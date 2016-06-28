@@ -1,15 +1,3 @@
-# Ignore temporarily
-Builder_button.js
-docs/doc
-
-# Ignore always
-.sublime-gulp.cache
-node_modules
-mblazonryComponents*.zip
-
-# end mblazonry-configs #
-#########################
-
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -35,8 +23,7 @@ $RECYCLE.BIN/
 
 # OSX
 # =========================
-
-.DS_Store
+.[dD][sS]_[sS]tore
 .AppleDouble
 .LSOverride
 
@@ -57,4 +44,28 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+# ======================= #
+###########################
+#    mblazonry-configs    #
 
+# Ignore temporarily
+docs/doc/
+
+# Ignore maybe
+unpackaged/
+metadata.zip
+
+# Ignore always
+*.env
+*.sublime-project
+*.sublime-settings
+*.sublime-workspace
+*.log
+*.sublime-gulp.cache
+node_modules/
+mblazonryComponents*.zip
+resource-bundles/
+src/staticresources/
+config/
+deploy/
+debug/

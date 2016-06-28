@@ -1,5 +1,7 @@
 (function (skuid)
 {
+	'use strict';
+
 	skuid.componentType.register('mblazonry__progress_indicator', function (element, xmlDef, component)
 	{
 		var $ = skuid.jQuery;
@@ -127,7 +129,9 @@
 		{
 			// If it's already been set
 			if (friendComponent)
+			{
 				return;
+			}
 
 			// The friend of this components is how this
 			// component will determine when to update itself
@@ -214,4 +218,4 @@
 			}
 		}
 	});
-})(skuid);
+})(window.skuid);
