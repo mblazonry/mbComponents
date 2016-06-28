@@ -49,7 +49,6 @@ Temporary Items
 #    mblazonry-configs    #
 
 # Ignore temporarily
-Builder_button.js
 docs/doc/
 
 # Ignore maybe

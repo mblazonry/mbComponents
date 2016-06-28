@@ -32,10 +32,11 @@ First part:
 
 8.  You need to create a `.env` file in your working directory that contains only the following two lines:
 
-    MB_USERNAME="username@org.com"
-    MB_PASSWORD="passwordAndSecurityTokenConcatenated"
+	**(case-sensitive)**
+    mB_USERNAME="username@org.com"
+    	mB_PASSWORD="passwordAndSecurityTokenConcatenated"
 
-	(You will eventually need to create additional entries for each org you wish to deploy your component packages to).
+	You will eventually need to create additional entries for each org you wish to deploy your component packages to.
 
 10. Make sure you can connect to the org with your credentials.
 
