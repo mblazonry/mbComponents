@@ -10,7 +10,7 @@ Home of mBlazonry's primary custom component source!
 
 - Barry Schnell's old ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community forums.
 
-## Setup ##
+## Dev Setup ##
 
 This section has two parts. You already did the initial setup part by downloading this repo.
 
