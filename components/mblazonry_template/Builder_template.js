@@ -265,9 +265,12 @@
 					{
 						$(dropzones[i]).css(
 						{
-							height: ($(templates[i]).height() - 24) + "px",
+							// height: ($(templates[i]).height() - 24) + "px",
+							height: ($(templates[i]).height()) + "px",
 							width: "8px",
-							display: "inline-block"
+							display: "inline-block",
+							"vertical-align": "top",
+							"margin-top": "8px"
 						});
 					}
 				}
