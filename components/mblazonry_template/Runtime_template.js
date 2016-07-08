@@ -97,8 +97,6 @@
 
             function handle(event)
             {
-                event.stopImmediatePropagation();
-
                 // Run action framework actions if any
                 if (actions)
                 {
