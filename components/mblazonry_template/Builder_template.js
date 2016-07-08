@@ -135,6 +135,7 @@
 					type: "string",
 					label: "Event Name",
 					isVisible: true,
+					placeholder: "yourpackage.eventname",
 					onChange: function (src)
 					{
 						component.save().refresh().rebuildProps();
