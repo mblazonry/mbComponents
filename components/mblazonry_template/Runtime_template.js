@@ -37,6 +37,7 @@
             multiple = xmlDefinition.attr("multiple"),
             isMultiRow = multiple && multiple === "true",
             allowHTML = "true" === xmlDefinition.attr("allowhtml"),
+            isHidden = "true" === xmlDefinition.attr("hidden"),
             uniqueId = xmlDefinition.attr("uniqueid");
 
         ///////////////////////////
@@ -71,6 +72,11 @@
         if (allowHTML)
         {
             template.addClass("allowHMTL");
+        }
+
+        if (isHidden)
+        {
+            template.addClass("hidden");
         }
 
         // only make clickable if we have

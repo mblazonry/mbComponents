@@ -18,3 +18,8 @@
 {
    vertical-align: text-bottom;
 }
+
+.mblazonry-template.hidden
+{
+   display: none;
+}

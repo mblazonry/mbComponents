@@ -33,8 +33,9 @@
 		{
 			propertiesObj.setTitle("mB Template Properties");
 			var state = component.state,
-				eventType = state.children("actions").attr("event"),
-				isCustomEventType = ("custom" === eventType),
+				eventType = state.children.length && state.children("actions").attr("event"),
+				isCustomEventType = eventType && ("custom" === eventType),
+				isHidden = ("true" == state.attr("hidden")),
 				properties = [];
 
 			var basicPropsList = [
@@ -57,7 +58,7 @@
 				type: "template",
 				label: "Template",
 				location: "node",
-				helptext: "The text or HTML to display in this area. Can contain global Merge-Fields, e.g. {{$Model.Contact.data.0.First_Name__c}}, as well as row/model merge fields (e.g. {{Name}}, {{CreatedDate}}) if you have selected a Model. Row merge fields can be easily added using the Merge-Field Picker on the right.",
+				helptext: "The text or HTML to display inside the template. Can contain global Merge-Fields, e.g. {{$Model.Contact.data.0.First_Name__c}}, as well as row/model merge fields (e.g. {{Name}}, {{CreatedDate}}) if you have selected a Model. Row merge fields can be easily added using the Merge-Field Picker on the right.",
 				onChange: function ()
 				{
 					component.refreshText();
@@ -70,7 +71,17 @@
 				defaultValue: false,
 				onChange: function ()
 				{
-					// component.refreshText();
+					component.save().refresh();
+				}
+			},
+			{
+				id: "hidden",
+				type: "boolean",
+				label: "Hidden template",
+				defaultValue: false,
+				helptext: "The template will have \"display: none;\" set.",
+				onChange: function ()
+				{
 					component.save().refresh();
 				}
 			}];
@@ -144,6 +155,14 @@
 					{
 						component.save().refresh().rebuildProps();
 					}
+				});
+			}
+			else if (isHidden)
+			{
+				actionsTreeRoot.props.push(
+				{
+					type: "helptext",
+					html: "⚠ Template is set to \"Hidden\"! Users won't be able trigger a click ⚠"
 				});
 			}
 
