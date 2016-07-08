@@ -131,9 +131,9 @@
     skuid.componentType.register("mblazonry__template", Runtime_template);
     $u.registerPlugin("template",
     {
-        init: function (xmlDefinition, component)
+        init: (xmlDefinition, component) =>
         {
-            return Runtime_template(this, xmlDefinition, component), this.data("object", this), this;
+            return new Runtime_template(this, xmlDefinition, component), this.data("object", this), this;
         }
     });
 })(window.skuid.$, window.skuid, window);
