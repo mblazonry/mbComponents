@@ -44,10 +44,8 @@ const merge = require('merge-stream'),
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
 gulp.task('build', ['build-min-release']);
-gulp.task('up', ['upload-min-release']);
 gulp.task('deploy', ['deploy-dev']);
 // Release builds
-gulp.task('upload-min-release', ['build-min-release'], upload_min_release);
 gulp.task('build-min-release', ['clean-min-release'], build_min_release);
 gulp.task('clean-min-release', ['lint'], clean_release);
 gulp.task('static-resource-min-release', ['build-min-release'], static_resource_min_release);
