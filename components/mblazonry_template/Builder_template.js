@@ -113,10 +113,14 @@
 					}],
 					onChange: function (e)
 					{
-						// state.children("actions").removeAttr("event");
+
 						if ("click" === e)
 						{
-							state.children("actions").attr("event", "click");
+							state.children("actions").removeAttr("eventname");
+						}
+						else if ("custom" === e)
+						{
+							// state.children("actions").attr("eventname", "custom");
 						}
 						component.save().refresh().rebuildProps();
 					}

@@ -10,6 +10,7 @@
     var $e = skuid.events;
     var $m = skuid.model;
     var $u = skuid.utils;
+    var console = window.console;
 
     var Runtime_template = function (element, xmlDefinition, component)
     {
@@ -21,7 +22,8 @@
             contents = xmlDefinition.children("contents").first(),
             actions = xmlDefinition.children("actions"),
             eventType = actions.attr("event"),
-            isClickEvent = ("click" === eventType);
+            isClickEvent = (eventType === "click"),
+            eventName = actions.attr("eventname");
 
         contents = contents.length ? contents[0] : xmlDefinition[0];
 
@@ -34,7 +36,8 @@
             conditions = component.createConditionsFromXml(xmlDefinition),
             multiple = xmlDefinition.attr("multiple"),
             isMultiRow = multiple && multiple === "true",
-            allowHTML = "true" === xmlDefinition.attr("allowhtml");
+            allowHTML = "true" === xmlDefinition.attr("allowhtml"),
+            uniqueId = xmlDefinition.attr("uniqueid");
 
         ///////////////////////////
         // Creating the template //
@@ -65,14 +68,17 @@
 
         template.addClass("mblazonry-template");
 
-        if (isClickEvent)
-        {
-            template.addClass("clickable");
-        }
-
         if (allowHTML)
         {
             template.addClass("allowHMTL");
+        }
+
+        // only make clickable if we have
+        // click enbaled and actions to run.
+        if (isClickEvent && actions.children().length)
+        {
+            eventName = eventType;
+            template.addClass("clickable");
         }
 
         // ################################################################
@@ -80,12 +86,16 @@
         //
         $(document).ready(function ()
         {
-            // Attach a function to the template event
-            $('.mblazonry-template').on(eventType, handleTimerClick);
-            $e.subscribe(eventType, handleTimerClick);
+            if (isClickEvent)
+            {
+                $(`#${uniqueId}`).on(eventName, handle);
+            }
+            else
+            {
+                $e.subscribe(eventName, handle);
+            }
 
-            // function handleTimerClick(event)
-            function handleTimerClick()
+            function handle(event)
             {
                 event.stopImmediatePropagation();
 
@@ -104,9 +114,16 @@
             {
                 if (actionsNode && actionsNode.length)
                 {
-                    var res = $a.runActionsNode(actionsNode, component, component.context ||
-                    {});
-                    return res;
+                    var msg = `Event ${eventType} on ${uniqueId} `;
+
+                    $a.runActionsNode(actionsNode, component, component.context ||
+                    {}).then(() =>
+                    {
+                        console.log(msg + "succeded!");
+                    }, () =>
+                    {
+                        console.log(msg + "errored :(");
+                    });
                 }
             }
         });
