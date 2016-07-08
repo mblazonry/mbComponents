@@ -270,21 +270,12 @@
 
 			templateXML.append($xml("<contents/>"));
 
-			var actions = $xml("<actions/>"),
-				action = $xml("<action/>");
+			var actions = $xml("<actions/>");
 
 			actions.attr(
 			{
 				event: 'click'
 			});
-
-			action.attr(
-			{
-				type: 'redirect',
-				window: 'self'
-			});
-
-			actions.append(action);
 			templateXML.append(actions);
 
 			return templateXML;
