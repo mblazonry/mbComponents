@@ -16,6 +16,8 @@ const merge = require('merge-stream'),
    uglify = require("gulp-uglify"),
    cleanCSS = require('gulp-clean-css'),
    jsonminify = require('gulp-jsonminify'),
+   babel = require('gulp-babel'),
+   pump = require('pump'),
    crc = require('crc'),
    zip = require('gulp-zip'),
    gutil = require('gulp-util'),
@@ -41,10 +43,13 @@ const merge = require('merge-stream'),
  */
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
-gulp.task('build', ['build-release']);
+gulp.task('build', ['build-min-release']);
+gulp.task('up', ['upload-min-release']);
+gulp.task('deploy', ['deploy-dev']);
 // Release builds
-gulp.task('clean-min-release', ['lint'], clean_release);
+gulp.task('upload-min-release', ['build-min-release'], upload_min_release);
 gulp.task('build-min-release', ['clean-min-release'], build_min_release);
+gulp.task('clean-min-release', ['lint'], clean_release);
 gulp.task('static-resource-min-release', ['build-min-release'], static_resource_min_release);
 // Interactive Build
 gulp.task('build-interactive', ['clean-min-release'], build_min_components);
@@ -56,7 +61,7 @@ gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
 gulp.task('env-dev', false, env_dev);
-gulp.task('deploy', ['static-resource-dev', 'env-dev'], deploy_dev);
+gulp.task('deploy-dev', ['static-resource-dev', 'env-dev'], deploy_dev);
 
 ///////////////////
 // Utility Tasks //
@@ -337,7 +342,7 @@ function build_dev()
  * It allows the user, from the command line,
  * to state by name which packages to build.
  */
-function build_min_components()
+function build_min_components(cb)
 {
    const SPECIAL = {
       pI: "progressIndicator",
@@ -372,18 +377,19 @@ function build_min_components()
    {
       exclude = "progressIndicator";
    }
-   return build_min(comp);
+   return build_min(comp, "custom", cb);
 }
 
-function build_min_release()
+function build_min_release(cb)
 {
-   return build_min(RELEASE_BUILD, "release");
+   return build_min(RELEASE_BUILD, "release", cb);
 }
 
-function build_min(comps, build_type)
+function build_min(comps, build_type, cb)
 {
    var js = [],
-      css = [];
+      css = [],
+      remains = 0;
 
    comps.forEach(function (comp)
    {
@@ -391,10 +397,17 @@ function build_min(comps, build_type)
       css.push(`./components/*_${comp}/*.css`);
    });
 
+   remains++;
    // minify-js
-   var min_js = gulp.src(js)
-      .pipe(list())
-      .pipe(uglify());
+   var min_js = pump([
+      gulp.src(js),
+      list(),
+      babel(
+      {
+         presets: ['es2015']
+      }),
+      uglify()
+   ], completed);
 
    //minify-css
    var min_css = gulp.src(css)
@@ -436,8 +449,26 @@ function build_min(comps, build_type)
       // minify configs
       .pipe(jsonminify());
 
+   remains++;
    // Zip all files
-   return merge(min_src, min_configs)
-      .pipe(zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`))
-      .pipe(gulp.dest('./'));
+   pump([
+      merge(min_src, min_configs),
+      zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`),
+      gulp.dest('./')
+   ], completed);
+
+   /**
+    * Checks if the build is done
+    * @param  {Error} err This will be non-null is one of the pumps has an error.
+    */
+   function completed(err)
+   {
+      (err) ? cb(err) : () =>
+      {
+         if (--remains === 0)
+         {
+            cb;
+         }
+      };
+   }
 }
