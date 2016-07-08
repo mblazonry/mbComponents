@@ -385,7 +385,7 @@ function build_min(comps, build_type)
    var js = [],
       css = [];
 
-   comps.forEach(comp =>
+   comps.forEach(function (comp)
    {
       js.push(`./components/*_${comp}/*.js`);
       css.push(`./components/*_${comp}/*.css`);
