@@ -1,6 +1,6 @@
 {
   "name": "mblazonrycomponents",
-  "version": "0.0.3-beta.0",
+  "version": "0.1.0-beta",
   "license": "BSD-3-Clause",
   "author": "Andréas Kaytar-Lefrançois <andreas@mblazonry.com>",
   "description": "mBlazonry's custom components!",
@@ -49,6 +49,7 @@
     "jshint-stylish": "^2.2.0",
     "merge-stream": "^1.0.0",
     "pre-commit": "^1.1.2",
+    "pump": "^1.0.1",
     "yargs": "^4.7.1"
   },
   "scripts":

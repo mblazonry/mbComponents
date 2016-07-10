@@ -10,7 +10,7 @@ Home of mBlazonry's primary custom component source!
 
 - Barry Schnell's old ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community forums.
 
-## Setup ##
+## Dev Setup ##
 
 This section has two parts. You already did the initial setup part by downloading this repo.
 
@@ -32,10 +32,11 @@ First part:
 
 8.  You need to create a `.env` file in your working directory that contains only the following two lines:
 
-    MB_USERNAME="username@org.com"
-    MB_PASSWORD="passwordAndSecurityTokenConcatenated"
+	**(case-sensitive)**
+    mB_USERNAME="username@org.com"
+    	mB_PASSWORD="passwordAndSecurityTokenConcatenated"
 
-	(You will eventually need to create additional entries for each org you wish to deploy your component packages to).
+	You will eventually need to create additional entries for each org you wish to deploy your component packages to.
 
 10. Make sure you can connect to the org with your credentials.
 

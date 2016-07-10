@@ -1,6 +1,5 @@
 .mblazonry-template
 {
-   min-width: 50px;
    display: inline-block;
 }
 
@@ -17,4 +16,9 @@
 .mblazonry-template.allowHTML > div > img
 {
    vertical-align: text-bottom;
+}
+
+.mblazonry-template.hidden
+{
+   display: none;
 }
