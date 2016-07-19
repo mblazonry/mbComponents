@@ -27,10 +27,6 @@
 	var $m = skuid.model;
 	var $p = skuid.page;
 
-	// timeout interval for server polling, in ms
-	const TIMEOUT_INTERVAL = 12 * 60 * 1000;
-	let SESSION_TIMEOUT = false;
-
 	/**
 	 * @author aklef
 	 * @function
@@ -79,6 +75,9 @@
 		//////////////////////////////////
 		// Top-level || mblazonry-timer //
 		//////////////////////////////////
+		// timeout interval for server polling, in ms
+		const TIMEOUT_INTERVAL = 12 * 60 * 1000;
+		let SESSION_TIMEDOUT = false;
 		var timer = element,
 			timeout, queriedStartTime;
 
