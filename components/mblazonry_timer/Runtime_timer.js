@@ -476,19 +476,115 @@
 			$('.mblazonry-timer-counter').counter('reset');
 		}
 
+		////////////////////////
+		// HTML5 LS Functions //
+		////////////////////////
+
+		/**
+		 * Checks whether an entry has already been made in local storage
+		 * and allows server polling and/or updates local storage as appropriate
+		 *
+		 * Called periodically, every TIMEOUT_INTERVAL seconds.
+		 */
+		function updateLS()
+		{
+			// Check that we have HMTL5 LocalStorage
+			if (window.localStorage)
+			{
+				// the current tab is the master tab (first tab opened)
+				// OR the master tab was closed and the current tab can be
+				// assigned as the master tab
+				if (localStorage.masterTabId === undefined)
+				{
+					// create a window-scoped unique ID for the tab setting the
+					// timeout interval
+					window.masterTabId = Math.floor(Math.random() * 10e5);
+					// assign Tab Id to LS
+					localStorage.masterTabId = window.masterTabId;
+					setLSExpiryTimestamp();
+
+					// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
+					// and update SERVER_TIMEOUT as appropriate
+					var errorChecker = setTimeout(checkForSkuidErrorsDiv, TIMEOUT_INTERVAL);
+
+					// clear the master tab ID before closing the tab
+					window.onunload = (() =>
+					{
+						clearInterval(errorChecker);
+						window.localStorage.masterTabId = undefined;
+					});
+				}
+				// the current tab is not the master tab
+				else if (window.localStorage.masterTabId !== undefined)
+				{
+					// Do Nothing
+				}
+			}
+		}
+
+		/**
+		 * Writes an expiry date timestamp to the LocalStorage
+		 * @example It's not possible to specify expiration of LS as seen here {@link https://stackoverflow.com/questions/2326943/when-do-items-in-html5-local-storage-expire}
+		 * @param {Date} date The expiry date.
+		 */
+		function setLSExpiryTimestamp(date)
+		{
+			var expiryDate;
+
+			if (date) // Expire whenever + TIMEOUT_INTERVAL
+			{
+				expiryDate = new Date(date);
+			}
+			else // Expire now + TIMEOUT_INTERVAL
+			{
+				expiryDate = new Date();
+			}
+			expiryDate = expiryDate.setMinutes(expiryDate.getMinutes() + (TIMEOUT_INTERVAL / 6e4));
+			localStorage.expiryDate = expiryDate;
+		}
+
+		/**
+		 * Checks whether a session has expired
+		 *  by presence of a skuid error banner,
+		 *  it then polls the server.
+		 */
+		function checkForSkuidErrorsDiv()
+		{
+			var nx_problem_divs = document.getElementsByClassName('nx-problem');
+			if (nx_problem_divs.length !== 0)
+			{
+				nx_problem_divs.map((div) =>
+				{
+					if (div.innerHTML == '1. Unable to connect to the server (communication failure).')
+					{
+						SESSION_TIMEDOUT = true;
+					}
+					else
+					{
+						// create a timestamp with offset of TIMEOUT_INTERVAL minutes
+						setLSExpiryTimestamp(localStorage.expiryDate);
+					}
+				});
+			}
+		}
+
+		// Save callback for debugging purposes.
+		// Allows for cancellation of local storage update from console
+		var updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
+
 		////////////////
 		// Timer Sync //
 		////////////////
 
 		/**
 		 * Starts Timer asynchronous polling for timer updates.
-		 * 	The value used by clearInterval() is returned from setInterval().
+		 * 	The value returned by setInterval() is used by clearInterval(), so save it.
 		 * @example See {@link http://www.w3schools.com/js/js_timing.asp|JavaScript Timing Events}
 		 * @param  {Integer} interval The number of seconds between checks.
 		 */
 		function pollTimer(interval)
 		{
-			if (timeout) // reset
+			if (timeout) // we reset the timeout
 			{
 				window.clearTimeout(timeout);
 			}
@@ -508,74 +604,23 @@
 		}
 
 		/**
-		 * Checks whether an entry has already been made in local storage
-		 * and allows server polling and/or updates local storage as appropriate
+		 * The whole premise of this method is to poll the timer state
+		 * from the server at an arbitrary time interval to see if things
+		 * have changed and update the timer states accordingly.
 		 *
-		 * Called periodically, every TIMEOUT_INTERVAL seconds.
-		 */
-		function updateLS() {
-			if (typeof(Storage) !== undefined) {
-
-				// the current tab is the master tab (first tab opened)
-				// OR the master tab was closed and the current tab can be
-				// assigned as the master tab
-				if (localStorage.masterTabId === undefined) {
-
-					// create a window-scoped unique ID for the tab setting the
-					// timeout interval
-					window.masterTabId = Math.floor(Math.random() * 10e5);
-					localStorage.masterTabId = window.masterTabId;
-
-					// create a timestamp with offset of TIMEOUT_INTERVAL minutes
-					var d = (new Date());
-					d = d.setMinutes(d.getMinutes() + (TIMEOUT_INTERVAL / 6e4));
-					localStorage.expiryDate = d;
-
-					// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
-					// and update SERVER_TIMEOUT as appropriate
-					var updateFunc = setTimeout(() => {
-						var nx_problem_divs = document.getElementsByClassName('nx-problem');
-						if (nx_problem_divs.length !== 0) {
-							nx_problem_divs.map((nxpd) => {
-								if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).') {
-									SESSION_TIMEOUT = true;
-								} else {
-									var d = new Date(localStorage.expiryDate);
-									localStorage.expiryDate = d.setMinutes(d.getMinutes() + TIMEOUT_INTERVAL / 6e4);
-								}
-							});
-						}
-					}, TIMEOUT_INTERVAL);
-
-					// clear the master tab ID before closing the tab
-					window.onunload = (() => {
-						clearInterval(updateFunc);
-						localStorage.masterTabId = undefined;
-					});
-				}
-
-				// the current tab is not the master tab
-				else if (localStorage.masterTabId !== undefined) {
-					
-				}
-			}
-		}
-
-		// assigned to updateLSid for debugging purposes
-		// allows for emergency cancellation of local storage update from
-		// console
-		var updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
-
-		/**
-		 * Checks whether a session has expired
-		 *  by presence of a skuid error banner,
-		 *  it then polls the server.
+		 * As each tab may run its own timer instance, this functionality
+		 * has been supplemented by cross-tab checking using HTML5 local
+		 * storage, thus greatly reducing the number of checks per browser.
+		 *
+		 * The checkTimer() function eventually fires itself again on an
+		 * arbitrary time interval set by the user in the builder.
 		 */
 		function checkTimer()
 		{
-
-			if (SESSION_TIMEOUT)
+			// Session
+			if (SESSION_TIMEDOUT)
 			{
+				// check for no outstadning saves or actions
 				if (!pendingActions)
 				{
 					$.when(userModel.updateData()).then(function ()
@@ -593,7 +638,7 @@
 					});
 					pollTimer();
 				}
-				else
+				else // allow action to complete and check back soon.
 				{
 					window.setTimeout(checkTimer, 20 * 1000);
 				}
@@ -646,6 +691,10 @@
 				// Stop the timer
 			}
 		}
+
+		///////////////////////
+		// Utility Functions //
+		///////////////////////
 
 		/**
 		 * Takes an XML top-level action node and runs all of its child actions.
