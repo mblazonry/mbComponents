@@ -511,6 +511,8 @@
 		/**
 		 * Checks whether an entry has already been made in local storage
 		 * and allows server polling and/or updates local storage as appropriate
+		 *
+		 * Called periodically, every TIMEOUT_INTERVAL seconds.
 		 */
 		function updateLS() {
 			if (typeof(Storage) !== undefined) {
@@ -519,6 +521,7 @@
 				// OR the master tab was closed and the current tab can be
 				// assigned as the master tab
 				if (localStorage.masterTabId === undefined) {
+
 					// create a window-scoped unique ID for the tab setting the
 					// timeout interval
 					window.masterTabId = Math.floor(Math.random() * 10e5);
@@ -558,6 +561,11 @@
 				}
 			}
 		}
+
+		// assigned to updateLSid for debugging purposes
+		// allows for emergency cancellation of local storage update from
+		// console
+		var updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
 
 		/**
 		 * Checks whether a session has expired

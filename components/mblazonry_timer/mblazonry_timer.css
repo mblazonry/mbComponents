@@ -52,8 +52,8 @@
 }
 
 .mblazonry-timer.recording:not(.pending) .mblazonry-timer-button {
-   animation: recPulse 2.7s infinite;
-   -webkit-animation: recPulse 2.7s infinite;
+   animation: recPulse 2.7s infinite !important;
+   -webkit-animation: recPulse 2.7s infinite !important;
 }
 @keyframes recPulse {
   0%   { color: red;  background: inherit } /*red = ff0000*/
