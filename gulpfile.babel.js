@@ -6,7 +6,8 @@
 //////////
 // gulp //
 //////////
-const gulp = require('gulp');
+const gulp = require('gulp'),
+   del = require('del');
 
 ///////////////////
 // gulp plug-ins //
@@ -23,7 +24,6 @@ const merge = require('merge-stream'),
    gutil = require('gulp-util'),
    list = require('gulp-print'),
    rename = require('gulp-rename'),
-   clean = require('gulp-clean'),
    stylish = require('jshint-stylish'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
@@ -69,16 +69,11 @@ gulp.task('deploy-dev', ['static-resource-dev', 'env-dev'], deploy_dev);
  */
 function clean_dev()
 {
-   return gulp.src(
-         [
-            './*-dev.zip',
-            './resource-bundles/mBlazonryComponents.resource'
-         ],
-         {
-            read: false,
-            base: '.'
-         })
-      .pipe(clean());
+   return del(
+      [
+         './*-dev.zip',
+         './resource-bundles/mBlazonryComponents.resource'
+      ]);
 }
 
 /**
@@ -90,15 +85,13 @@ function clean_release()
 }
 
 /**
- * Remove old files from directory.
+ * Remove files from directory.
  */
 function clean_min(build_type)
 {
-   return gulp.src(`./*-min*-${build_type}.zip`,
-      {
-         read: false
-      })
-      .pipe(clean());
+   return del([
+      `./*-min*-${build_type}.zip`
+   ]);
 }
 
 /**
