@@ -514,7 +514,7 @@
 			// the current tab is not the master tab
 			else if (window.localStorage.masterTabId !== undefined)
 			{
-				// Do Nothing. Cause:
+				// Do Nothing, because:
 				// - either this is the master tab and we've already
 				// updated the LS cache with the appropriate data; or
 				// - this isn't the master tab and we don't have to do
