@@ -488,37 +488,33 @@
 		 */
 		function updateLS()
 		{
-			// Check that we have HMTL5 LocalStorage
-			if (window.localStorage)
+			// the current tab is the master tab (first tab opened)
+			// OR the master tab was closed and the current tab can be
+			// assigned as the master tab
+			if (localStorage.masterTabId === undefined)
 			{
-				// the current tab is the master tab (first tab opened)
-				// OR the master tab was closed and the current tab can be
-				// assigned as the master tab
-				if (localStorage.masterTabId === undefined)
-				{
-					// create a window-scoped unique ID for the tab setting the
-					// timeout interval
-					window.masterTabId = Math.floor(Math.random() * 10e5);
-					// assign Tab Id to LS
-					localStorage.masterTabId = window.masterTabId;
-					setLSExpiryTimestamp();
+				// create a window-scoped unique ID for the tab setting the
+				// timeout interval
+				window.masterTabId = Math.floor(Math.random() * 10e5);
+				// assign Tab Id to LS
+				localStorage.masterTabId = window.masterTabId;
+				setLSExpiryTimestamp();
 
-					// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
-					// and update SERVER_TIMEOUT as appropriate
-					var errorChecker = setTimeout(checkForSkuidErrorsDiv, TIMEOUT_INTERVAL);
+				// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
+				// and update SERVER_TIMEOUT as appropriate
+				var errorChecker = setTimeout(checkForSkuidErrorsDiv, TIMEOUT_INTERVAL);
 
-					// clear the master tab ID before closing the tab
-					window.onunload = (() =>
-					{
-						clearInterval(errorChecker);
-						window.localStorage.masterTabId = undefined;
-					});
-				}
-				// the current tab is not the master tab
-				else if (window.localStorage.masterTabId !== undefined)
+				// clear the master tab ID before closing the tab
+				window.onunload = (() =>
 				{
-					// Do Nothing
-				}
+					clearInterval(errorChecker);
+					window.localStorage.masterTabId = undefined;
+				});
+			}
+			// the current tab is not the master tab
+			else if (window.localStorage.masterTabId !== undefined)
+			{
+				// Do Nothing
 			}
 		}
 
@@ -570,7 +566,13 @@
 
 		// Save callback for debugging purposes.
 		// Allows for cancellation of local storage update from console
-		var updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
+		var updateLSid;
+
+		// Check that we have HMTL5 LocalStorage
+		if (window.localStorage)
+		{
+			updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
+		}
 
 		////////////////
 		// Timer Sync //
