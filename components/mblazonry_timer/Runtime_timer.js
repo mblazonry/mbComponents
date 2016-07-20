@@ -617,8 +617,8 @@
 		 */
 		function checkTimer()
 		{
-			// Session
-			if (SESSION_TIMEDOUT)
+			// Session should be valid
+			if (!SESSION_TIMEDOUT)
 			{
 				// check for no outstadning saves or actions
 				if (!pendingActions)
