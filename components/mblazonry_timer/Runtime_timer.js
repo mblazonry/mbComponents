@@ -245,7 +245,7 @@
 					}
 					else
 					{
-						// error?
+						window.console.log("Error handling timer click: Timer has pending actions!");
 					}
 				}
 				else if (!isPending)
@@ -564,6 +564,10 @@
 				{
 					window.setTimeout(checkTimer, 20 * 1000);
 				}
+			}
+			else
+			{
+				window.console.log("Polled: invalid Session Id! Refresh or relog");
 			}
 		}
 
