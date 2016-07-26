@@ -621,10 +621,6 @@
 		// HTML5 LS Functions //
 		////////////////////////
 
-		var mBLocalStorage = {
-			masterTabId: "",
-		};
-
 		/**
 		 * Checks whether an entry has already been made in local storage
 		 * and allows server polling and/or updates local storage as appropriate
