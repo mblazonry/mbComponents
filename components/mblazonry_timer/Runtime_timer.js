@@ -20,13 +20,12 @@
 
 	"use strict";
 
-	//var $j = $.noConflict();
-	var $a = skuid.actions;
-	var $e = skuid.events;
-	var $t = skuid.time;
-	var $m = skuid.model;
-	var $p = skuid.page;
-
+	//const $j = $.noConflict();
+	const $a = skuid.actions;
+	const $e = skuid.events;
+	const $t = skuid.time;
+	const $m = skuid.model;
+	const $p = skuid.page;
 	/**
 	 * @author aklef
 	 * @function
