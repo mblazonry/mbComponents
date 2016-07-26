@@ -75,11 +75,9 @@
 		//////////////////////////////////
 		// Top-level || mblazonry-timer //
 		//////////////////////////////////
-		// timeout interval for server polling, in ms
-		const TIMEOUT_INTERVAL = 12 * 60 * 1000;
-		let SESSION_TIMEDOUT = false;
 		var timer = element,
 			timeout, queriedStartTime;
+		const MINUTES = (60 * 10e2);
 
 		timer.addClass("mblazonry-timer");
 
@@ -503,15 +501,15 @@
 
 			if (interval && interval != "0") // supplied as an argument
 			{
-				timeout = window.setInterval(checkTimer, interval * 60 * 1000);
+				timeout = window.setInterval(checkTimer, interval * MINUTES);
 			}
 			else if (pollInterval && pollInterval != "0") // set by user
 			{
-				timeout = window.setInterval(checkTimer, pollInterval * 60 * 1000);
+				timeout = window.setInterval(checkTimer, pollInterval * MINUTES);
 			}
 			else // default value
 			{
-				timeout = window.setInterval(checkTimer, 5 * 60 * 1000);
+				timeout = window.setInterval(checkTimer, 5 * MINUTES);
 			}
 		}
 
@@ -530,16 +528,12 @@
 		function checkTimer()
 		{
 			// Session should be valid
-			if (!SESSION_TIMEDOUT)
+			if (!skuidErrors)
 			{
-				// Save callback for debugging purposes.
-				// Allows for cancellation of local storage update from console
-				var updateLSid;
-
-				// Check that we have HMTL5 LocalStorage
+				// if we have HMTL5 LocalStorage
 				if (window.localStorage)
 				{
-					updateLSid = setInterval(updateLS, TIMEOUT_INTERVAL);
+					updateLS();
 				}
 
 				// check for no outstadning saves or actions
@@ -577,10 +571,7 @@
 		 */
 		function startTimeIsValid()
 		{
-
-
 			queriedStartTime = queryStartTime();
-
 
 			return (startTime == queriedStartTime);
 		}
@@ -648,7 +639,6 @@
 				// clear the master tab ID before closing the tab
 				window.onunload = (() =>
 				{
-					clearInterval(errorChecker);
 					window.localStorage.masterTabId = undefined;
 				});
 			}
@@ -680,16 +670,16 @@
 			{
 				expiryDate = new Date();
 			}
-			expiryDate = expiryDate.setMinutes(expiryDate.getMinutes() + (pollInterval / (60 * 1000)));
+			expiryDate = expiryDate.setMinutes(expiryDate.getMinutes() + (pollInterval / (MINUTES)));
 			localStorage.expiryDate = expiryDate;
 		}
 
 		/**
-		 * Checks whether a session has expired
+		 * Return true to indicate a session has expired
 		 *  by presence of a skuid error banner,
 		 *  it then polls the server.
 		 */
-		function checkForSkuidErrorsDiv()
+		function skuidErrors()
 		{
 			// Hunt for Skuid problems on page
 			var nx_problem_divs = document.getElementsByClassName('nx-problem'),
