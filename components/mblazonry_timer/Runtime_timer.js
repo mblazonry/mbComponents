@@ -110,14 +110,14 @@
 				"<li> userId: \'" + noStache(xmlDefinition.attr("userId")) + "\'</li>" +
 				"<li> user_name: \'" + user_Name + "\'</li>" +
 				"<li> userModel: \'" + (userModel ? "true" : "false") + "\'</li>" +
-				"<li> Start_Time: \'" + startTime + "\'</li>" +
-				"<li> End_Time: \'" + endTime + "\'</li>" +
-				"<li> Pending_Actions: \'" + pendingActions + "\'</li>" +
-				"<li> start_time_temp_field: \'" + startTimeTempField + "\'</li>" +
-				"<li> start_time_dest_field: \'" + startTimeDestField + "\'</li>" +
-				"<li> end_time_dest_field: \'" + endTimeDestination + "\'</li>" +
-				"<li> timer_Started_Event: \'" + timer_Started_Event + "\'</li>" +
-				"<li> timer_Done_Event: \'" + timer_Done_Event + "\'</li>" +
+				`<li> Start_Time: \'${startTime}\'</li>` +
+				`<li> End_Time: \'${endTime}\'</li>` +
+				`<li> Pending_Actions: \'${pendingActions}\'</li>` +
+				`<li> start_time_temp_field: \'${startTimeTempField}\'</li>` +
+				`<li> start_time_dest_field: \'${startTimeDestField}\'</li>` +
+				`<li> end_time_dest_field: \'${endTimeDestination}\'</li>` +
+				`<li> timer_Started_Event: \'${timer_Started_Event}\'</li>` +
+				`<li> timer_Done_Event: \'${timer_Done_Event}\'</li>` +
 				"</ul>"
 			);
 			var d2 = $("<td>").append("<h3>Actions:</h3>");
@@ -133,8 +133,8 @@
 				'<li> counterStopLabel: ' + (counterStopLabel ? "\'" + counterStopLabel + '\'' : "false") + ',</li>' +
 				'<li> recColor: ' + (recColor ? "true: \'" + recColor + '\'' : "false") + ',</li>' +
 				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' minutes' : "false") + ',</li>' +
-			'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
-				'<li> jQuery verison \'' + $.fn.jquery + '\'</li>' +
+				'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
+				`<li> jQuery verison \'${$.fn.jquery}\'</li>` +
 				"</ul>");
 
 			var debugTable = $('<table style="width:50%">');
@@ -746,7 +746,7 @@
 		function jsDateTimeRemoveMilis(jsDateTime)
 		{
 			var sfDateTime = jsDateTime.split('.');
-			return (sfDateTime[0] + ".000+0000");
+			return (`${sfDateTime[0]}.000+0000`);
 		}
 
 		function parseDateForCounter(E)
@@ -771,7 +771,7 @@
 			HH = zeroPad(HH);
 			MM = zeroPad(MM);
 			SS = zeroPad(SS);
-			return HH + ":" + MM + ":" + SS;
+			return `${HH}:${MM}:${SS}`;
 		}
 		/**
 		 * Removes handlebars.
