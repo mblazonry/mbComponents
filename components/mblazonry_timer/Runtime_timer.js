@@ -132,8 +132,8 @@
 				'<li> counterStartLabel: ' + (counterStartLabel ? "\'" + counterStartLabel + '\'' : "false") + ',</li>' +
 				'<li> counterStopLabel: ' + (counterStopLabel ? "\'" + counterStopLabel + '\'' : "false") + ',</li>' +
 				'<li> recColor: ' + (recColor ? "true: \'" + recColor + '\'' : "false") + ',</li>' +
-				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' seconds' : "false") + ',</li>' +
-				'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
+				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' minutes' : "false") + ',</li>' +
+			'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
 				'<li> jQuery verison \'' + $.fn.jquery + '\'</li>' +
 				"</ul>");
 
