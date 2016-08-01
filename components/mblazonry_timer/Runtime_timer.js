@@ -16,21 +16,15 @@
 	 */
 	/* jshint -W098 */ // x is unused.
 	/* jshint -W030 */ // useless and unnecessary code.
-	/* jshint -W004 */ // x is already defined.
 
 	"use strict";
 
-	//var $j = $.noConflict();
-	var $a = skuid.actions;
-	var $e = skuid.events;
-	var $t = skuid.time;
-	var $m = skuid.model;
-	var $p = skuid.page;
-
-	// timeout interval for server polling, in ms
-	const TIMEOUT_INTERVAL = 12 * 60 * 1000;
-	let SESSION_TIMEOUT = false;
-
+	//const $j = $.noConflict();
+	const $a = skuid.actions;
+	const $e = skuid.events;
+	const $t = skuid.time;
+	const $m = skuid.model;
+	const $p = skuid.page;
 	/**
 	 * @author aklef
 	 * @function
@@ -80,7 +74,8 @@
 		// Top-level || mblazonry-timer //
 		//////////////////////////////////
 		var timer = element,
-			timeout, queriedStartTime;
+			timeout, queriedStartTime, storage;
+		const MINUTES = (60 * 10e2);
 
 		timer.addClass("mblazonry-timer");
 
@@ -112,16 +107,16 @@
 			d1.append(
 				"<ul> " +
 				"<li> userId: \'" + noStache(xmlDefinition.attr("userId")) + "\'</li>" +
-				"<li> user_name: \'" + user_Name + "\'</li>" +
+				`<li> user_name: \'${user_Name}\'</li>` +
 				"<li> userModel: \'" + (userModel ? "true" : "false") + "\'</li>" +
-				"<li> Start_Time: \'" + startTime + "\'</li>" +
-				"<li> End_Time: \'" + endTime + "\'</li>" +
-				"<li> Pending_Actions: \'" + pendingActions + "\'</li>" +
-				"<li> start_time_temp_field: \'" + startTimeTempField + "\'</li>" +
-				"<li> start_time_dest_field: \'" + startTimeDestField + "\'</li>" +
-				"<li> end_time_dest_field: \'" + endTimeDestination + "\'</li>" +
-				"<li> timer_Started_Event: \'" + timer_Started_Event + "\'</li>" +
-				"<li> timer_Done_Event: \'" + timer_Done_Event + "\'</li>" +
+				`<li> Start_Time: \'${startTime}\'</li>` +
+				`<li> End_Time: \'${endTime}\'</li>` +
+				`<li> Pending_Actions: \'${pendingActions}\'</li>` +
+				`<li> start_time_temp_field: \'${startTimeTempField}\'</li>` +
+				`<li> start_time_dest_field: \'${startTimeDestField}\'</li>` +
+				`<li> end_time_dest_field: \'${endTimeDestination}\'</li>` +
+				`<li> timer_Started_Event: \'${timer_Started_Event}\'</li>` +
+				`<li> timer_Done_Event: \'${timer_Done_Event}\'</li>` +
 				"</ul>"
 			);
 			var d2 = $("<td>").append("<h3>Actions:</h3>");
@@ -136,9 +131,9 @@
 				'<li> counterStartLabel: ' + (counterStartLabel ? "\'" + counterStartLabel + '\'' : "false") + ',</li>' +
 				'<li> counterStopLabel: ' + (counterStopLabel ? "\'" + counterStopLabel + '\'' : "false") + ',</li>' +
 				'<li> recColor: ' + (recColor ? "true: \'" + recColor + '\'' : "false") + ',</li>' +
-				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' seconds' : "false") + ',</li>' +
+				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' minutes' : "false") + ',</li>' +
 				'<li> timerIcon: ' + (timerIcon ? "true: \'" + timerIcon + '\'' : "false") + ',</li>' +
-				'<li> jQuery verison \'' + $.fn.jquery + '\'</li>' +
+				`<li> jQuery verison \'${$.fn.jquery}\'</li>` +
 				"</ul>");
 
 			var debugTable = $('<table style="width:50%">');
@@ -147,10 +142,14 @@
 			info.append(debugTable);
 		}
 		// ################################################################
-		// document.ready event hook
-		//
+		// PageLoad hook - the document.ready event
+
 		$(document).ready(function ()
 		{
+			/////////////////////
+			// PageLoad Events //
+			/////////////////////
+
 			//$('.mblazonry-timer').on(timer_Started_Event, timerStartedEventFired);
 			$e.subscribe(timer_Started_Event, timerStartedEventFired);
 
@@ -181,6 +180,20 @@
 				$('.nx-page-region').append(info);
 			}
 
+			/////////////////////
+			// PageLoad Checks //
+			/////////////////////
+			try
+			{
+				var uid = new Date();
+				(storage = window.localStorage).setItem(uid, uid);
+				var fail = storage.getItem(uid) != uid;
+				storage.removeItem(uid);
+				fail && (storage = false);
+			}
+			catch (exception)
+			{}
+
 			// There's a task running
 			if (endTime && startTime)
 			{
@@ -208,45 +221,48 @@
 			{
 				pollTimer();
 			}
+		}); // End of (document).ready
 
-			////////////////////////////////
-			// Handle timer State Changes //
-			////////////////////////////////
 
-			/**
-			 * Toggles the logical state of this timer.
-			 * Should never be done directly.
-			 * Should only run action framework.
-			 */
-			function handleTimerClick()
+		////////////////////////////////
+		// Handle timer State Changes //
+		////////////////////////////////
+
+		/**
+		 * Toggles the logical state of this timer.
+		 * Should never be done directly.
+		 * Should only run action framework.
+		 */
+		function handleTimerClick()
+		{
+			window.console.log("Attempting to handle pending actions...");
+
+			if (!startTimeIsValid())
 			{
-				if (!startTimeIsValid())
-				{
-					handleChangedStartTime();
-					return;
-				}
+				handleChangedStartTime();
+				return;
+			}
 
-				var isRecording = $(".mblazonry-timer").hasClass("recording");
-				var isPending = $(".mblazonry-timer").hasClass("pending");
+			var isRecording = $(".mblazonry-timer").hasClass("recording");
+			var isPending = $(".mblazonry-timer").hasClass("pending");
 
-				// Clean slate. Continue
-				if (!isRecording)
+			// Clean slate. Continue
+			if (!isRecording)
+			{
+				if (!isPending)
 				{
-					if (!isPending)
-					{
-						startPending();
-					}
-					else
-					{
-						// error?
-					}
+					startPending();
 				}
-				else if (!isPending)
+				else
 				{
-					timerStopPending();
+					window.console.log("Error handling timer click: Timer has pending actions!");
 				}
 			}
-		}); // End of (document).ready
+			else if (!isPending)
+			{
+				timerStopPending();
+			}
+		}
 
 		//////////////////////
 		// UI state Changes //
@@ -386,40 +402,51 @@
 		 */
 		function handleModelSavedOutsideOfPending(saveResult)
 		{
-			if (!pendingActions && (userModel.id in saveResult.models) && (saveResult.totalsuccess))
+			if (userModel.id in saveResult.models)
 			{
-				window.console.log("Event detected: " + userModel.id + " model saved!");
+				window.console.log(`Event detected: ${userModel.id} model saved!`);
 
-				userModel.updateData();
-				user = userModel.getFirstRow();
-				var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
+				if (!pendingActions && saveResult.totalsuccess)
+				{
+					userModel.updateData();
+					user = userModel.getFirstRow();
+					var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
 
-				if (changedStartTime && changedStartTime !== startTime)
-				{
-					startTime = changedStartTime;
-					restartCounter();
-				}
-				else if (!changedStartTime) // it was deleted
-				{
-					stopCounter();
-					startTime = changedStartTime;
-				}
+					if (changedStartTime && changedStartTime !== startTime)
+					{
+						startTime = changedStartTime;
+						restartCounter();
+					}
+					else if (!changedStartTime) // it was deleted
+					{
+						stopCounter();
+						startTime = changedStartTime;
+					}
 
-				var newEndTime = userModel.getFieldValue(user, endTimeDestination);
-				if (newEndTime && newEndTime !== endTime)
-				{
-					endTime = newEndTime;
-					// do something?
-				}
-				else if (!newEndTime)
-				{
-					endTime = newEndTime;
-				}
+					var newEndTime = userModel.getFieldValue(user, endTimeDestination);
+					if (newEndTime && newEndTime !== endTime)
+					{
+						endTime = newEndTime;
+						// do something?
+					}
+					else if (!newEndTime)
+					{
+						endTime = newEndTime;
+					}
 
-				var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
-				if (changedPendingActions !== pendingActions)
+					var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
+					if (changedPendingActions !== pendingActions)
+					{
+						pendingActions = changedPendingActions;
+					}
+				}
+				else if (pendingActions)
 				{
-					pendingActions = changedPendingActions;
+					handleTimerClick();
+				}
+				else if (!saveResult.totalsuccess)
+				{
+					window.console.log(`${userModel.id} model save failed!`);
 				}
 			}
 		}
@@ -483,92 +510,55 @@
 
 		/**
 		 * Starts Timer asynchronous polling for timer updates.
-		 * 	The value used by clearInterval() is returned from setInterval().
+		 * 	The value returned by setInterval() is used by clearInterval(), so save it.
 		 * @example See {@link http://www.w3schools.com/js/js_timing.asp|JavaScript Timing Events}
 		 * @param  {Integer} interval The number of seconds between checks.
 		 */
 		function pollTimer(interval)
 		{
-			if (timeout) // reset
+			if (timeout) // we reset the timeout
 			{
 				window.clearTimeout(timeout);
 			}
 
-			if (interval) // supplied as an argument
+			if (interval && interval != "0") // supplied as an argument
 			{
-				timeout = window.setInterval(checkTimer, interval * 60 * 1000);
+				timeout = window.setInterval(checkTimer, interval * MINUTES);
 			}
-			else if (pollInterval) // set by user
+			else if (pollInterval && pollInterval != "0") // set by user
 			{
-				timeout = window.setInterval(checkTimer, pollInterval * 60 * 1000);
+				timeout = window.setInterval(checkTimer, pollInterval * MINUTES);
 			}
 			else // default value
 			{
-				timeout = window.setInterval(checkTimer, 5 * 60 * 1000);
+				timeout = window.setInterval(checkTimer, 5 * MINUTES);
 			}
 		}
 
 		/**
-		 * Checks whether an entry has already been made in local storage
-		 * and allows server polling and/or updates local storage as appropriate
-		 */
-		function updateLS() {
-			if (typeof(Storage) !== undefined) {
-
-				// the current tab is the master tab (first tab opened)
-				// OR the master tab was closed and the current tab can be
-				// assigned as the master tab
-				if (localStorage.masterTabId === undefined) {
-					// create a window-scoped unique ID for the tab setting the
-					// timeout interval
-					window.masterTabId = Math.floor(Math.random() * 10e5);
-					localStorage.masterTabId = window.masterTabId;
-
-					// create a timestamp with offset of TIMEOUT_INTERVAL minutes
-					var d = (new Date());
-					d = d.setMinutes(d.getMinutes() + (TIMEOUT_INTERVAL / 6e4));
-					localStorage.expiryDate = d;
-
-					// have a worker function poll the DOM every TIMEOUT_INTERVAL minutes
-					// and update SERVER_TIMEOUT as appropriate
-					var updateFunc = setTimeout(() => {
-						var nx_problem_divs = document.getElementsByClassName('nx-problem');
-						if (nx_problem_divs.length !== 0) {
-							nx_problem_divs.map((nxpd) => {
-								if (nxpd.innerHTML == '1. Unable to connect to the server (communication failure).') {
-									SESSION_TIMEOUT = true;
-								} else {
-									var d = new Date(localStorage.expiryDate);
-									localStorage.expiryDate = d.setMinutes(d.getMinutes() + TIMEOUT_INTERVAL / 6e4);
-								}
-							});
-						}
-					}, TIMEOUT_INTERVAL);
-
-					// clear the master tab ID before closing the tab
-					window.onunload = (() => {
-						clearInterval(updateFunc);
-						localStorage.masterTabId = undefined;
-					});
-				}
-
-				// the current tab is not the master tab
-				else if (localStorage.masterTabId !== undefined) {
-					
-				}
-			}
-		}
-
-		/**
-		 * Checks whether a session has expired
-		 *  by presence of a skuid error banner,
-		 *  it then polls the server.
+		 * The whole premise of this method is to poll the timer state
+		 * from the server at an arbitrary time interval to see if things
+		 * have changed and update the timer states accordingly.
+		 *
+		 * As each tab may run its own timer instance, this functionality
+		 * has been supplemented by cross-tab checking using HTML5 local
+		 * storage, thus greatly reducing the number of checks per browser.
+		 *
+		 * The checkTimer() function eventually fires itself again on an
+		 * arbitrary time interval set by the user in the builder.
 		 */
 		function checkTimer()
 		{
-
-			if (SESSION_TIMEOUT)
+			// Session should be valid
+			if (!skuidErrors())
 			{
+				// if we have HMTL5 LocalStorage
+				if (storage)
+				{
+					updateLS();
+				}
+
+				// check for no outstadning saves or actions
 				if (!pendingActions)
 				{
 					$.when(userModel.updateData()).then(function ()
@@ -586,10 +576,14 @@
 					});
 					pollTimer();
 				}
-				else
+				else // allow action to complete and check back soon.
 				{
 					window.setTimeout(checkTimer, 20 * 1000);
 				}
+			}
+			else
+			{
+				window.console.log("Polled: invalid Session Id! Refresh or relog");
 			}
 		}
 
@@ -640,6 +634,102 @@
 			}
 		}
 
+		////////////////////////
+		// HTML5 LS Functions //
+		////////////////////////
+
+		/**
+		 * Checks whether an entry has already been made in local storage
+		 * and allows server polling and/or updates local storage as appropriate
+		 *
+		 * Called periodically, every TIMEOUT_INTERVAL seconds.
+		 */
+		function updateLS()
+		{
+			if (!localStorage.masterTabId)
+			{
+				// No masterTabId in LS means the current tab is either:
+				// - the first of the browser's tabs to be loaded
+				// OR the old masterTab was closed, thus we can assign
+				// the current tab as the new master tab.
+
+				// We create a unique ID for this tab.
+				window.masterTabId = Math.floor(Math.random() * 10e5);
+				// assign Tab Id to LS
+				localStorage.masterTabId = window.masterTabId;
+				setLSExpiryTimestamp();
+				// clear the master tab ID before closing the tab
+				window.onunload = (() =>
+				{
+					window.localStorage.masterTabId = undefined;
+				});
+			}
+			// the current tab is not the master tab
+			else
+			{
+				// Do Nothing, because:
+				// - either this is the master tab and we've already
+				// updated the LS cache with the appropriate data; or
+				// - this isn't the master tab and we don't have to do
+				// anything.
+			}
+		}
+
+		/**
+		 * Writes an expiry date timestamp to the LocalStorage
+		 * @example It's not possible to specify expiration of LS as seen here {@link https://stackoverflow.com/questions/2326943/when-do-items-in-html5-local-storage-expire}
+		 * @param {Date} date The expiry date.
+		 */
+		function setLSExpiryTimestamp(date)
+		{
+			var expiryDate;
+
+			if (date) // Expire whenever + TIMEOUT_INTERVAL
+			{
+				expiryDate = new Date(date);
+			}
+			else // Expire now + TIMEOUT_INTERVAL
+			{
+				expiryDate = new Date();
+			}
+			expiryDate = expiryDate.setMinutes(expiryDate.getMinutes() + (pollInterval / (MINUTES)));
+			localStorage.expiryDate = expiryDate;
+		}
+
+		/**
+		 * Return true to indicate a session has expired
+		 *  by presence of a skuid error banner,
+		 *  it then polls the server.
+		 */
+		function skuidErrors()
+		{
+			// Hunt for Skuid problems on page
+			var nx_problem_divs = document.getElementsByClassName('nx-problem'),
+				errorFound = false;
+
+			if (nx_problem_divs.length !== 0)
+			{
+				for (var div in nx_problem_divs)
+				{
+					// Trigger on server comms failure
+					if (div.innerHTML == '1. Unable to connect to the server (communication failure).')
+					{
+						errorFound = true;
+					}
+					else
+					{
+						// create a timestamp with offset of TIMEOUT_INTERVAL minutes
+						setLSExpiryTimestamp(localStorage.expiryDate);
+					}
+				}
+			}
+			return errorFound;
+		}
+
+		///////////////////////
+		// Utility Functions //
+		///////////////////////
+
 		/**
 		 * Takes an XML top-level action node and runs all of its child actions.
 		 * @param  {Object} actionsNode the XML top-level action node
@@ -679,7 +769,7 @@
 		function jsDateTimeRemoveMilis(jsDateTime)
 		{
 			var sfDateTime = jsDateTime.split('.');
-			return (sfDateTime[0] + ".000+0000");
+			return (`${sfDateTime[0]}.000+0000`);
 		}
 
 		function parseDateForCounter(E)
@@ -704,7 +794,7 @@
 			HH = zeroPad(HH);
 			MM = zeroPad(MM);
 			SS = zeroPad(SS);
-			return HH + ":" + MM + ":" + SS;
+			return `${HH}:${MM}:${SS}`;
 		}
 		/**
 		 * Removes handlebars.
@@ -715,8 +805,8 @@
 		{
 			if (stached)
 			{
-				var noStache = /{{\s*([^}]+)\s*}}/g;
-				return noStache.exec(stached)[1];
+				var stache = /{{\s*([^}]+)\s*}}/g;
+				return stache.exec(stached)[1];
 			}
 			return stached;
 		}
