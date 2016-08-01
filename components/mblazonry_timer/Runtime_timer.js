@@ -16,7 +16,6 @@
 	 */
 	/* jshint -W098 */ // x is unused.
 	/* jshint -W030 */ // useless and unnecessary code.
-	/* jshint -W004 */ // x is already defined.
 
 	"use strict";
 
@@ -75,7 +74,7 @@
 		// Top-level || mblazonry-timer //
 		//////////////////////////////////
 		var timer = element,
-			timeout, queriedStartTime;
+			timeout, queriedStartTime, storage;
 		const MINUTES = (60 * 10e2);
 
 		timer.addClass("mblazonry-timer");
@@ -108,7 +107,7 @@
 			d1.append(
 				"<ul> " +
 				"<li> userId: \'" + noStache(xmlDefinition.attr("userId")) + "\'</li>" +
-				"<li> user_name: \'" + user_Name + "\'</li>" +
+				`<li> user_name: \'${user_Name}\'</li>` +
 				"<li> userModel: \'" + (userModel ? "true" : "false") + "\'</li>" +
 				`<li> Start_Time: \'${startTime}\'</li>` +
 				`<li> End_Time: \'${endTime}\'</li>` +
@@ -184,6 +183,16 @@
 			/////////////////////
 			// PageLoad Checks //
 			/////////////////////
+			try
+			{
+				var uid = new Date();
+				(storage = window.localStorage).setItem(uid, uid);
+				var fail = storage.getItem(uid) != uid;
+				storage.removeItem(uid);
+				fail && (storage = false);
+			}
+			catch (exception)
+			{}
 
 			// There's a task running
 			if (endTime && startTime)
@@ -212,45 +221,48 @@
 			{
 				pollTimer();
 			}
+		}); // End of (document).ready
 
-			////////////////////////////////
-			// Handle timer State Changes //
-			////////////////////////////////
 
-			/**
-			 * Toggles the logical state of this timer.
-			 * Should never be done directly.
-			 * Should only run action framework.
-			 */
-			function handleTimerClick()
+		////////////////////////////////
+		// Handle timer State Changes //
+		////////////////////////////////
+
+		/**
+		 * Toggles the logical state of this timer.
+		 * Should never be done directly.
+		 * Should only run action framework.
+		 */
+		function handleTimerClick()
+		{
+			window.console.log("Attempting to handle pending actions...");
+
+			if (!startTimeIsValid())
 			{
-				if (!startTimeIsValid())
-				{
-					handleChangedStartTime();
-					return;
-				}
+				handleChangedStartTime();
+				return;
+			}
 
-				var isRecording = $(".mblazonry-timer").hasClass("recording");
-				var isPending = $(".mblazonry-timer").hasClass("pending");
+			var isRecording = $(".mblazonry-timer").hasClass("recording");
+			var isPending = $(".mblazonry-timer").hasClass("pending");
 
-				// Clean slate. Continue
-				if (!isRecording)
+			// Clean slate. Continue
+			if (!isRecording)
+			{
+				if (!isPending)
 				{
-					if (!isPending)
-					{
-						startPending();
-					}
-					else
-					{
-						window.console.log("Error handling timer click: Timer has pending actions!");
-					}
+					startPending();
 				}
-				else if (!isPending)
+				else
 				{
-					timerStopPending();
+					window.console.log("Error handling timer click: Timer has pending actions!");
 				}
 			}
-		}); // End of (document).ready
+			else if (!isPending)
+			{
+				timerStopPending();
+			}
+		}
 
 		//////////////////////
 		// UI state Changes //
@@ -390,40 +402,51 @@
 		 */
 		function handleModelSavedOutsideOfPending(saveResult)
 		{
-			if (!pendingActions && (userModel.id in saveResult.models) && (saveResult.totalsuccess))
+			if (userModel.id in saveResult.models)
 			{
-				window.console.log("Event detected: " + userModel.id + " model saved!");
+				window.console.log(`Event detected: ${userModel.id} model saved!`);
 
-				userModel.updateData();
-				user = userModel.getFirstRow();
-				var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
+				if (!pendingActions && saveResult.totalsuccess)
+				{
+					userModel.updateData();
+					user = userModel.getFirstRow();
+					var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
 
-				if (changedStartTime && changedStartTime !== startTime)
-				{
-					startTime = changedStartTime;
-					restartCounter();
-				}
-				else if (!changedStartTime) // it was deleted
-				{
-					stopCounter();
-					startTime = changedStartTime;
-				}
+					if (changedStartTime && changedStartTime !== startTime)
+					{
+						startTime = changedStartTime;
+						restartCounter();
+					}
+					else if (!changedStartTime) // it was deleted
+					{
+						stopCounter();
+						startTime = changedStartTime;
+					}
 
-				var newEndTime = userModel.getFieldValue(user, endTimeDestination);
-				if (newEndTime && newEndTime !== endTime)
-				{
-					endTime = newEndTime;
-					// do something?
-				}
-				else if (!newEndTime)
-				{
-					endTime = newEndTime;
-				}
+					var newEndTime = userModel.getFieldValue(user, endTimeDestination);
+					if (newEndTime && newEndTime !== endTime)
+					{
+						endTime = newEndTime;
+						// do something?
+					}
+					else if (!newEndTime)
+					{
+						endTime = newEndTime;
+					}
 
-				var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
-				if (changedPendingActions !== pendingActions)
+					var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
+					if (changedPendingActions !== pendingActions)
+					{
+						pendingActions = changedPendingActions;
+					}
+				}
+				else if (pendingActions)
 				{
-					pendingActions = changedPendingActions;
+					handleTimerClick();
+				}
+				else if (!saveResult.totalsuccess)
+				{
+					window.console.log(`${userModel.id} model save failed!`);
 				}
 			}
 		}
@@ -527,10 +550,10 @@
 		function checkTimer()
 		{
 			// Session should be valid
-			if (!skuidErrors)
+			if (!skuidErrors())
 			{
 				// if we have HMTL5 LocalStorage
-				if (window.localStorage)
+				if (storage)
 				{
 					updateLS();
 				}
@@ -623,7 +646,7 @@
 		 */
 		function updateLS()
 		{
-			if (localStorage.masterTabId === undefined)
+			if (!localStorage.masterTabId)
 			{
 				// No masterTabId in LS means the current tab is either:
 				// - the first of the browser's tabs to be loaded
@@ -642,7 +665,7 @@
 				});
 			}
 			// the current tab is not the master tab
-			else if (window.localStorage.masterTabId !== undefined)
+			else
 			{
 				// Do Nothing, because:
 				// - either this is the master tab and we've already
@@ -782,8 +805,8 @@
 		{
 			if (stached)
 			{
-				var noStache = /{{\s*([^}]+)\s*}}/g;
-				return noStache.exec(stached)[1];
+				var stache = /{{\s*([^}]+)\s*}}/g;
+				return stache.exec(stached)[1];
 			}
 			return stached;
 		}
