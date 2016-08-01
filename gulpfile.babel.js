@@ -449,17 +449,22 @@ function build_min(comps, build_type, cb)
    ], completed);
 
    /**
-    * Checks if the build is done
-    * @param  {Error} err This will be non-null is one of the pumps has an error.
+    * This is sort of a hacky status function called at the end of each pump
+    * to report on the status of the build. If this function was called with
+    * an error as argument, pass that along to the callback function, otherwise
+    * continue until we have no operatons remaining and the build is done. The
+    * callback method is then called sin arguments to signify a passed build.
+    * @param  {Error} err This will be non-null if one of the pumps errored out.
     */
    function completed(err)
    {
-      (err) ? cb(err) : () =>
+      if (err)
       {
-         if (--remains === 0)
-         {
-            cb;
-         }
-      };
+         cb(err);
+      }
+      else if ((--remains) === 0)
+      {
+         cb();
+      }
    }
 }
