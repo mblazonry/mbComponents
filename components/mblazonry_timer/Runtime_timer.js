@@ -589,7 +589,7 @@
 				}
 				else // allow action to complete and check back soon.
 				{
-					window.setTimeout(checkTimer, 20 * 1000);
+					window.setTimeout(checkTimer, MINUTES / 3);
 				}
 			}
 			else
@@ -785,7 +785,7 @@
 
 		function parseDateForCounter(E)
 		{
-			E /= 1000;
+			E /= 10e2;
 
 			// get seconds (Original had 'round' which incorrectly counts 0:28, 0:29, 1:30 ... 1:59, 1:0)
 			var SS = Math.round(E % 60);
