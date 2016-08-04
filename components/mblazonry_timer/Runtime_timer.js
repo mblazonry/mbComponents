@@ -235,7 +235,7 @@
 		 */
 		function handleTimerClick()
 		{
-			window.console.log("Attempting to handle pending actions...");
+			window.console.log("Handling timer click...");
 
 			if (!startTimeIsValid())
 			{
