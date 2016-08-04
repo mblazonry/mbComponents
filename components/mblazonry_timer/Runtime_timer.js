@@ -101,17 +101,18 @@
 		});
 		timer.append(button);
 
-		{ // DEBUG
-			var info = $("<div>").addClass("mblazonry-timer-debug"),
-				d1 = $("<td>").append("<h2>Debug info:</h2>");
+		// DEBUG
+		function updateDebugInfo()
+		{
+			var info = $(".mblazonry-timer-debug");
+			info.hide().empty();
+
+			var d1 = $("<td>").append("<h2>Debug info:</h2>");
 			d1.append(
 				"<ul> " +
 				"<li> userId: \'" + noStache(xmlDefinition.attr("userId")) + "\'</li>" +
 				`<li> user_name: \'${user_Name}\'</li>` +
 				"<li> userModel: \'" + (userModel ? "true" : "false") + "\'</li>" +
-				`<li> Start_Time: \'${startTime}\'</li>` +
-				`<li> End_Time: \'${endTime}\'</li>` +
-				`<li> Pending_Actions: \'${pendingActions}\'</li>` +
 				`<li> start_time_temp_field: \'${startTimeTempField}\'</li>` +
 				`<li> start_time_dest_field: \'${startTimeDestField}\'</li>` +
 				`<li> end_time_dest_field: \'${endTimeDestination}\'</li>` +
@@ -119,7 +120,16 @@
 				`<li> timer_Done_Event: \'${timer_Done_Event}\'</li>` +
 				"</ul>"
 			);
-			var d2 = $("<td>").append("<h3>Actions:</h3>");
+
+			var d2 = $("<td>").append("<h3>State Vars:</h3>");
+			d2.append(
+				"<ul> " +
+				`<li> Start_Time: <br>\'${startTime}\'</li>` +
+				`<li> End_Time: <br>\'${endTime}\'</li>` +
+				`<li> Pending_Actions: \'${pendingActions}\'</li>` +
+				"</ul>"
+			);
+			d2.append("<h3>Actions:</h3>");
 			d2.append("<ul> " +
 				'<li> actions: \'' + (actions ? "true" : "false") + '\',</li>' +
 				'<li> onStartActions: \'' + (onStartActions ? "true" : "false") + '\',</li>' +
@@ -128,6 +138,7 @@
 
 			var d3 = $("<td>").append("<h3>Advanced/UI:</h3>");
 			d3.append("<ul> " +
+				'<li> pollInterval: ' + (pollInterval ? "true: " + pollInterval + ' minutes' : "false") + ',</li>' +
 				'<li> counterStartLabel: ' + (counterStartLabel ? "\'" + counterStartLabel + '\'' : "false") + ',</li>' +
 				'<li> counterStopLabel: ' + (counterStopLabel ? "\'" + counterStopLabel + '\'' : "false") + ',</li>' +
 				'<li> recColor: ' + (recColor ? "true: \'" + recColor + '\'' : "false") + ',</li>' +
@@ -139,8 +150,9 @@
 			var debugTable = $('<table style="width:50%">');
 			debugTable.append(d1).append(d2).append(d3);
 
-			info.append(debugTable);
+			info.append(debugTable).show('fast', 'linear');
 		}
+
 		// ################################################################
 		// PageLoad hook - the document.ready event
 
@@ -176,8 +188,12 @@
 			// for Debug Page only
 			if ($p.name.match(/Timer_Debug_Page/i) && $('.mblazonry-timer-debug').length === 0)
 			{
+				var info = $("<div>").addClass("mblazonry-timer-debug");
+
 				// Append useful debug info to body
 				$('.nx-page-region').append(info);
+				updateDebugInfo();
+				setInterval(updateDebugInfo, MINUTES / 4);
 			}
 
 			/////////////////////
