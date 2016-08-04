@@ -485,6 +485,7 @@
 		function stopPending()
 		{
 			$('.mblazonry-timer-counter').counter('stop');
+			$(".mblazonry-timer").addClass("pending");
 		}
 
 		function stopCounter()
@@ -506,7 +507,7 @@
 			{
 				settings.initial = '00:00:00';
 			}
-			$.when(stopPending()).then($('.mblazonry-timer-counter').counter(settings));
+			$.when($('.mblazonry-timer-counter').counter('stop')).then($('.mblazonry-timer-counter').counter(settings));
 		}
 
 		function resetCounter()
