@@ -369,9 +369,9 @@
 		function timerStopPending()
 		{
 			stopPending();
+			endTime = $t.getSFDateTime(new Date());
+			userModel.updateRow(user, endTimeDestination, endTime);
 			pendingActions = true;
-			var stoptime = $t.getSFDateTime(new Date());
-			userModel.updateRow(user, endTimeDestination, stoptime);
 			userModel.updateRow(user, pendingActionsDest, true);
 
 			$.when(userModel.save()).then(function ()
