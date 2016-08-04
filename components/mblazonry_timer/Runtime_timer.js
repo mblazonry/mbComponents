@@ -272,10 +272,21 @@
 		function startPending()
 		{
 			startCounterPending();
-			pendingActions = true;
-			userModel.updateRow(user, pendingActionsDest, true);
 
-			$.when(userModel.save()).then(function ()
+			if (pendingActions && !pendingActions)
+			{
+				pendingActions = true;
+
+				userModel.updateRow(user, pendingActionsDest, true);
+
+				$.when(userModel.save()).then(doPending);
+			}
+			else
+			{
+				doPending();
+			}
+
+			function doPending()
 			{
 				// Update UI-only field after the save so it doesn't get nerfed.
 				if (startTimeTempField)
@@ -289,7 +300,7 @@
 				{
 					runActions(onStartActions);
 				}
-			});
+			}
 		}
 
 		function timerStarted()
