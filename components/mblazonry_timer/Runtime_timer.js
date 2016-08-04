@@ -387,15 +387,26 @@
 			});
 		}
 
+		/**
+		 * Cleanup function for when the Timer is done
+		 */
 		function timerDone()
 		{
-			// Cleanup
-			startTime = null;
-			endTime = null;
 			stopCounter();
-			userModel.updateRow(user, pendingActionsDest, false);
-			userModel.updateRow(user, startTimeDestField, null);
-			userModel.updateRow(user, endTimeDestination, null);
+			if (startTime)
+			{
+				startTime = null;
+				userModel.updateRow(user, startTimeDestField, null);
+			}
+			if (endTime)
+			{
+				endTime = null;
+				userModel.updateRow(user, endTimeDestination, null);
+			}
+			if (pendingActions)
+			{
+				userModel.updateRow(user, pendingActionsDest, false);
+			}
 			userModel.updateRow(user, timerNotesDestination, null);
 
 			$.when(userModel.save()).then(function ()
