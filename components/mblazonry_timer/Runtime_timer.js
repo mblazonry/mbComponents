@@ -251,14 +251,13 @@
 		 */
 		function handleTimerClick()
 		{
-			window.console.log("Handling timer click...");
-
 			if (!startTimeIsValid())
 			{
 				handleChangedStartTime();
 				return;
 			}
 
+			window.console.log("Handling timer click...");
 			var isRecording = $(".mblazonry-timer").hasClass("recording");
 			var isPending = $(".mblazonry-timer").hasClass("pending");
 
@@ -268,6 +267,7 @@
 				if (!isPending)
 				{
 					startPending();
+					window.console.log("Started, pending...");
 				}
 				else
 				{
@@ -277,6 +277,11 @@
 			else if (!isPending)
 			{
 				timerStopPending();
+				window.console.log("Stopped, pending...");
+			}
+			else
+			{
+				window.console.log("Error handling timer click: Timer state in error!");
 			}
 		}
 
