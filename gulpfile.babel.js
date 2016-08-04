@@ -44,7 +44,7 @@ const merge = require('merge-stream'),
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
 gulp.task('build', ['build-min-release']);
-gulp.task('deploy', ['deploy-dev']);
+gulp.task('deploy', ['deploy-dev'], deploy_Default);
 // Release builds
 gulp.task('build-min-release', ['clean-min-release'], build_min_release);
 gulp.task('clean-min-release', ['lint'], clean_release);
@@ -134,6 +134,14 @@ const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
 ////////////////
 // Deployment //
 ////////////////
+
+/**
+ * Deploy release build to Ideal Protein.
+ */
+function deploy_Default()
+{
+   gutil.log(gcl.yellow("Deployed to default destination!"));
+}
 
 /**
  * Deploy release build to Ideal Protein.
