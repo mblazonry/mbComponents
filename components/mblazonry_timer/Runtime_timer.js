@@ -449,47 +449,57 @@
 			{
 				window.console.log(`Event detected: ${userModel.id} model saved!`);
 
-				if (!pendingActions && saveResult.totalsuccess)
-				{
-					userModel.updateData();
-					user = userModel.getFirstRow();
-					var changedStartTime = userModel.getFieldValue(user, startTimeDestField);
-
-					if (changedStartTime && changedStartTime !== startTime)
-					{
-						startTime = changedStartTime;
-						restartCounter();
-					}
-					else if (!changedStartTime) // it was deleted
-					{
-						stopCounter();
-						startTime = changedStartTime;
-					}
-
-					var newEndTime = userModel.getFieldValue(user, endTimeDestination);
-					if (newEndTime && newEndTime !== endTime)
-					{
-						endTime = newEndTime;
-						// do something?
-					}
-					else if (!newEndTime)
-					{
-						endTime = newEndTime;
-					}
-
-					var changedPendingActions = userModel.getFieldValue(user, pendingActionsDest);
-					if (changedPendingActions !== pendingActions)
-					{
-						pendingActions = changedPendingActions;
-					}
-				}
-				else if (pendingActions)
-				{
-					handleTimerClick();
-				}
-				else if (!saveResult.totalsuccess)
+				if (!saveResult.totalsuccess) // Handle error?
 				{
 					window.console.log(`${userModel.id} model save failed!`);
+					return;
+				}
+
+				userModel.updateData();
+				user = userModel.getFirstRow();
+				const polledPendingActions = userModel.getFieldValue(user, pendingActionsDest);
+				const polledStartTime = userModel.getFieldValue(user, startTimeDestField);
+				const polledEndTime = userModel.getFieldValue(user, endTimeDestination);
+
+				if (!pendingActions)
+				{
+					if (polledPendingActions !== pendingActions)
+					{
+						pendingActions = polledPendingActions;
+						handleTimerClick();
+					}
+
+					if (polledStartTime && polledStartTime !== startTime)
+					{
+						startTime = polledStartTime;
+						restartCounter();
+					}
+					else if (startTime && !polledStartTime)
+					{
+						stopCounter();
+						startTime = null;
+					}
+
+					if (polledEndTime && polledEndTime !== endTime)
+					{
+						endTime = polledEndTime;
+						window.console.log(`- End time changed to ${endTime} -`);
+						// do something?
+					}
+					else if (endTime && !polledEndTime)
+					{
+						endTime = null;
+					}
+				}
+				else
+				{
+					// A save happened while we had pending actions
+					// so far, this can only mean the cancel button was pressed.
+					if (!(polledPendingActions && polledStartTime && polledEndTime))
+					{
+						// Handle?
+						window.console.log(`Detected Timer Cancel.`);
+					}
 				}
 			}
 		}
