@@ -412,7 +412,8 @@
 			$.when(userModel.save()).then(function ()
 			{
 				pendingActions = false;
-				pollTimer(1);
+				// Fixme??
+				pollTimer(pollInterval);
 			});
 		}
 
