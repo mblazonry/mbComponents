@@ -323,7 +323,7 @@ function build_dev()
 {
    var src = gulp.src(['./components/**/*.*']);
 
-   var min_configs = gulp.src('./skuid_*.json')
+   var min_configs = gulp.src('./components/skuid_*.json')
       // minify configs
       .pipe(jsonminify());
 
@@ -438,7 +438,7 @@ function build_min(comps, build_type, cb)
       crc32 = crc.crc32(comps.sort()).toString(16);
    }
 
-   var min_configs = gulp.src('./skuid_*.json')
+   var min_configs = gulp.src('./components/skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
       {
