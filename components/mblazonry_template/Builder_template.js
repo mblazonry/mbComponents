@@ -1,4 +1,3 @@
-/* jshint -W098 */ // x is unused.
 /* jshint -W030 */ // useless and unnecessary code.
 /* jshint -W004 */ // x is already defined.
 
@@ -11,7 +10,6 @@
 	var $bc = $b.core;
 	var $u = $S.utils;
 	var $xml = $u.makeXMLDoc;
-	var $j = $.noConflict();
 
 	$b.registerBuilder(new $b.Builder(
 	{
