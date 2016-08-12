@@ -18,6 +18,9 @@
       },
       {
          "id": "template"
+      },
+      {
+         "id": "card_list"
       }
    ],
 
@@ -38,6 +41,9 @@
       },
       {
          "path": "mblazonry_template/Runtime_template.js"
+      },
+      {
+         "path": "mblazonry_template/Runtime_cardList.js"
       }
    ],
 
@@ -55,6 +61,9 @@
       },
       {
          "path": "mblazonry_template/Runtime_template.css"
+      },
+      {
+         "path": "mblazonry_template/Runtime_cardList.css"
       }
    ]
 }
