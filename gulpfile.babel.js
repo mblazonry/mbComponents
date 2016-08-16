@@ -140,7 +140,7 @@ const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
  */
 function deploy_Default()
 {
-   gutil.log(gcl.bgGreen(gcl.white("Deployed to default destination.")));
+   gutil.log(gcl.bgGreen(gcl.white("Done deploying to default destination")));
 }
 
 /**
@@ -321,7 +321,7 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var src = gulp.src(['./components/**/*.*']);
+   var src = gulp.src(['./components/**/*.*', '!./components/skuid_*.json']);
 
    var min_configs = gulp.src('./components/skuid_*.json')
       // minify configs
