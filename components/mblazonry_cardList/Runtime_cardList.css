@@ -1,0 +1,26 @@
+.mblazonry-cardList
+{
+   display: inline-block;
+}
+
+.mblazonry-cardList .ui-sortable tr.ui-state-highlight > td {
+    height: 4em;
+    /*border-top: 1px solid #dad55e;*/
+    border-top: 1px solid #A0C6FF;
+    border-bottom: 1px solid #A0C6FF;
+    /*background: #fffa90 !important;*/
+    color: #777620 !important;
+}
+
+.mblazonry-cardList .ui-sortable tr.ui-state-highlight > td:first-child {
+    border-left: 1px solid #A0C6FF;
+}
+
+.mblazonry-cardList .ui-sortable tr.ui-state-highlight > td:last-child {
+    border-right: 1px solid #A0C6FF;
+}
+cardList .tilt {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
