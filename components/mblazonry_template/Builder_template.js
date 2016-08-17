@@ -16,7 +16,7 @@
 		id: "mblazonry__template",
 		name: "mB Template",
 		icon: "sk-bi-template",
-		description: 'A Merge-Field area.<br/><br/>More information: <ul><li><a href="http://help.skuidify.com/s/tutorials/m/components/l/102558-template" target="SkuidBuilderHelp">Template Component Tutorial</a> </li><li><a href="http://help.skuidify.com/s/tutorials/m/models-conditions-filters/l/108687-template-fields" target="SkuidBuilderHelp">Create Template Fields</a> </li><li><a href="http://help.skuidify.com/s/tutorials/m/supercharge-your-ui/l/153540-highlighting-critical-data-using-templates-and-custom-components" target="SkuidBuilderHelp">Highlighting Critical Data using Templates and Custom Components</a></li></ul>',
+		description: 'A Merge-Field area.<br/><br/>More information: <ul><li><a href="https://community.skuid.com/skuid/topics/template-component-with-action-framework">Original post on the skuid Community</a></li><li><a href="https://github.com/mBlazonry/mBlazonrySupport/tree/master/Components">mB Support Repo - Components</a></li><li><a href="http://help.skuid.com/s/tutorials/m/components/l/102558-template">Template Component Tutorial</a> </li><li><a href="http://help.skuid.com/s/tutorials/m/models-conditions-filters/l/108687-template-fields">Create Template Fields</a> </li><li><a href="http://help.skuid.com/s/tutorials/m/supercharge-your-ui/l/153540-highlighting-critical-data-using-templates-and-custom-components">Highlighting Critical Data using Templates and Custom Components</a></li></ul>',
 		isJSCreateable: true,
 		isTransparent: true,
 		handleStateEvent: function (a, event, component)
@@ -122,7 +122,6 @@
 					}],
 					onChange: function (e)
 					{
-
 						if ("click" === e)
 						{
 							state.children("actions").removeAttr("eventname");
