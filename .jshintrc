@@ -13,7 +13,10 @@
    "nonew": true,
 
    "undef": true,
-   "globals": "skuid",
+   "globals":
+   {
+      "skuid": true
+   },
    "unused": "vars",
    "trailing": true,
    "lastsemic": true,
@@ -23,7 +26,7 @@
    "asi": true,
 
    "browser": true,
-   "esnext": true,
+   "esversion": 6,
    "strict": true,
    "devel": false,
    "jquery": true,

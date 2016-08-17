@@ -10,7 +10,7 @@ Home of mBlazonry's primary custom component source!
 
 - Barry Schnell's old ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community forums.
 
-## Setup ##
+## Dev Setup ##
 
 This section has two parts. You already did the initial setup part by downloading this repo.
 
@@ -30,19 +30,19 @@ First part:
 
 7.  Running `gulp` will run the default task of listing all available gulp tasks.
 
-8.  You need to create a `.env` file in your working directory that contains only the following two lines:
+8.  Create a `.env` file in your working directory that containing the following two lines:
 
 	**(case-sensitive)**
     mB_USERNAME="username@org.com"
-    	mB_PASSWORD="passwordAndSecurityTokenConcatenated"
+    mB_PASSWORD="passwordAndSecurityTokenConcatenated"
 
 	You will eventually need to create additional entries for each org you wish to deploy your component packages to.
 
-10. Make sure you can connect to the org with your credentials.
+9. Make sure you can connect to the org with your credentials.
 
-11. Now to deploy, all you should have to do is run `gulp deploy` and it will automatically build and create the static resource and upload it to SF using jsforce!
+10. To deploy, run `gulp deploy` to automatically build and create the static resource and upload it to SF using jsforce!
 
-12. You should be good to go. 
+11. You should now be good to go. 
 
 
 ### MavensMate [plug-in for editors ](https://github.com/joeferraro/MavensMate#active-plugins) ###

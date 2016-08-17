@@ -10,6 +10,7 @@
     var $e = skuid.events;
     var $m = skuid.model;
     var $u = skuid.utils;
+    var console = window.console;
 
     var Runtime_template = function (element, xmlDefinition, component)
     {
@@ -21,7 +22,8 @@
             contents = xmlDefinition.children("contents").first(),
             actions = xmlDefinition.children("actions"),
             eventType = actions.attr("event"),
-            isClickEvent = ("click" === eventType);
+            isClickEvent = (eventType === "click"),
+            eventName = actions.attr("eventname");
 
         contents = contents.length ? contents[0] : xmlDefinition[0];
 
@@ -34,7 +36,9 @@
             conditions = component.createConditionsFromXml(xmlDefinition),
             multiple = xmlDefinition.attr("multiple"),
             isMultiRow = multiple && multiple === "true",
-            allowHTML = "true" === xmlDefinition.attr("allowhtml");
+            allowHTML = "true" === xmlDefinition.attr("allowhtml"),
+            isHidden = "true" === xmlDefinition.attr("hidden"),
+            uniqueId = xmlDefinition.attr("uniqueid");
 
         ///////////////////////////
         // Creating the template //
@@ -65,14 +69,22 @@
 
         template.addClass("mblazonry-template");
 
-        if (isClickEvent)
-        {
-            template.addClass("clickable");
-        }
-
         if (allowHTML)
         {
             template.addClass("allowHMTL");
+        }
+
+        if (isHidden)
+        {
+            template.addClass("hidden");
+        }
+
+        // only make clickable if we have
+        // click enbaled and actions to run.
+        if (isClickEvent && actions.children().length)
+        {
+            eventName = eventType;
+            template.addClass("clickable");
         }
 
         // ################################################################
@@ -80,15 +92,17 @@
         //
         $(document).ready(function ()
         {
-            // Attach a function to the template event
-            $('.mblazonry-template').on(eventType, handleTimerClick);
-            $e.subscribe(eventType, handleTimerClick);
-
-            // function handleTimerClick(event)
-            function handleTimerClick()
+            if (isClickEvent)
             {
-                event.stopImmediatePropagation();
+                $(`#${uniqueId}`).on(eventName, handle);
+            }
+            else
+            {
+                $e.subscribe(eventName, handle);
+            }
 
+            function handle(event)
+            {
                 // Run action framework actions if any
                 if (actions)
                 {
@@ -104,9 +118,16 @@
             {
                 if (actionsNode && actionsNode.length)
                 {
-                    var res = $a.runActionsNode(actionsNode, component, component.context ||
-                    {});
-                    return res;
+                    var msg = `Event ${eventType} on ${uniqueId} `;
+
+                    $a.runActionsNode(actionsNode, component, component.context ||
+                    {}).then(() =>
+                    {
+                        console.log(msg + "succeded!");
+                    }, () =>
+                    {
+                        console.log(msg + "errored :(");
+                    });
                 }
             }
         });
@@ -114,9 +135,9 @@
     skuid.componentType.register("mblazonry__template", Runtime_template);
     $u.registerPlugin("template",
     {
-        init: function (xmlDefinition, component)
+        init: (xmlDefinition, component) =>
         {
-            return Runtime_template(this, xmlDefinition, component), this.data("object", this), this;
+            return new Runtime_template(this, xmlDefinition, component), this.data("object", this), this;
         }
     });
 })(window.skuid.$, window.skuid, window);

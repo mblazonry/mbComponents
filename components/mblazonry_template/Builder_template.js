@@ -1,4 +1,3 @@
-/* jshint -W098 */ // x is unused.
 /* jshint -W030 */ // useless and unnecessary code.
 /* jshint -W004 */ // x is already defined.
 
@@ -11,7 +10,6 @@
 	var $bc = $b.core;
 	var $u = $S.utils;
 	var $xml = $u.makeXMLDoc;
-	var $j = $.noConflict();
 
 	$b.registerBuilder(new $b.Builder(
 	{
@@ -33,8 +31,9 @@
 		{
 			propertiesObj.setTitle("mB Template Properties");
 			var state = component.state,
-				eventType = state.children("actions").attr("event"),
-				isCustomEventType = ("custom" === eventType),
+				eventType = state.children.length && state.children("actions").attr("event"),
+				isCustomEventType = eventType && ("custom" === eventType),
+				isHidden = ("true" == state.attr("hidden")),
 				properties = [];
 
 			var basicPropsList = [
@@ -57,7 +56,7 @@
 				type: "template",
 				label: "Template",
 				location: "node",
-				helptext: "The text or HTML to display in this area. Can contain global Merge-Fields, e.g. {{$Model.Contact.data.0.First_Name__c}}, as well as row/model merge fields (e.g. {{Name}}, {{CreatedDate}}) if you have selected a Model. Row merge fields can be easily added using the Merge-Field Picker on the right.",
+				helptext: "The text or HTML to display inside the template. Can contain global Merge-Fields, e.g. {{$Model.Contact.data.0.First_Name__c}}, as well as row/model merge fields (e.g. {{Name}}, {{CreatedDate}}) if you have selected a Model. Row merge fields can be easily added using the Merge-Field Picker on the right.",
 				onChange: function ()
 				{
 					component.refreshText();
@@ -70,7 +69,17 @@
 				defaultValue: false,
 				onChange: function ()
 				{
-					// component.refreshText();
+					component.save().refresh();
+				}
+			},
+			{
+				id: "hidden",
+				type: "boolean",
+				label: "Hidden template",
+				defaultValue: false,
+				helptext: "The template will have \"display: none;\" set.",
+				onChange: function ()
+				{
 					component.save().refresh();
 				}
 			}];
@@ -113,10 +122,14 @@
 					}],
 					onChange: function (e)
 					{
-						// state.children("actions").removeAttr("event");
+
 						if ("click" === e)
 						{
-							state.children("actions").attr("event", "click");
+							state.children("actions").removeAttr("eventname");
+						}
+						else if ("custom" === e)
+						{
+							// state.children("actions").attr("eventname", "custom");
 						}
 						component.save().refresh().rebuildProps();
 					}
@@ -135,10 +148,19 @@
 					type: "string",
 					label: "Event Name",
 					isVisible: true,
+					placeholder: "yourpackage.eventname",
 					onChange: function (src)
 					{
 						component.save().refresh().rebuildProps();
 					}
+				});
+			}
+			else if (isHidden)
+			{
+				actionsTreeRoot.props.push(
+				{
+					type: "helptext",
+					html: "⚠ Template is set to \"Hidden\"! Users won't be able trigger a click ⚠"
 				});
 			}
 
@@ -241,9 +263,12 @@
 					{
 						$(dropzones[i]).css(
 						{
-							height: ($(templates[i]).height() - 24) + "px",
+							// height: ($(templates[i]).height() - 24) + "px",
+							height: ($(templates[i]).height()) + "px",
 							width: "8px",
-							display: "inline-block"
+							display: "inline-block",
+							"vertical-align": "top",
+							"margin-top": "8px"
 						});
 					}
 				}
@@ -270,21 +295,12 @@
 
 			templateXML.append($xml("<contents/>"));
 
-			var actions = $xml("<actions/>"),
-				action = $xml("<action/>");
+			var actions = $xml("<actions/>");
 
 			actions.attr(
 			{
 				event: 'click'
 			});
-
-			action.attr(
-			{
-				type: 'redirect',
-				window: 'self'
-			});
-
-			actions.append(action);
 			templateXML.append(actions);
 
 			return templateXML;

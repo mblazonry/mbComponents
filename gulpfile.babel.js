@@ -6,7 +6,8 @@
 //////////
 // gulp //
 //////////
-const gulp = require('gulp');
+const gulp = require('gulp'),
+   del = require('del');
 
 ///////////////////
 // gulp plug-ins //
@@ -16,12 +17,13 @@ const merge = require('merge-stream'),
    uglify = require("gulp-uglify"),
    cleanCSS = require('gulp-clean-css'),
    jsonminify = require('gulp-jsonminify'),
+   babel = require('gulp-babel'),
+   pump = require('pump'),
    crc = require('crc'),
    zip = require('gulp-zip'),
    gutil = require('gulp-util'),
    list = require('gulp-print'),
    rename = require('gulp-rename'),
-   clean = require('gulp-clean'),
    stylish = require('jshint-stylish'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
@@ -41,10 +43,11 @@ const merge = require('merge-stream'),
  */
 gulp.task('default', taskListing);
 gulp.task('lint', lint);
-gulp.task('build', ['build-release']);
+gulp.task('build', ['build-min-release']);
+gulp.task('deploy', ['deploy-dev'], deploy_Default);
 // Release builds
-gulp.task('clean-min-release', ['lint'], clean_release);
 gulp.task('build-min-release', ['clean-min-release'], build_min_release);
+gulp.task('clean-min-release', ['lint'], clean_release);
 gulp.task('static-resource-min-release', ['build-min-release'], static_resource_min_release);
 // Interactive Build
 gulp.task('build-interactive', ['clean-min-release'], build_min_components);
@@ -56,7 +59,7 @@ gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
 gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
 gulp.task('env-dev', false, env_dev);
-gulp.task('deploy', ['static-resource-dev', 'env-dev'], deploy_dev);
+gulp.task('deploy-dev', ['static-resource-dev', 'env-dev'], deploy_dev);
 
 ///////////////////
 // Utility Tasks //
@@ -66,16 +69,11 @@ gulp.task('deploy', ['static-resource-dev', 'env-dev'], deploy_dev);
  */
 function clean_dev()
 {
-   return gulp.src(
-         [
-            './*-dev.zip',
-            './resource-bundles/mBlazonryComponents.resource'
-         ],
-         {
-            read: false,
-            base: '.'
-         })
-      .pipe(clean());
+   return del(
+      [
+         './*-dev.zip',
+         './resource-bundles/mBlazonryComponents.resource'
+      ]);
 }
 
 /**
@@ -87,15 +85,13 @@ function clean_release()
 }
 
 /**
- * Remove old files from directory.
+ * Remove files from directory.
  */
 function clean_min(build_type)
 {
-   return gulp.src(`./*-min*-${build_type}.zip`,
-      {
-         read: false
-      })
-      .pipe(clean());
+   return del([
+      `./*-min*-${build_type}.zip`
+   ]);
 }
 
 /**
@@ -138,6 +134,14 @@ const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
 ////////////////
 // Deployment //
 ////////////////
+
+/**
+ * Deploy release build to Ideal Protein.
+ */
+function deploy_Default()
+{
+   gutil.log(gcl.bgGreen(gcl.white("Done deploying to default destination")));
+}
 
 /**
  * Deploy release build to Ideal Protein.
@@ -319,7 +323,7 @@ function build_dev()
 {
    var src = gulp.src(['./components/**/*.*']);
 
-   var min_configs = gulp.src('./skuid_*.json')
+   var min_configs = gulp.src('./components/skuid_*.json')
       // minify configs
       .pipe(jsonminify());
 
@@ -337,7 +341,7 @@ function build_dev()
  * It allows the user, from the command line,
  * to state by name which packages to build.
  */
-function build_min_components()
+function build_min_components(cb)
 {
    const SPECIAL = {
       pI: "progressIndicator",
@@ -372,29 +376,37 @@ function build_min_components()
    {
       exclude = "progressIndicator";
    }
-   return build_min(comp);
+   return build_min(comp, "custom", cb);
 }
 
-function build_min_release()
+function build_min_release(cb)
 {
-   return build_min(RELEASE_BUILD, "release");
+   return build_min(RELEASE_BUILD, "release", cb);
 }
 
-function build_min(comps, build_type)
+function build_min(comps, build_type, cb)
 {
    var js = [],
-      css = [];
+      css = [],
+      remains = 0;
 
-   comps.forEach(comp =>
+   comps.forEach(function (comp)
    {
       js.push(`./components/*_${comp}/*.js`);
       css.push(`./components/*_${comp}/*.css`);
    });
 
+   remains++;
    // minify-js
-   var min_js = gulp.src(js)
-      .pipe(list())
-      .pipe(uglify());
+   var min_js = pump([
+      gulp.src(js),
+      list(),
+      babel(
+      {
+         presets: ['es2015']
+      }),
+      uglify()
+   ], completed);
 
    //minify-css
    var min_css = gulp.src(css)
@@ -426,7 +438,7 @@ function build_min(comps, build_type)
       crc32 = crc.crc32(comps.sort()).toString(16);
    }
 
-   var min_configs = gulp.src('./skuid_*.json')
+   var min_configs = gulp.src('./components/skuid_*.json')
       // strip unrelated stuff
       .pipe(stripCode(
       {
@@ -436,8 +448,31 @@ function build_min(comps, build_type)
       // minify configs
       .pipe(jsonminify());
 
+   remains++;
    // Zip all files
-   return merge(min_src, min_configs)
-      .pipe(zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`))
-      .pipe(gulp.dest('./'));
+   pump([
+      merge(min_src, min_configs),
+      zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`),
+      gulp.dest('./')
+   ], completed);
+
+   /**
+    * This is sort of a hacky status function called at the end of each pump
+    * to report on the status of the build. If this function was called with
+    * an error as argument, pass that along to the callback function, otherwise
+    * continue until we have no operatons remaining and the build is done. The
+    * callback method is then called sin arguments to signify a passed build.
+    * @param  {Error} err This will be non-null if one of the pumps errored out.
+    */
+   function completed(err)
+   {
+      if (err)
+      {
+         cb(err);
+      }
+      else if ((--remains) === 0)
+      {
+         cb();
+      }
+   }
 }
