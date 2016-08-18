@@ -32,7 +32,7 @@
 		id: "mblazonry__model_registerer",
 		name: "Model Registerer",
 		icon: "fa-chain",
-		description: 'TODO',
+		description: 'Choose what models should be registered to save/cancel buttons on parent pages.',
 		propertiesRenderer: function(propertiesObj, component) {
 			propertiesObj.setTitle('Model Registerer Properties');
 			var state = component.state,
