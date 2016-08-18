@@ -29,6 +29,10 @@
       {
          "id": "template",
          "folderId": "mblazonry"
+      },
+      {
+          "id": "model_registerer",
+          "folderId": "mblazonry"
       }
    ],
 
@@ -49,6 +53,9 @@
       },
       {
          "path": "mblazonry_template/Builder_template.js"
+      },
+      {
+        "path": "mblazonry_modelRegisterer/Builder_modelRegisterer.js"
       }
    ],
 

@@ -18,6 +18,9 @@
       },
       {
          "id": "template"
+      },
+      {
+          "id": "model_registerer"
       }
    ],
 
@@ -38,6 +41,9 @@
       },
       {
          "path": "mblazonry_template/Runtime_template.js"
+      },
+      {
+          "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
       }
    ],
 
