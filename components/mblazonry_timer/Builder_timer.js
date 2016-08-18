@@ -17,7 +17,7 @@
 		id: 'mblazonry__timer',
 		name: 'Timer',
 		icon: 'sk-icon-versions', // looks like a clock
-		description: 'Records and displays elapsed time.',
+		description: 'Records and displays elapsed time.<br/><br/>More information: <ul><li><a href="https://community.skuid.com/skuid/topics/timer-component-time-tasks-with-hooks-on-action-framework-events">Original post on the skuid Community</a></li><li><a href="https://github.com/mBlazonry/mBlazonrySupport/tree/master/Components">mB Support Repo - Components</a></li></ul>',
 		handleStateEvent: function (c, event, f)
 		{
 			var changeEvent = "model.idChange" === event.type,
