@@ -128,6 +128,7 @@ const RELEASE_BUILD = [
    'progressIndicator',
    'timer',
    'template',
+   'modelRegisterer'
 ];
 const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
 
