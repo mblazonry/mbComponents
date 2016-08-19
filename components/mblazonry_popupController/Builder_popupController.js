@@ -8,7 +8,7 @@
 		id: 'mblazonry__popupcontroller',
 		name: 'Popup Controller',
 		icon: 'sk-icon-popup',
-		description: 'This component provides hooks for popup dialog events.',
+		description: 'This component provides hooks for popup dialog events. <br/><br/>More information: <ul><li><a href="http://help.skuid.com/m/11720/l/451511-progress-indicator-component">Original post on the skuid Help</a></li><li><a href="https://github.com/mBlazonry/mBlazonrySupport/tree/master/Components">mB Support Repo - Components</a></li></ul>',
 		isJSCreateable: true, // required so that component can be added to popup, drawer, etc.
 		componentRenderer: function (component)
 		{

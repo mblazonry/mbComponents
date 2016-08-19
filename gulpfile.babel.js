@@ -128,6 +128,7 @@ const RELEASE_BUILD = [
    'progressIndicator',
    'timer',
    'template',
+   'modelRegisterer'
 ];
 const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
 
@@ -321,7 +322,7 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var src = gulp.src(['./components/**/*.*']);
+   var src = gulp.src(['./components/**/*.*', '!./components/skuid_*.json']);
 
    var min_configs = gulp.src('./components/skuid_*.json')
       // minify configs

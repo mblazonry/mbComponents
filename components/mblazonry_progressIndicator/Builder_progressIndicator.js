@@ -10,7 +10,7 @@
 		id: "mblazonry__progress_indicator",
 		name: "Progress Indicator",
 		icon: "sk-icon-arrow-right",
-		description: "Indicates the progress of a Wizard, a Tabset, or a Picklist.",
+		description: 'Indicates the progress of a Wizard, a Tabset, or a Picklist.<br/><br/>More information: <ul><li><a href="http://help.skuid.com/m/11720/l/451511-progress-indicator-component">Original skuid Help page</a></li><li><a href="https://github.com/mBlazonry/mBlazonrySupport/tree/master/Components">mB Support Repo - Components</a></li></ul>',
 
 		// How it's rendered in the composer view in desktop
 		componentRenderer: function (component)

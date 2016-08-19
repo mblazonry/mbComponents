@@ -21,6 +21,12 @@
       },
       {
          "id": "card_list"
+      },
+      {
+          "id": "model_registerer"
+      },
+      {
+          "id": "model_refresher"
       }
    ],
 
@@ -44,6 +50,12 @@
       },
       {
          "path": "mblazonry_template/Runtime_cardList.js"
+      },
+      {
+          "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
+      },
+      {
+          "path": "mblazonry_modelRefresher/Runtime_modelRefresher.js"
       }
    ],
 
