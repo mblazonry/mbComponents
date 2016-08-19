@@ -21,6 +21,9 @@
       },
       {
           "id": "model_registerer"
+      },
+      {
+          "id": "model_refresher"
       }
    ],
 
@@ -44,6 +47,9 @@
       },
       {
           "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
+      },
+      {
+          "path": "mblazonry_modelRefresher/Runtime_modelRefresher.js"
       }
    ],
 

@@ -33,6 +33,10 @@
       {
           "id": "model_registerer",
           "folderId": "mblazonry"
+      },
+      {
+        "id": "model_refresher",
+        "folderId": "mblazonry"
       }
    ],
 
@@ -56,6 +60,9 @@
       },
       {
         "path": "mblazonry_modelRegisterer/Builder_modelRegisterer.js"
+      },
+      {
+        "path": "mblazonry_modelRefresher/Builder_modelRefresher.js"
       }
    ],
 
