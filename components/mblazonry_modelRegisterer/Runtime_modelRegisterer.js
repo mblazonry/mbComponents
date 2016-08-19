@@ -23,8 +23,12 @@
             target = skuid.component.getById(xmlDefinition.attr('title-id'));
         }
 
-        for (let m of models) {
-            target.editor.registerModel(skuid.$M(m));
+        if (target) {
+            for (let m of models) {
+                target.editor.registerModel(skuid.$M(m));
+            }
+        } else {
+            component.addProblem('No target page title provided for model registerer.');
         }
     };
     skuid.componentType.register("mblazonry__model_registerer", Runtime_modelRegisterer);
