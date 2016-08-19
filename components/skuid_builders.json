@@ -63,7 +63,7 @@
          "path": "mblazonry_template/Builder_template.js"
       },
       {
-         "path": "mblazonry_template/Builder_cardList.js"
+         "path": "mblazonry_cardList/Builder_cardList.js"
       },
       {
         "path": "mblazonry_modelRegisterer/Builder_modelRegisterer.js"
@@ -89,7 +89,7 @@
          "path": "mblazonry_template/Builder_template.css"
       },
       {
-         "path": "mblazonry_template/Builder_cardList.css"
+         "path": "mblazonry_cardList/Builder_cardList.css"
       }
    ]
 }

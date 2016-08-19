@@ -49,7 +49,7 @@
          "path": "mblazonry_template/Runtime_template.js"
       },
       {
-         "path": "mblazonry_template/Runtime_cardList.js"
+         "path": "mblazonry_cardList/Runtime_cardList.js"
       },
       {
           "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
@@ -75,7 +75,7 @@
          "path": "mblazonry_template/Runtime_template.css"
       },
       {
-         "path": "mblazonry_template/Runtime_cardList.css"
+         "path": "mblazonry_cardList/Runtime_cardList.css"
       }
    ]
 }
