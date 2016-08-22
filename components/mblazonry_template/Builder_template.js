@@ -98,7 +98,7 @@
 
 			var actionsTreeRoot = {
 				customNodeId: "actions",
-				label: "Actions:",
+				label: `Actions (${eventType}):`,
 				linkedComponent: component,
 				actionsIndent: 1,
 				props: [
