@@ -79,17 +79,26 @@
 				helptext: "Allow HTML content and mustached stuff in a List Title.",
 				onChange: componentSaveRefresh
 			},
+			{},
 			{
 				id: "list-cross-drop",
 				type: "boolean",
 				label: "Allow Cross-Component Dropping",
 				defaultValue: false,
-				helptext: "Normally, a List can only be droppped onto the same component it orginated from. This setting allow items of matching SObject to be dropped onto one another. Somehow..."
+				helptext: "Normally, a List of Cards can only be droppped onto the same component it orginated from. This setting allows List of items of matching SObject type to be dropped onto one another. Magically..."
+			},
+			{
+				id: "list-auto-save",
+				type: "boolean",
+				label: "Auto-save on Drop",
+				defaultValue: true,
+				helptext: "When a list is dropped onto this component, normally, the associated model is immediately saved. This behaviour can be changed by disabling this checkbox.",
+				onChange: componentSaveRefresh
 			}];
 
 			if (state.attr("list-model"))
 			{
-				basicListPropsList.splice(getObjKeyValueIndex(basicListPropsList, "id", "list-model"), 0,
+				basicListPropsList.splice(getObjKeyValueIndex(basicListPropsList, "id", "list-model") + 1, 0,
 				{
 					id: "allow-list-ordering",
 					type: "boolean",
@@ -101,7 +110,7 @@
 					id: "allow-list-creation",
 					type: "boolean",
 					label: "Allow List Creation",
-					defaultValue: false,
+					defaultValue: true,
 					onChange: componentSaveRefresh
 				});
 			}
@@ -124,20 +133,21 @@
 					component.save().rebuildProps();
 				}
 			},
-			{
-				id: "list-auto-save",
-				type: "boolean",
-				label: "Auto-save on Drop",
-				defaultValue: false,
-				helptext: "Normally, row-based template-rendering logic will be applied, so that the specified template will be run for all data rows in the selected Model. If this property is checked, however, the template will only be run once, in a Model context.",
-				onChange: componentSaveRefresh
-			},
+			{},
 			{
 				id: "card-cross-drop",
 				type: "boolean",
 				label: "Allow Cross-Component Dropping",
 				defaultValue: false,
 				helptext: "Normally, a Card can only be droppped unto the same component it orginated from. This setting allow items of matching SObject to be dropped onto one another. Somehow..."
+			},
+			{
+				id: "card-auto-save",
+				type: "boolean",
+				label: "Auto-save on Drop",
+				defaultValue: true,
+				helptext: "When a card is dropped onto this component, normally, the associated model is immediately saved. This behaviour can be changed by disabling this checkbox.",
+				onChange: componentSaveRefresh
 			}];
 
 			if (state.attr("card-model"))
@@ -198,8 +208,8 @@
 			});
 
 			/**
-			 * Used to override the default behavior obsvered by the builder
-			 * in the manner the Actions Framework tree is built in the builder.
+			 * Used to override the default behavior in the way an Actions
+			 * Framework tree is created in the builder view.
 			 * @param {[type]} comp The component instance in its current state.
 			 */
 			function ChildrenFunction(comp)
