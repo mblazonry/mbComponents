@@ -9,6 +9,7 @@
 	var $S = skuid;
 	var $b = $S.builder;
 	var $bc = $b.core;
+	var $bd = $b.desktop;
 	var $u = $S.utils;
 	var $xml = $u.makeXMLDoc;
 	var $j = $.noConflict();
@@ -41,11 +42,14 @@
 				allowOrdering = state.attr("allow-ordering"),
 				properties = [];
 
+			//////////
+			// List //
+			//////////
 			var basicListPropsList = [
 			{
 				id: "list-model",
 				type: "model",
-				label: "Lists Model",
+				label: "List Model",
 				required: false,
 				onChange: function ()
 				{
@@ -102,11 +106,14 @@
 				});
 			}
 
+			//////////
+			// Card //
+			//////////
 			var basicCardPropsList = [
 			{
 				id: "card-model",
 				type: "model",
-				label: "Cards Model",
+				label: "Card Model",
 				required: false,
 				onChange: function ()
 				{
@@ -147,7 +154,7 @@
 					id: "allow-card-creation",
 					type: "boolean",
 					label: "Allow Card Creation",
-					defaultValue: false,
+					defaultValue: true,
 					onChange: componentSaveRefresh
 				});
 			}
