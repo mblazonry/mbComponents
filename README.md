@@ -16,27 +16,29 @@ This section has two parts. You already did the initial setup part by downloadin
 
 First part:
 
-1.  [download](https://nodejs.org/en/download/) and [install](http://blog.teamtreehouse.com/install-node-js-npm-windows) [Node.js](https://nodejs.org/en/) 
+1.  Your working directory for this repository is assume dto be called `mblazonryComponents`. You should now open a command-line window/terminal there (in Windows: by shift-right-clicking anywhere in the folder and "Open command window here"). 
 
-2.  From the console you should now be able to run `npm`.
+2.  Install [Node.js](https://nodejs.org/en/) globally on your system. ([downloads](https://nodejs.org/en/download/), instructions [for Windows](http://blog.teamtreehouse.com/install-node-js-npm-windows)).
 
-3.  Run `npm install` in this repo's directory, 
+3.  From the console, make sure you can now run `npm`. It should display the help, and version number of npm.
 
-4.  That sets up the app, grabbing all dependencies needed by the project and installing them to a local node_modules folder.
+4.  Run `npm install`. That sets up the app, grabbing all dependencies needed by the project and installing them to a local node_modules folder.
 
 5.  If you run any of the automation now you'll get an error saying Gulp needs to be installed globally. So from the repo dir again, run `npm install gulp -g`
 
-6.  Once that's done installing, make sure `npm ls` returns a load of stuff.
+6.  Once finished, make sure `npm ls` returns a load of stuff.
 
-7.  Running `gulp` will run the default task of listing all available gulp tasks.
+## Using the custom Deploy Script ##
 
-8.  Create a `.env` file in your working directory that containing the following two lines:
+7.  Running the `gulp` command in the console set at the components' directory will run the default task of listing all available gulp tasks.
+
+8.  Create a `.env` file in your working directory with the following two lines:
 
 	**(case-sensitive)**
-    mB_USERNAME="username@org.com"
-    mB_PASSWORD="passwordAndSecurityTokenConcatenated"
+	`mB_USERNAME="username@org.com"`
+	`mB_PASSWORD="passwordAndSecurityTokenConcatenated"`
 
-	You will eventually need to create additional entries for each org you wish to deploy your component packages to.
+	You will eventually need to create additional entries for each org you wish to deploy component packages to.
 
 9. Make sure you can connect to the org with your credentials.
 
@@ -46,6 +48,7 @@ First part:
 
 
 ### MavensMate [plug-in for editors ](https://github.com/joeferraro/MavensMate#active-plugins) ###
+(Deprecated)
 
 Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
 
