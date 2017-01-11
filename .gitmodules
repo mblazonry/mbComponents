@@ -1,0 +1,21 @@
+[submodule "components/mblazonry_modelRegisterer"]
+	path = components/mblazonry_modelRegisterer
+	url = https://github.com/mBlazonry/mblazonry_modelRegisterer.git
+[submodule "components/mblazonry_popupController"]
+	path = components/mblazonry_popupController
+	url = https://github.com/mBlazonry/mblazonry_popupController.git
+[submodule "components/mblazonry_modelRefresher"]
+	path = components/mblazonry_modelRefresher
+	url = https://github.com/mBlazonry/mblazonry_modelRefresher.git
+[submodule "components/mblazonry_template"]
+	path = components/mblazonry_template
+	url = https://github.com/mBlazonry/mblazonry_template.git
+[submodule "components/mblazonry_sayHello"]
+	path = components/mblazonry_sayHello
+	url = https://github.com/mBlazonry/mblazonry_sayHello.git
+[submodule "components/mblazonry_progressIndicator"]
+	path = components/mblazonry_progressIndicator
+	url = https://github.com/mBlazonry/mblazonry_progressIndicator.git
+[submodule "components/mblazonry_timer"]
+	path = components/mblazonry_timer
+	url = https://github.com/mBlazonry/mblazonry_timer.git
