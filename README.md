@@ -46,32 +46,6 @@ First part:
 
 11. You should now be good to go. 
 
-
-
-
-## [DEPRECATED] MavensMate [plug-in for editors ](https://github.com/joeferraro/MavensMate#active-plugins) ###
-(Deprecated)
-
-Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
-
-These are instructions for the Sublime Text 3 mavensmate plugin. These were tested only on Windows 7 64-bit round June 2016. YMMV
-
-1. To deploy, create a mavensmate project using the existing source in your working directory. 
-
-2. Make sure you can connect to the org with your credentials.
-
-3. And set it up like so:
-![Mavensmate Project Settings](https://docs.google.com/drawings/d/13dryEkE4vxSCofTEtOnOmkr0-O4vMv7EawwpWDpU07I/pub?w=952&h=537) 
-
-### [DEPRECATED] [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone) ###
-
-If running mavensmate v7 or higher, you will need to have this app installed anyways. The mavensmate-app is an Electron-based tool that essentially runs in a webview on any platform and forms a coherent backbone to the few extension of mm for editors.
-
-You can get it from [here](https://github.com/joeferraro/mavensmate-app/releases). Install it, and please make sure it runs.
-
-The UI is essentially the same as for the mm editor plugins so you can follow the procedures listed above or elsewhere.
-
-
 ### Sublime Text 3: Tips ###
 
 1.  If you don't have it already, [install Package Control](https://packagecontrol.io/installation), the sublime package manager.
@@ -89,6 +63,30 @@ The UI is essentially the same as for the mm editor plugins so you can follow th
 3. With all that installed, you should be able to right-click a file in the FOLDERS tree in Sublime's sidebar [right-click] → Gulp → "List Tasks to Run". That should show the various build options. Run the `default` build and do `Ctrl + ~` on your keyboard to show the console in Sublime, and observe the output.
 
 4. Assuming all went well you should be good to develop mBlazonry's components and use interactive builds!
+
+## THINGS WE DEPRECATED ##
+
+### MavensMate [plug-in for editors ](https://github.com/joeferraro/MavensMate#active-plugins) ###
+
+Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
+
+(These are instructions for the Sublime Text 3 mavensmate plugin. These were tested only on Windows 7 64-bit round June 2016. YMMV)
+
+1. To deploy, create a mavensmate project using the existing source in your working directory. 
+
+2. Make sure you can connect to the org with your credentials.
+
+3. And set it up like so:
+![Mavensmate Project Settings](https://docs.google.com/drawings/d/13dryEkE4vxSCofTEtOnOmkr0-O4vMv7EawwpWDpU07I/pub?w=952&h=537) 
+
+### [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone) ###
+
+If running mavensmate v7 or higher, you will need to have this app installed anyways. The mavensmate-app is an Electron-based tool that essentially runs in a webview on any platform and forms a coherent backbone to the few extension of mm for editors.
+
+You can get it from [here](https://github.com/joeferraro/mavensmate-app/releases). Install it, and please make sure it runs.
+
+The UI is essentially the same as for the mm editor plugins so you can follow the procedures listed above or elsewhere.
+
 
 ## BSD License ##
 
