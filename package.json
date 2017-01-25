@@ -1,6 +1,6 @@
 {
   "name": "mblazonrycomponents",
-  "version": "0.1.0-beta",
+  "version": "0.2.0-beta",
   "license": "BSD-3-Clause",
   "author": "Andréas Kaytar-Lefrançois <andreas@mblazonry.com>",
   "description": "mBlazonry's custom components!",
@@ -8,15 +8,18 @@
     "skuid",
     "component"
   ],
-  "repository": {
+  "repository":
+  {
     "type": "git",
-    "url": "https://github.com/aklef/mblazonryComponents.git"
+    "url": "https://github.com/mBlazonry/mbComponents.git"
   },
-  "engines": {
+  "engines":
+  {
     "node": ">= 4.2.6",
     "npm": ">= 2.14.12"
   },
-  "devDependencies": {
+  "devDependencies":
+  {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
@@ -53,7 +56,8 @@
     "pump": "^1.0.1",
     "yargs": "^4.7.1"
   },
-  "scripts": {
+  "scripts":
+  {
     "build-dev": "gulp build-dev",
     "build-docs": "gulp build-docs",
     "lint": "gulp lint"
