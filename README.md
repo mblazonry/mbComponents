@@ -4,7 +4,7 @@ Home of mBlazonry's primary custom component source!
 
 
 
-## Includes ##
+# Includes: #
 
 - The skuid ["progress indicator" sample component](http://help.skuidify.com/m/11720/l/451511?data-resolve-url=true&data-manual-id=11720) code from the skuid docs.
 
