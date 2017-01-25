@@ -29,7 +29,15 @@ const merge = require('merge-stream'),
    header = require('gulp-header'),
    forceDeploy = require('gulp-jsforce-deploy'),
    fileExists = require('file-exists'),
-   taskListing = require('gulp-task-listing');
+   taskListing = require('gulp-task-listing'),
+   flatten = require('gulp-flatten'),
+   sass = require('gulp-sass'),
+   es = require('event-stream');
+
+///////////
+// Debug //
+///////////
+const debug = require('gulp-debug-streams');
 
 ///////////
 // Tasks //
@@ -323,7 +331,16 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var src = gulp.src(['./components/**/*.*', '!./components/skuid_*.json']);
+   var js = gulp.src(['./components/**/js/*.js']);
+
+   var css = gulp.src(['./components/**/sass/*.scss'])
+      .pipe(sass());
+
+   var src = es.merge(js, css)
+      .pipe(flatten(
+      {
+         includeParents: 1
+      }));
 
    var min_configs = gulp.src('./components/skuid_*.json')
       // minify configs
@@ -333,7 +350,7 @@ function build_dev()
       // then make them into a resource bundle
       .pipe(gulp.dest('./resource-bundles/mBlazonryComponents.resource'))
       // zip the files
-      .pipe(zip('./mblazonryComponents-dev.zip')) // eventually remove this
+      .pipe(zip('./mblazonryComponents-dev.zip'))
       // drop the zip in the top level folder
       .pipe(gulp.dest('./'));
 }
