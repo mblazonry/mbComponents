@@ -93,7 +93,7 @@ function clean_release()
 }
 
 /**
- * Remove files from directory.
+ * Remove files from directory of minified type.
  */
 function clean_min(build_type)
 {
@@ -104,7 +104,7 @@ function clean_min(build_type)
 
 /**
  * Lint project source files using JShint.
- * Fails if any errors are found.
+ * Fails the build if any errors are found.
  */
 function lint()
 {
@@ -411,12 +411,12 @@ function build_min(comps, build_type, cb)
 
    comps.forEach(function (comp)
    {
-      js.push(`./components/*_${comp}/*.js`);
-      css.push(`./components/*_${comp}/*.css`);
+      js.push(`./components/*_${comp}/js/*.js`);
+      css.push(`./components/*_${comp}/sass/*.scss`);
    });
 
-   remains++;
    // minify-js
+   remains++;
    var min_js = pump([
       gulp.src(js),
       list(),
@@ -427,16 +427,24 @@ function build_min(comps, build_type, cb)
       uglify()
    ], completed);
 
-   //minify-css
-   var min_css = gulp.src(css)
-      .pipe(list())
-      .pipe(cleanCSS(
+   // minify-css
+   remains++;
+   var min_css = pump([
+      gulp.src(css),
+      list(),
+      sass(),
+      cleanCSS(
       {
          debug: true
-      }, res => gutil.log(`${res.name} : ${res.stats.originalSize} → ${res.stats.minifiedSize}`)));
+      }, res => gutil.log(`${res.name} : ${res.stats.originalSize} → ${res.stats.minifiedSize}`))
+   ], completed);
 
    // combine
-   var min_src = merge(min_js, min_css)
+   var min_src = es.merge(min_js, min_css)
+      .pipe(flatten(
+      {
+         includeParents: 1
+      }))
       // append header to config files
       .pipe(header(banner,
       {
@@ -467,8 +475,8 @@ function build_min(comps, build_type, cb)
       // minify configs
       .pipe(jsonminify());
 
-   remains++;
    // Zip all files
+   remains++;
    pump([
       merge(min_src, min_configs),
       zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`),
@@ -481,6 +489,7 @@ function build_min(comps, build_type, cb)
     * an error as argument, pass that along to the callback function, otherwise
     * continue until we have no operatons remaining and the build is done. The
     * callback method is then called sin arguments to signify a passed build.
+    *
     * @param  {Error} err This will be non-null if one of the pumps errored out.
     */
    function completed(err)
