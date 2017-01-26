@@ -69,3 +69,4 @@ src/staticresources/
 config/
 deploy/
 debug/
+share/
