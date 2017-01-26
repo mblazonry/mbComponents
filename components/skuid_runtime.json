@@ -20,10 +20,10 @@
          "id": "template"
       },
       {
-          "id": "model_registerer"
+         "id": "model_registerer"
       },
       {
-          "id": "model_refresher"
+         "id": "model_refresher"
       }
    ],
 
@@ -46,10 +46,10 @@
          "path": "mblazonry_template/Runtime_template.js"
       },
       {
-          "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
+         "path": "mblazonry_modelRegisterer/Runtime_modelRegisterer.js"
       },
       {
-          "path": "mblazonry_modelRefresher/Runtime_modelRefresher.js"
+         "path": "mblazonry_modelRefresher/Runtime_modelRefresher.js"
       }
    ],
 
@@ -60,7 +60,7 @@
       },
       /* end-release-excludes */
       {
-         "path": "mblazonry_progressIndicator/Runtime_progressIndicator.css"
+         "path": "mblazonry_progressIndicator/mblazonry_progressIndicator.css"
       },
       {
          "path": "mblazonry_timer/mblazonry_timer.css"
