@@ -11,75 +11,77 @@
       /* start-release-excludes */
       {
          "id": "sayhello",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_sayHello/Builder_sayHello.js"
+         }],
+         "css": [
+         {
+            "path": "mblazonry_sayHello/Builder_sayHello.css"
+         }]
       },
       {
          "id": "popupcontroller",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_popupController/Builder_popupController.js"
+         }]
+
       },
       /* end-release-excludes */
       {
          "id": "progress_indicator",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
+         }],
+         "css": [
+         {
+            "path": "mblazonry_progressIndicator/mblazonry_progressIndicator.css"
+         }]
       },
       {
          "id": "timer",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_timer/Builder_timer.js"
+         }],
+         "css": [
+         {
+            "path": "mblazonry_timer/mblazonry_timer.css"
+         }]
       },
       {
          "id": "template",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_template/Builder_template.js"
+         }],
+         "css": [
+         {
+            "path": "mblazonry_template/Builder_template.css"
+         }]
       },
       {
          "id": "model_registerer",
-         "folderId": "mblazonry"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_modelRegisterer/Builder_modelRegisterer.js"
+         }]
       },
       {
          "id": "model_refresher",
-         "folderId": "mblazonry"
-      }
-   ],
-
-   "js": [
-      /* start-release-excludes */
-      {
-         "path": "mblazonry_sayHello/Builder_sayHello.js"
-      },
-      {
-         "path": "mblazonry_popupController/Builder_popupController.js"
-      },
-      /* end-release-excludes */
-      {
-         "path": "mblazonry_progressIndicator/Builder_progressIndicator.js"
-      },
-      {
-         "path": "mblazonry_timer/Builder_timer.js"
-      },
-      {
-         "path": "mblazonry_template/Builder_template.js"
-      },
-      {
-         "path": "mblazonry_modelRegisterer/Builder_modelRegisterer.js"
-      },
-      {
-         "path": "mblazonry_modelRefresher/Builder_modelRefresher.js"
-      }
-   ],
-
-   "css": [
-      /* start-release-excludes */
-      {
-         "path": "mblazonry_sayHello/Builder_sayHello.css"
-      },
-      /* end-release-excludes */
-      {
-         "path": "mblazonry_progressIndicator/mblazonry_progressIndicator.css"
-      },
-      {
-         "path": "mblazonry_timer/mblazonry_timer.css"
-      },
-      {
-         "path": "mblazonry_template/Builder_template.css"
+         "folderId": "mblazonry",
+         "js": [
+         {
+            "path": "mblazonry_modelRefresher/Builder_modelRefresher.js"
+         }]
       }
    ]
 }
