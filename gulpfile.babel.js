@@ -331,9 +331,10 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var js = gulp.src(['./components/**/js/*.js']);
+   var prefix = "mblazonry_";
+   var js = gulp.src([`./components/${prefix}*/js/*.js`]);
 
-   var css = gulp.src(['./components/**/sass/*.scss'])
+   var css = gulp.src([`./components/${prefix}*/sass/*.scss`])
       .pipe(sass());
 
    var src = es.merge(js, css)
@@ -348,7 +349,7 @@ function build_dev()
 
    return merge(src, min_configs)
       // then make them into a resource bundle
-      .pipe(gulp.dest('./resource-bundles/mBlazonryComponents.resource'))
+      .pipe(gulp.dest('./resource-bundles/mblazonryComponents.resource'))
       // zip the files
       .pipe(zip('./mblazonryComponents-dev.zip'))
       // drop the zip in the top level folder
