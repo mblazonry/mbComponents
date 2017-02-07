@@ -100,6 +100,7 @@ Choose between using either editor plugins or the standalone mavensmate-app furt
 ![Mavensmate Project Settings](https://docs.google.com/drawings/d/13dryEkE4vxSCofTEtOnOmkr0-O4vMv7EawwpWDpU07I/pub?w=952&h=537) 
 
 </details>
+<details>
 
 ### <summary>[MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone)</summary> ###
 
@@ -108,7 +109,7 @@ If running mavensmate v7 or higher, you will need to have this app installed any
 You can get it from [here](https://github.com/joeferraro/mavensmate-app/releases). Install it, and please make sure it runs.
 
 The UI is essentially the same as for the mm editor plugins so you can follow the procedures listed above or elsewhere.
-
+</details>
 
 ## BSD License ##
 
