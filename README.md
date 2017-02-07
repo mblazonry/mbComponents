@@ -85,8 +85,9 @@ This section has two parts.
 
 ## THINGS WE DEPRECATED ##
 <details>
+<summary>MavensMate plug-in for editors</summary>
 
-### <summary>MavensMate [plug-in for editors](https://github.com/joeferraro/MavensMate#active-plugins)</summary> ###
+### MavensMate [plug-in for editors](https://github.com/joeferraro/MavensMate#active-plugins) ###
 
 Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
 
@@ -101,8 +102,9 @@ Choose between using either editor plugins or the standalone mavensmate-app furt
 
 </details>
 <details>
-
-### <summary>[MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone)</summary> ###
+<summary>MavensMate-app</summary>
+ 
+### [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone) ###
 
 If running mavensmate v7 or higher, you will need to have this app installed anyways. The mavensmate-app is an Electron-based tool that essentially runs in a webview on any platform and forms a coherent backbone to the few extension of mm for editors.
 
