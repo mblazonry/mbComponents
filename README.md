@@ -21,9 +21,11 @@ Try [SmartGit](https://www.syntevo.com/smartgit/download) (for Windows/Linux/Mac
 		GitKraken
 
 Clone the repo from the current address in your browser bar.
+
 ![Clone](http://i.imgur.com/tdZHyKL.png)
 
 Be sure to select the "Include Submodules" option when cloning. This will make your life easier by fetching all submodules for you.
+
 ![SubModules](http://i.imgur.com/exD9aOz.png)
 
 ## Dev. Env. Setup ##
