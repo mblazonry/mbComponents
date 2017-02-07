@@ -10,25 +10,42 @@ Home of mBlazonry's primary custom component source!
 
 - Barry Schnell's old ["popup controller" custom component](https://community.skuidify.com/skuid/topics/popup-controller-component-disable-x-escape-key-and-hook-dialog-events) code from the skuid community forums.
 
-## Dev Setup ##
+## Dev. Env. Prerequisites ##
 
-This section has two parts. You already did the initial setup part by downloading this repo.
+You should download this repo using a Git client that has git SubModule support.
 
-First part:
+Try [SmartGit](https://www.syntevo.com/smartgit/download) (for Windows/Linux/Mac).
 
-1.  Your working directory for this repository is assume dto be called `mblazonryComponents`. You should now open a command-line window/terminal there (in Windows: by shift-right-clicking anywhere in the folder and "Open command window here"). 
+	Unsupported as of 07/02/2017:
+		GitHub Desktop
+		GitKraken
 
-2.  Install [Node.js](https://nodejs.org/en/) globally on your system. ([downloads](https://nodejs.org/en/download/), instructions [for Windows](http://blog.teamtreehouse.com/install-node-js-npm-windows)).
+Clone the repo from the current address in your browser bar.
+![Clone](http://i.imgur.com/tdZHyKL.png)
 
-3.  From the console, make sure you can now run `npm`. It should display the help, and version number of npm.
+Be sure to select the "Include Submodules" option when cloning. This will make your life easier by fetching all submodules for you.
+![SubModules](http://i.imgur.com/exD9aOz.png)
 
-4.  Run `npm install`. That sets up the app, grabbing all dependencies needed by the project and installing them to a local node_modules folder.
+## Dev. Env. Setup ##
 
-5.  If you run any of the automation now you'll get an error saying Gulp needs to be installed globally. So from the repo dir again, run `npm install gulp -g`
+This section has two parts.
 
-6.  Once finished, make sure `npm ls` returns a load of stuff.
+1.  I'll assume your working directory for this repo is named `mbComponents`. You should now open a command-line window/terminal at that folder!
+	
+	Windows: by shift-right-clicking on empty space in a folder and clicking *Open command window here*.
+	Mac: [instructions here](https://stackoverflow.com/questions/420456/open-terminal-here-in-mac-os-finder).
 
-## Using the custom Deploy Script ##
+2.  Install [Node.js](https://nodejs.org/en/) globally on your system. ([all downloads](https://nodejs.org/en/download/), and [Windows instructions](http://blog.teamtreehouse.com/install-node-js-npm-windows)).
+
+3.  From your console, be sure you can run `npm`. It should display the help, and version number of npm.
+
+4.  *From the repo dir*, run `npm install`. This sets up the app, grabbing all dependencies needed by the project and installing them to a local *node_modules* folder.
+
+5.  If you run any of the automation now you'll get an error saying Gulp needs to be installed globally. So from the repo dir run `npm install gulp -g`
+
+6.  Once finished, make sure `npm ls` displays the full list of installed modules.
+
+### Using the custom Deploy Script ###
 
 7.  Running the `gulp` command in the console set at the components' directory will run the default task of listing all available gulp tasks.
 
@@ -51,22 +68,23 @@ First part:
 1.  If you don't have it already, [install Package Control](https://packagecontrol.io/installation), the sublime package manager.
 
 2. Now, we go about installing some packages:
-
-    [sublime-gulp](https://github.com/NicoSantangelo/sublime-gulp) (and here's [a guide](https://mijingo.com/blog/run-gulp-from-sublime-text)),
 	
-	[sublime-jshint](https://github.com/uipoet/sublime-jshint),
+	reccommended:
+    [GitGutter](https://github.com/jisaacks/GitGutter)
+    
+    optional:
+    [sublime-jsdocs](https://github.com/spadgos/sublime-jsdocs)
+	[sublime-jshint](https://github.com/uipoet/sublime-jshint)
+    [sublime-gulp](https://github.com/NicoSantangelo/sublime-gulp) (and here's [a guide](https://mijingo.com/blog/run-gulp-from-sublime-text))
 
-    [sublime-jsdocs](https://github.com/spadgos/sublime-jsdocs) (reccommended),
-
-    [GitGutter](https://github.com/jisaacks/GitGutter) (reccommended)
-
-3. With all that installed, you should be able to right-click a file in the FOLDERS tree in Sublime's sidebar [right-click] → Gulp → "List Tasks to Run". That should show the various build options. Run the `default` build and do `Ctrl + ~` on your keyboard to show the console in Sublime, and observe the output.
+3. [Optional] With all that installed, you should be able to right-click a file in the FOLDERS tree in Sublime's sidebar [right-click] → Gulp → "List Tasks to Run". That should show the various build options. Run the `default` build and do `Ctrl + ~` on your keyboard to show the console in Sublime, and observe the output.
 
 4. Assuming all went well you should be good to develop mBlazonry's components and use interactive builds!
 
 ## THINGS WE DEPRECATED ##
+<details>
 
-### MavensMate [plug-in for editors ](https://github.com/joeferraro/MavensMate#active-plugins) ###
+### <summary>MavensMate [plug-in for editors](https://github.com/joeferraro/MavensMate#active-plugins)</summary> ###
 
 Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
 
@@ -79,7 +97,9 @@ Choose between using either editor plugins or the standalone mavensmate-app furt
 3. And set it up like so:
 ![Mavensmate Project Settings](https://docs.google.com/drawings/d/13dryEkE4vxSCofTEtOnOmkr0-O4vMv7EawwpWDpU07I/pub?w=952&h=537) 
 
-### [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone) ###
+</details>
+
+### <summary>[MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone)</summary> ###
 
 If running mavensmate v7 or higher, you will need to have this app installed anyways. The mavensmate-app is an Electron-based tool that essentially runs in a webview on any platform and forms a coherent backbone to the few extension of mm for editors.
 
