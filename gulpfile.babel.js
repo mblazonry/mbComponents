@@ -1,6 +1,3 @@
-/* jshint node:true */
-/********************/
-
 "use strict";
 
 //////////
@@ -13,7 +10,6 @@ const gulp = require('gulp'),
 // gulp plug-ins //
 ///////////////////
 const merge = require('merge-stream'),
-   jshint = require("gulp-jshint"),
    uglify = require("gulp-uglify"),
    cleanCSS = require('gulp-clean-css'),
    jsonminify = require('gulp-jsonminify'),
@@ -24,7 +20,6 @@ const merge = require('merge-stream'),
    gutil = require('gulp-util'),
    list = require('gulp-print'),
    rename = require('gulp-rename'),
-   stylish = require('jshint-stylish'),
    stripCode = require('gulp-strip-code'),
    header = require('gulp-header'),
    forceDeploy = require('gulp-jsforce-deploy'),
@@ -32,11 +27,13 @@ const merge = require('merge-stream'),
    taskListing = require('gulp-task-listing'),
    flatten = require('gulp-flatten'),
    sass = require('gulp-sass'),
-   es = require('event-stream');
+   es = require('event-stream'),
+   eslint = require('gulp-eslint');
 
 ///////////
 // Debug //
 ///////////
+// eslint-disable-next-line no-unused-vars
 const debug = require('gulp-debug-streams');
 
 ///////////
@@ -103,15 +100,17 @@ function clean_min(build_type)
 }
 
 /**
- * Lint project source files using JShint.
+ * Lint project source files.
  * Fails the build if any errors are found.
  */
 function lint()
 {
-   return gulp.src('./components/**/*.js') // path to your files
-      .pipe(jshint())
-      .pipe(jshint.reporter(stylish))
-      .pipe(jshint.reporter('fail'));
+   return gulp.src('./components/**/*.js') // path to files
+      .pipe(eslint())
+      .pipe(eslint.format()) // output the lint results to the console.
+      // On lint error, exit process with an error code (1),
+      // then return the stream and pipe to failAfterError last.
+      .pipe(eslint.failAfterError());
 }
 
 ////////////
@@ -287,7 +286,7 @@ function env_exists(client)
  */
 function env_require()
 {
-   require('dotenv').config();
+   require('dotenv').config(); // eslint-disable-line global-require
 }
 
 ///////////////////////////////
@@ -331,7 +330,6 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var prefix = "mblazonry_";
    var js = gulp.src([`./components/${prefix}*/js/*.js`]);
 
    var css = gulp.src([`./components/${prefix}*/sass/*.scss`])
@@ -370,7 +368,7 @@ function build_min_components(cb)
 
    var comp = [],
       exclude,
-      argv = require('yargs')
+      argv = require('yargs') // eslint-disable-line global-require
       .usage(gutil.log('Usage: $0 $1 --c [name]'))
       .demand(['c'])
       .alias('c', 'component')
