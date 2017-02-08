@@ -87,7 +87,7 @@ This section has two parts.
 <details>
 <summary>MavensMate plug-in for editors</summary>
 
-### MavensMate [plug-in for editors](https://github.com/joeferraro/MavensMate#active-plugins) ###
+### MavensMate [plugin for editors](https://github.com/joeferraro/MavensMate#active-plugins) ###
 
 Choose between using either editor plugins or the standalone mavensmate-app further [below](https://github.com/aklef/mBlazonryComponents#multiplatform-mavensmate-app-standalone).
 
@@ -104,13 +104,13 @@ Choose between using either editor plugins or the standalone mavensmate-app furt
 <details>
 <summary>MavensMate-app</summary>
  
-### [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multiplatform & standalone) ###
+### [MavensMate-app](https://github.com/joeferraro/MavensMate-app) (Multi-platform & standalone) ###
 
-If running mavensmate v7 or higher, you will need to have this app installed anyways. The mavensmate-app is an Electron-based tool that essentially runs in a webview on any platform and forms a coherent backbone to the few extension of mm for editors.
+If using mavensmate v7 or higher, you will have this app installed regardless. The mavensmate-app is an Electron-based tool that, on any platform, runs in a webview and forms a coherent backbone to the new extension of mm for editors such as Sublime and Atom.
 
-You can get it from [here](https://github.com/joeferraro/mavensmate-app/releases). Install it, and please make sure it runs.
+You can get it [here](https://github.com/joeferraro/mavensmate-app/releases). Install it, and please make sure it runs.
 
-The UI is essentially the same as for the mm editor plugins so you can follow the procedures listed above or elsewhere.
+The UI is essentially the same as in the mm editor plugins, so you can follow the procedures listed above or elsewhere.
 </details>
 
 ## BSD License ##
