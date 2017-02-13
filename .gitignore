@@ -63,10 +63,9 @@ metadata.zip
 *.log
 *.sublime-gulp.cache
 node_modules/
-mblazonryComponents*.zip
+*Components*.zip
 resource-bundles/
-src/staticresources/
 config/
-deploy/
+pkg/staticresources/*.resource
 debug/
 share/

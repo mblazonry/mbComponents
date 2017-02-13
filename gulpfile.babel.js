@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Following https://jsforce.github.io/blog/posts/20140126-deploy-package-using-jsforce-and-gulpjs.html
+ *
+ *
+ */
+
 //////////
 // gulp //
 //////////
@@ -50,19 +56,20 @@ gulp.task('default', taskListing);
 gulp.task('lint', lint);
 gulp.task('build', ['build-min-release']);
 gulp.task('deploy', ['deploy-dev'], deploy_Default);
+gulp.task('clean-deploy', clean_deploy);
 // Release builds
 gulp.task('build-min-release', ['clean-min-release'], build_min_release);
 gulp.task('clean-min-release', ['lint'], clean_release);
-gulp.task('static-resource-min-release', ['build-min-release'], static_resource_min_release);
+gulp.task('static-resource-min-release', ['clean-deploy', 'build-min-release'], static_resource_min_release);
 // Interactive Build
 gulp.task('build-interactive', ['clean-min-release'], build_min_components);
 // Client Builds
-gulp.task('env-ip', false, env_IP);
-gulp.task('deploy-ip', ['static-resource-min-release', 'env-ip'], deploy_IP);
+//gulp.task('env-ip', false, env_IP);
+//gulp.task('deploy-ip', ['static-resource-min-release', 'env-ip'], deploy_IP);
 // Developer builds
 gulp.task('clean-dev', clean_dev);
 gulp.task('build-dev', ['clean-dev', 'lint'], build_dev);
-gulp.task('static-resource-dev', ['build-dev'], static_resource_dev);
+gulp.task('static-resource-dev', ['clean-deploy', 'build-dev'], static_resource_dev);
 gulp.task('env-dev', false, env_dev);
 gulp.task('deploy-dev', ['static-resource-dev', 'env-dev'], deploy_dev);
 
@@ -77,7 +84,7 @@ function clean_dev()
    return del(
       [
          './*-dev.zip',
-         './resource-bundles/mBlazonryComponents.resource'
+         './resource-bundles/*.resource'
       ]);
 }
 
@@ -96,6 +103,16 @@ function clean_min(build_type)
 {
    return del([
       `./*-min*-${build_type}.zip`
+   ]);
+}
+
+/**
+ * Remove old deploy files.
+ */
+function clean_deploy()
+{
+   return del([
+      `./pkg/staticresources/*.zip`
    ]);
 }
 
@@ -139,6 +156,7 @@ const RELEASE_BUILD = [
    'modelRefresher'
 ];
 const RELEASE_CRC32 = crc.crc32(RELEASE_BUILD.sort()).toString(16);
+const prefix = "mbComponents";
 
 ////////////////
 // Deployment //
@@ -184,8 +202,9 @@ function deploy(targetPrefix)
       pollTimeout: 120 * 1000,
       pollInterval: 2 * 1000,
       version: '37.0',
-      verbose: false,
-      logLevel: "WARNING", // "DEBUG"
+      verbose: true,
+      logLevel: "DEBUG",
+      // logLevel: "WARNING",
       rollbackOnError: true
    };
 
@@ -194,10 +213,8 @@ function deploy(targetPrefix)
       org.loginUrl = loginUrl;
    }
 
-   return gulp.src('./src/**',
-      {
-         base: "."
-      })
+   return gulp.src('./pkg/**')
+      .pipe(debug())
       .pipe(zip('pkg.zip'))
       .pipe(forceDeploy(org));
 }
@@ -319,9 +336,9 @@ function static_resource(build_type)
          base: "."
       })
       // rename
-      .pipe(rename('mBlazonryComponents.resource'))
+      .pipe(rename(`${prefix}.resource`))
       // move to SF package
-      .pipe(gulp.dest('src/staticresources'));
+      .pipe(gulp.dest('pkg/staticresources'));
 }
 
 ///////////////////////////////////////
@@ -330,9 +347,9 @@ function static_resource(build_type)
 
 function build_dev()
 {
-   var js = gulp.src([`./components/${prefix}*/js/*.js`]);
+   var js = gulp.src([`./components/*_*/js/*.js`]);
 
-   var css = gulp.src([`./components/${prefix}*/sass/*.scss`])
+   var css = gulp.src([`./components/*_*/sass/*.scss`])
       .pipe(sass());
 
    var src = es.merge(js, css)
@@ -347,9 +364,9 @@ function build_dev()
 
    return merge(src, min_configs)
       // then make them into a resource bundle
-      .pipe(gulp.dest('./resource-bundles/mblazonryComponents.resource'))
+      .pipe(gulp.dest(`./resource-bundles/${prefix}.resource`))
       // zip the files
-      .pipe(zip('./mblazonryComponents-dev.zip'))
+      .pipe(zip(`./${prefix}-dev.zip`))
       // drop the zip in the top level folder
       .pipe(gulp.dest('./'));
 }
@@ -478,7 +495,7 @@ function build_min(comps, build_type, cb)
    remains++;
    pump([
       merge(min_src, min_configs),
-      zip(`./mblazonryComponents-min-${crc32}-${build_type}.zip`),
+      zip(`./${prefix}-min-${crc32}-${build_type}.zip`),
       gulp.dest('./')
    ], completed);
 
