@@ -3,7 +3,6 @@
 /**
  * Following https://jsforce.github.io/blog/posts/20140126-deploy-package-using-jsforce-and-gulpjs.html
  *
- *
  */
 
 //////////
@@ -203,8 +202,7 @@ function deploy(targetPrefix)
       pollInterval: 2 * 1000,
       version: '37.0',
       verbose: true,
-      logLevel: "DEBUG",
-      // logLevel: "WARNING",
+      logLevel: "WARNING",
       rollbackOnError: true
    };
 
@@ -213,7 +211,10 @@ function deploy(targetPrefix)
       org.loginUrl = loginUrl;
    }
 
-   return gulp.src('./pkg/**')
+   return gulp.src('./pkg/**',
+      {
+         base: "."
+      })
       .pipe(debug())
       .pipe(zip('pkg.zip'))
       .pipe(forceDeploy(org));
