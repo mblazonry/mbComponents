@@ -37,14 +37,16 @@ module.exports = function(env) {
             extensions: ['.js', '.jsx']
         },
         module: {
-            loaders: [{
+            rules: [{
                 test: /\.js$|\.jsx$/,
-                loader: {
+                use: [{
                     loader: 'babel-loader',
                     options: {
                         presets: ['es2015', 'react']
                     }
-                },
+                }, {
+                    loader: 'eslint-loader'
+                }],
             }, {
                 test: /\.scss$/,
                 loader: extractSass.extract({
