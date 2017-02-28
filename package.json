@@ -1,0 +1,56 @@
+{
+  "name": "mblazonrycomponents",
+  "version": "2.0.0-alpha",
+  "license": "BSD-3-Clause",
+  "author": "Remi Gelinas <remi@mblazonry.com>",
+  "description": "mBlazonry's custom components!",
+  "keywords": [
+    "skuid",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aklef/mblazonryComponents.git"
+  },
+  "engines": {
+    "node": ">= 4.2.6",
+    "npm": ">= 2.14.12"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
+    "node-sass": "^4.5.0",
+    "precommit-hook": "^3.0.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "sass": "^0.5.0",
+    "sass-loader": "^6.0.1",
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "build": "scripts/build.js && webpack && scripts/package.js",
+    "package": "scripts/package.js",
+    "lint": "jshint .",
+    "validate": "npm ls"
+  },
+  "bugs": {
+    "url": "https://github.com/aklef/mblazonryComponents/issues"
+  },
+  "homepage": "https://github.com/aklef/mblazonryComponents#readme",
+  "dependencies": {
+    "archiver": "^1.3.0",
+    "classnames": "^2.2.5",
+    "gson": "^0.1.5",
+    "npmlog": "^4.0.2",
+    "rimraf": "^2.6.1"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
+}
