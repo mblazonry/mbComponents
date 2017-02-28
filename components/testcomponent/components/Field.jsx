@@ -1,9 +1,9 @@
-let React = require('react');
+const React = require('react');
 
 class Field extends React.Component {
-    render() {
-        return "Hello World";
-    }
+  render() {
+    return "Hello World";
+  }
 }
 
-export default Field
+export default Field;

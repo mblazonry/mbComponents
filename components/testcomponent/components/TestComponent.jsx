@@ -1,9 +1,9 @@
-let React = require('react');
+const React = require('react');
 
 class TestComponent extends React.Component {
-    render() {
-        return <Field/>;
-    }
+  render() {
+    return <Field/>;
+  }
 }
 
 //export default TestComponent
