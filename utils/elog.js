@@ -20,6 +20,6 @@ exports.info = function(msg) {
 }
 
 exports.error = function(msg) {
-    exports.log('ERROR', msg);
+    exports.log(`${colors.red}${effects.bold}ERROR${colors.white}${effects.reset}`, msg);
     throw msg;
 }
