@@ -3,23 +3,13 @@
 const Archiver = require('archiver'),
     Fs = require('fs'),
     Path = require('path'),
-    Log = require('../utils/elog.js');
-
-// Constants
-const CONTEXT_DIRECTORY = Path.resolve('.');
-const BUILD_DIRECTORY = Path.resolve(CONTEXT_DIRECTORY, 'build');
-const BUNDLE_DIRECTORY = Path.resolve(BUILD_DIRECTORY, 'bundle');
-const CONFIG_DIRECTORY = Path.resolve(BUILD_DIRECTORY, 'config');
-const COMPONENT_DIRECTORY = Path.resolve(CONTEXT_DIRECTORY, 'components');
-
-const PACKAGE_ID = 'mblazonryreact';
-const PACKAGE_NAME = 'mbComponents';
+    Log = require('../utils/elog.js'),
+    Constants = require('../utils/constants.js');
 
 // Functions
-
 function forComponent(f) {
-    var files = Fs.readdirSync(COMPONENT_DIRECTORY).filter(file => {
-        return Fs.statSync(Path.resolve(COMPONENT_DIRECTORY, file)).isDirectory();
+    var files = Fs.readdirSync(Constants.COMPONENT_DIRECTORY).filter(file => {
+        return Fs.statSync(Path.resolve(Constants.COMPONENT_DIRECTORY, file)).isDirectory();
     });
 
     files.forEach(f);
@@ -27,7 +17,7 @@ function forComponent(f) {
 
 function packageBuild() {
     Log.info('Packaging bundled files...');
-    var build = Fs.createWriteStream(Path.resolve(BUILD_DIRECTORY, `${PACKAGE_NAME}.zip`));
+    var build = Fs.createWriteStream(Path.resolve(Constants.BUILD_DIRECTORY, `${Constants.PACKAGE_NAME}.zip`));
     var archive = Archiver('zip', {
         zlib: {
             level: 9
@@ -43,19 +33,19 @@ function packageBuild() {
     });
 
     archive.pipe(build);
-    archive.directory(BUNDLE_DIRECTORY, '/');
-    archive.directory(CONFIG_DIRECTORY, '/');
+    archive.directory(Constants.BUNDLE_DIRECTORY, '/');
+    archive.directory(Constants.CONFIG_DIRECTORY, '/');
     archive.finalize();
 }
 
 function genRuntimeConfig() {
     var runtimeOptions = {
-        id: PACKAGE_ID,
+        id: Constants.PACKAGE_ID,
         components: []
     };
 
     forComponent(component => {
-        var compPath = Path.resolve(BUNDLE_DIRECTORY, component)
+        var compPath = Path.resolve(Constants.BUNDLE_DIRECTORY, component)
 
         var o = {
             id: component
@@ -84,7 +74,7 @@ function genRuntimeConfig() {
         runtimeOptions.components.push(o);
     });
 
-    Fs.writeFileSync(Path.resolve(CONFIG_DIRECTORY, "skuid_runtime.json"), JSON.stringify(runtimeOptions), err => {
+    Fs.writeFileSync(Path.resolve(Constants.CONFIG_DIRECTORY, "skuid_runtime.json"), JSON.stringify(runtimeOptions), err => {
         if (err) {
             Log.error(err);
         }
@@ -94,20 +84,20 @@ function genRuntimeConfig() {
 
 function genBuilderConfig() {
     var builderOptions = Object.assign({
-        id: PACKAGE_ID,
+        id: Constants.PACKAGE_ID,
         components: []
     }, {
         folders: [Object.assign({
-                id: PACKAGE_ID
+                id: Constants.PACKAGE_ID
             }, JSON.parse(Fs.readFileSync('package_options.json')))]
     });
 
     forComponent(component => {
-        var compPath = Path.resolve(BUNDLE_DIRECTORY, component)
+        var compPath = Path.resolve(Constants.BUNDLE_DIRECTORY, component)
 
         var o = {
             id: component,
-            folderId: PACKAGE_ID
+            folderId: Constants.PACKAGE_ID
         };
 
         if (!Fs.existsSync(`${compPath}_builder.js`)) {
@@ -133,7 +123,7 @@ function genBuilderConfig() {
         builderOptions.components.push(o);
     });
 
-    Fs.writeFileSync(Path.resolve(CONFIG_DIRECTORY, "skuid_builders.json"), JSON.stringify(builderOptions), err => {
+    Fs.writeFileSync(Path.resolve(Constants.CONFIG_DIRECTORY, "skuid_builders.json"), JSON.stringify(builderOptions), err => {
         if (err) {
             Log.error(err);
         }
@@ -143,20 +133,20 @@ function genBuilderConfig() {
 
 function embedBundledBuilders() {
     forComponent(component => {
-        var compPath = Path.resolve(COMPONENT_DIRECTORY, component);
+        var compPath = Path.resolve(Constants.COMPONENT_DIRECTORY, component);
         var temp = `(function ($, skuid, undefined)
             {
-                ${Fs.readFileSync(Path.resolve(BUNDLE_DIRECTORY, `${component}_builder.js`))}
+                ${Fs.readFileSync(Path.resolve(Constants.BUNDLE_DIRECTORY, `${component}_builder.js`))}
             	skuid.builder.registerBuilder(new skuid.builder.Builder(Object.assign(${Fs.readFileSync(Path.resolve(compPath, 'builder.json'))}, ${component}Options)));
             })(window.skuid.$, window.skuid);`;
 
-        Fs.writeFileSync(Path.resolve(BUNDLE_DIRECTORY, `${component}_builder.js`), temp);
+        Fs.writeFileSync(Path.resolve(Constants.BUNDLE_DIRECTORY, `${component}_builder.js`), temp);
     });
 }
 
 function embedBundledRuntime() {
     forComponent(component => {
-        var compPath = Path.resolve(BUNDLE_DIRECTORY, component),
+        var compPath = Path.resolve(Constants.BUNDLE_DIRECTORY, component),
             temp = `(function ($, skuid, window, undefined)
         {
 
@@ -174,7 +164,7 @@ function embedBundledRuntime() {
 embedBundledRuntime();
 embedBundledBuilders()
 
-Fs.mkdirSync(CONFIG_DIRECTORY);
+Fs.mkdirSync(Constants.CONFIG_DIRECTORY);
 
 genRuntimeConfig();
 genBuilderConfig();
