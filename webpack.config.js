@@ -1,7 +1,9 @@
-const path = require('path');
-const fs = require('fs');
-const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const Path = require('path'),
+    Fs = require('fs'),
+    Webpack = require('webpack'),
+    ExtractTextPlugin = require("extract-text-Webpack-plugin"),
+    Constants = require('./utils/constants.js');
+
 
 // Plugin setup
 const extractSass = new ExtractTextPlugin({
