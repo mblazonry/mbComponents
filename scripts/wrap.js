@@ -141,8 +141,6 @@ function wrapBundledRuntime() {
             {
                 ${Fs.readFileSync(`${compPath}.js`)}
             });
-
-            console.log("REGISTERING ${Constants.PACKAGE_ID}__${compId}");
         })(window.skuid.$, window.skuid, window);`;
 
         Fs.writeFileSync(`${compPath}.js`, temp);
