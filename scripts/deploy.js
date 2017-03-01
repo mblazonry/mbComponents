@@ -6,7 +6,6 @@ const Log = require('../utils/elog.js'),
     Jsforce = require('jsforce'),
     Constants = require('../utils/constants.js');
 
-/* Functions */
 /** @function check
  * Checks the build environment for the presence of credentials for the given org.
  *
@@ -30,6 +29,11 @@ function check(org) {
     }
 }
 
+/** @function deploy
+ * Deploys the packaged component pack to a Salesforce organization.
+ *
+ * @param {jsforce.Connection} conn - The JSForce connection object, connected to the organization.
+ */
 function deploy(conn) {
     var buildStream = Fs.createReadStream(Path.resolve(Constants.BUILD_DIRECTORY, `${Constants.PACKAGE_NAME}.zip`));
     conn.metadata.deploy(buildStream).complete((err, res) => {
