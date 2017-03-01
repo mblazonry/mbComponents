@@ -7,19 +7,19 @@ const Path = require('path'),
 
 // Plugin setup
 const extractSass = new ExtractTextPlugin({
-    filename: "[name].css",
+    filename: `${Constants.PACKAGE_ID}_[name].css`,
 });
 
 // Custom functions
 function getDirEntries() {
-    var compPath = path.resolve(__dirname, 'components'),
-        dirNames = fs.readdirSync(compPath)
-        .filter(file => fs.statSync(path.resolve(compPath, file)).isDirectory());
+    var compPath = Path.resolve(__dirname, 'components'),
+        dirNames = Fs.readdirSync(compPath)
+        .filter(file => Fs.statSync(Path.resolve(compPath, file)).isDirectory());
 
     return dirNames.reduce((obj, dir) => {
         return Object.assign(obj, {
-            [dir]: path.resolve(compPath, dir, `${dir}.jsx`),
-            [`${dir}_builder`]: path.resolve(compPath, dir, `${dir}_builder.js`)
+            [dir]: Path.resolve(compPath, dir, `${dir}.jsx`),
+            [`${dir}_builder`]: Path.resolve(compPath, dir, `${dir}_builder.js`)
         });
     }, {});
 }
@@ -29,8 +29,8 @@ module.exports = function(env) {
     return {
         entry: getDirEntries(),
         output: {
-            path: path.resolve(__dirname, 'build/bundle'),
-            filename: '[name].js'
+            path: Path.resolve(__dirname, 'build/bundle'),
+            filename: `${Constants.PACKAGE_ID}_[name].js`
         },
         resolve: {
             modules: [
