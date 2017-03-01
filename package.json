@@ -38,9 +38,12 @@
     "webpack": "^2.2.1"
   },
   "scripts": {
-    "build": "scripts/build.js && webpack && scripts/package.js",
-    "build-dev": "scripts/build.js && webpack -p && scripts/package.js",
-    "deploy": "scripts/deploy.js"
+    "clean": "scripts/clean.js",
+    "embed": "scripts/embed.js",
+    "package": "scripts/package.js",
+    "deploy": "scripts/deploy.js",
+    "build": "npm run clean && webpack -p && npm run embed && npm run package",
+    "build-dev": "npm run clean && webpack && npm run embed && npm run package"
   },
   "bugs": {
     "url": "https://github.com/aklef/mblazonryComponents/issues"
