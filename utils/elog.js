@@ -1,4 +1,5 @@
-/* EasyLog logger */
+/** @module EasyLog */
+
 var exports = module.exports = {},
     colors = {
         green: '\x1b[32m',

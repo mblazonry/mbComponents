@@ -7,6 +7,11 @@ const Log = require('../utils/elog.js'),
     Constants = require('../utils/constants.js');
 
 /* Functions */
+/** @function check
+ * Checks the build environment for the presence of credentials for the given org.
+ *
+ * @param {string} org - The Salesforce organization name
+ */
 function check(org) {
     try {
         if (!Fs.existsSync(org)) {

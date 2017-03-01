@@ -1,3 +1,4 @@
+/** @module Constants */
 const Path = require('path');
 
 var exports = module.exports = {};
