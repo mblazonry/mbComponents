@@ -36,7 +36,7 @@ function check(org) {
  */
 function deploy(conn) {
     var buildStream = Fs.createReadStream(Path.resolve(Constants.BUILD_DIRECTORY, `${Constants.PACKAGE_NAME}.zip`));
-    conn.metadata.deploy(buildStream).complete((err, res) => {
+    conn.metadata.deploy(buildStream, {"name": Constants.PACKAGE_NAME}).complete((err, res) => {
         if (err) {
             Log.error(err);
         }
