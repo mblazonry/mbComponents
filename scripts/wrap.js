@@ -108,10 +108,10 @@ function genBuilderConfig() {
     });
 }
 
-/** @function embedBundledBuilders
+/** @function wrapBundledBuilders
   * Wraps bundled component builders in bootstrap code required by Skuid.
   */
-function embedBundledBuilders() {
+function wrapBundledBuilders() {
     Functions.forComponent(component => {
         var compId = `${Constants.PACKAGE_ID}_${component}`,
             compPath = Path.resolve(Constants.BUNDLE_DIRECTORY, compId);
@@ -127,10 +127,10 @@ function embedBundledBuilders() {
     });
 }
 
-/** @function genBundledRuntime
+/** @function wrapBundledRuntime
  * Wraps bundled component runtimes in bootstrap code required by Skuid.
  */
-function embedBundledRuntime() {
+function wrapBundledRuntime() {
     Functions.forComponent(component => {
         var compId = `${Constants.PACKAGE_ID}_${component}`,
             compPath = Path.resolve(Constants.BUNDLE_DIRECTORY, compId),
@@ -149,8 +149,8 @@ function embedBundledRuntime() {
     });
 }
 
-embedBundledRuntime();
-embedBundledBuilders()
+wrapBundledRuntime();
+wrapBundledBuilders()
 
 Fs.mkdirSync(Constants.CONFIG_DIRECTORY);
 
