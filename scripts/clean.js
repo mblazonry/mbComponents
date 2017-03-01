@@ -6,7 +6,6 @@ var Cp = require('child_process'),
 
 const BUILD_DIRECTORY = Path.resolve('.', 'build');
 
-// Clean build directory
 Rimraf(BUILD_DIRECTORY, () => {
-    Log.info('Build directory cleaned');
+    Log.info('Build directory cleaned.');
 });
