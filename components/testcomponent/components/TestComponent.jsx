@@ -2,7 +2,8 @@ const React = require('react');
 
 class TestComponent extends React.Component {
   render() {
-    return <Field/>;
+    console.log('Rendering TestComponent!');
+    return <div>Hello World</div>;
   }
 }
 
