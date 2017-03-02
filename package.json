@@ -39,11 +39,11 @@
   },
   "scripts": {
     "clean": "scripts/clean.js",
-    "embed": "scripts/embed.js",
+    "wrap": "scripts/wrap.js",
     "package": "scripts/package.js",
     "deploy": "scripts/deploy.js",
-    "build": "npm run clean && webpack -p && npm run embed && npm run package",
-    "build-dev": "npm run clean && webpack && npm run embed && npm run package"
+    "build": "npm run clean && webpack -p && npm run wrap && npm run package",
+    "build-dev": "npm run clean && webpack && npm run wrap && npm run package"
   },
   "bugs": {
     "url": "https://github.com/aklef/mblazonryComponents/issues"
