@@ -1,7 +1,6 @@
 /** @module EasyLog */
 
-var exports = module.exports = {},
-    colors = {
+var colors = {
         green: '\x1b[32m',
         red: '\x1b[31m',
         white: '\x1b[37m'
@@ -11,16 +10,30 @@ var exports = module.exports = {},
         bold: '\x1b[1m'
     };
 
-exports.log = function(level, msg) {
+/** @function log
+ *
+ */
+function log(level, msg) {
     console.log(`${level}\t${msg}`);
 }
 
-/* Level-specific logging functions */
-exports.info = function(msg) {
+/** @function info
+ *
+ */
+function info(msg) {
     exports.log(`${colors.green}${effects.bold}INFO${colors.white}${effects.reset}`, msg);
 }
 
-exports.error = function(msg) {
+/** @function error
+ *
+ */
+function error(msg) {
     exports.log(`${colors.red}${effects.bold}ERROR${colors.white}${effects.reset}`, msg);
     throw msg;
 }
+
+var exports = module.exports = {
+  log: log,
+  info: info,
+  error: error
+};
