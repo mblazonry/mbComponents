@@ -2,5 +2,5 @@
 <StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
     <cacheControl>Private</cacheControl>
     <contentType>application/zip</contentType>
-    <description>The mBlazonry custom component pack version!</description>
+    <description>The mBlazonry custom component pack version {VERSION}!</description>
 </StaticResource>

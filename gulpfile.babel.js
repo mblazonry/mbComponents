@@ -26,6 +26,7 @@ const merge = require('merge-stream'),
    list = require('gulp-print'),
    rename = require('gulp-rename'),
    stripCode = require('gulp-strip-code'),
+   replace = require('gulp-replace'),
    header = require('gulp-header'),
    forceDeploy = require('gulp-jsforce-deploy'),
    fileExists = require('file-exists'),
@@ -211,10 +212,18 @@ function deploy(targetPrefix)
       org.loginUrl = loginUrl;
    }
 
-   return gulp.src('./pkg/**',
+   var resource = gulp.src([`!./pkg/**/${prefix}*-meta.xml`, './pkg/**'],
+   {
+      base: ".",
+   });
+
+   var meta = gulp.src(`./pkg/**/${prefix}*-meta.xml`,
       {
-         base: "."
+         base: ".",
       })
+      .pipe(replace('{VERSION}', npm_pkg.version));
+
+   return merge(resource, meta)
       .pipe(debug())
       .pipe(zip('pkg.zip'))
       .pipe(forceDeploy(org));
