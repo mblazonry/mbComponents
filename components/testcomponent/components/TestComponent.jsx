@@ -1,10 +1,66 @@
-const React = require('react');
+const React = require('react'),
+  ReactRedux = require('react-redux'),
+  CompActions = require('../actions/compActions.js'),
+  DataActions = require('../actions/dataActions.js'),
+  Util = require('util');
 
 class TestComponent extends React.Component {
+  componentDidMount() {
+    skuid.events.subscribe('models.cancelled', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('models.loaded', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('models.saved', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('row.created', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('row.deleted', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('row.undeleted', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+    skuid.events.subscribe('row.updated', (e) => {
+      if (e.models) {
+        this.props.updateState(Object.keys(e.models)[0]);
+      }
+    });
+  }
+
   render() {
-    console.log('Rendering TestComponent!');
-    return <div>Hello World</div>;
+    return <div>
+      {Util.inspect(this.props.data)}
+    </div>;
   }
 }
 
-//export default TestComponent
+const mapStateToProps = (state, ownProps) => {
+  return {
+    data: state.data
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateState: m => dispatch(DataActions.updateState(m))
+  };
+};
+
+module.exports =
+        ReactRedux.connect(mapStateToProps, mapDispatchToProps)(TestComponent);

@@ -1,13 +1,25 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react'),
+  ReactDOM = require('react-dom'),
+  ReactRedux = require('react-redux'),
+  Redux = require('redux'),
+  RootReducer = require('./reducers/root.js'),
+  Skuiddleware = require('./middleware/skuiddleware.js');
 
-// Component imports
-var TestComponent = require('./components/TestComponent');
-var Field = require('./components/Field');
+// Component import
+const TestComponent = require('./components/TestComponent');
+
+// Store configuration
+const store = Redux.createStore(RootReducer, {
+  display: {
+    text: ""
+  }
+}, Redux.applyMiddleware(Skuiddleware));
 
 // Stylesheet imports
 require('./stylesheets/main.scss');
 
 // Root app render
 ReactDOM.render(
-  <TestComponent/>, element);
+  <ReactRedux.Provider store={store}>
+  <TestComponent/>
+</ReactRedux.Provider>, element[0]);

@@ -2,7 +2,8 @@
   // http://eslint.org/docs/rules/
   "parserOptions": {
       "ecmaFeatures": {
-        "jsx": true
+        "jsx": true,
+        "experimentalObjectRestSpread": true
       },
       "sourceType": "module"
   },

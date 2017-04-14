@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 var Cp = require('child_process'),
-    Rimraf = require('rimraf'),
-    Path = require('path'),
-    Log = require('../utils/elog.js');
+  Rimraf = require('rimraf'),
+  Path = require('path'),
+  Log = require('../utils/elog.js'),
+  Constants = require('../utils/constants.js');
 
-const BUILD_DIRECTORY = Path.resolve('.', 'build');
-
-Rimraf(BUILD_DIRECTORY, () => {
-    Log.info('Build directory cleaned.');
+Rimraf(Constants.BUILD_DIRECTORY, () => {
+  Log.info('Build directory cleaned.');
 });
