@@ -19,3 +19,6 @@
 [submodule "components/mblazonry_timer"]
 	path = components/mblazonry_timer
 	url = https://github.com/mBlazonry/mblazonry_timer.git
+[submodule "components/ModelRegisterer"]
+	path = components/ModelRegisterer
+	url = https://github.com/mblazonry/ModelRegisterer.git
