@@ -21,11 +21,11 @@ function onBuild(done) {
   };
 }
 
-Gulp.task('build', done => {
+Gulp.task('build-dev', done => {
   Webpack(WebpackConfig()).run(onBuild(done));
 });
 
-Gulp.task('build-dev', done => {
+Gulp.task('build-prod', done => {
   var newConf =  Object.assign({}, WebpackConfig());
   newConf.plugins = [...newConf.plugins, new Webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production')

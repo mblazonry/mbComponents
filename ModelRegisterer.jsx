@@ -2,22 +2,13 @@ const React = require('react'),
   ReactDOM = require('react-dom'),
   ReactRedux = require('react-redux'),
   Redux = require('redux'),
-  RootReducer = require('./reducers/root.js'),
-  Skuiddleware = require('./middleware/skuiddleware.js');
+  RootReducer = require('./reducers/root.js');
 
 // Component import
-const TestComponent = require('./components/TestComponent');
-
-function injectOptions() {
-  
-}
+const ModelRegisterer = require('./components/ModelRegisterer');
 
 // Store configuration
-const store = Redux.createStore(RootReducer, {
-  display: {
-    text: ""
-  }
-}, Redux.applyMiddleware(Skuiddleware));
+const store = Redux.createStore(RootReducer);
 
 // Stylesheet imports
 require('./stylesheets/main.scss');
@@ -25,5 +16,5 @@ require('./stylesheets/main.scss');
 // Root app render
 ReactDOM.render(
   <ReactRedux.Provider store={store}>
-  <TestComponent/>
+  <ModelRegisterer/>
 </ReactRedux.Provider>, element[0]);
